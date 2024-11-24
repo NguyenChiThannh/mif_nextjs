@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import Image from 'next/image'
 import React from 'react'
 
-export default function MessageReceived() {
+const MessageReceived = () => {
     return (
         <TooltipProvider>
             <Tooltip>
@@ -22,10 +22,9 @@ export default function MessageReceived() {
                                 className="w-full rounded-lg aspect-auto object-cover"
                             />
                         </div>
-                        {/* <div className="flex max-w-[65%] flex-col gap-2 rounded-full px-4 py-2 text-sm bg-muted">
+                        <div className="flex max-w-[65%] flex-col gap-2 rounded-full px-4 py-2 text-sm bg-muted">
                             Sure! I&apos;m free this weekend if you want to grab a coffee.
-
-                        </div> */}
+                        </div>
                     </div>
                 </TooltipTrigger>
                 <TooltipContent side='left'>
@@ -35,3 +34,5 @@ export default function MessageReceived() {
         </TooltipProvider>
     )
 }
+
+export default MessageReceived;

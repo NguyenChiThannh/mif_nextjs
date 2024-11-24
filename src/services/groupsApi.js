@@ -10,7 +10,7 @@ const createGroup = async (data) => {
 }
 
 const updateGroup = async (data) => {
-    const res = await privateApi.patch()
+    const res = await privateApi.patch(`/groups/${data.groupId}`, data)
     return res.data
 }
 

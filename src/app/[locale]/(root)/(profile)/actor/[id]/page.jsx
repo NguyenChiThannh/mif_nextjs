@@ -1,6 +1,4 @@
 'use client'
-import CardActor from '@/components/card-actor'
-import CardMovie from '@/components/card-movie'
 import DynamicImageGallery from '@/components/dynamic-image-gallery'
 import Title from '@/components/title'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
@@ -11,39 +9,20 @@ import { actorApi } from '@/services/actorApi'
 import { addFavoriteActor, favoriteActorsApi, removeFavoriteActor } from '@/services/favoriteActorsApi'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Award, Camera, ChevronDown, HeartOff, Triangle } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 export default function Actor({ params }) {
   const [liked, setLiked] = useState(false);
 
   const { data: actor } = actorApi.query.useGetActorById(params.id)
-  const { data: actorMovieography } = actorApi.query.useGetActorMovieography(params.id)
+  // const { data: actorMovieography } = actorApi.query.useGetActorMovieography(params.id)
   const { data: isliked, isLoading } = favoriteActorsApi.query.useIsActorFavorite(params.id)
-
-  const addFavoriteActorMutation = useMutation({
-    mutationFn: addFavoriteActor,
-    onSuccess: () => {
-      setLiked(true)
-      toast.success('Yêu thích')
-    },
-    onError: () => {
-      toast.error('Có lỗi')
-    }
-  })
-
-  const removeFavoriteActorMutation = useMutation({
-    mutationFn: removeFavoriteActor,
-    onSuccess: () => {
-      setLiked(false)
-      toast.success('Hủy yêu thích')
-    },
-    onError: () => {
-      toast.error('Có lỗi')
-    }
-  })
+  const addFavoriteActorMutation = favoriteActorsApi.mutation.useAddFavoriteActor()
+  const removeFavoriteActorMutation = favoriteActorsApi.mutation.useRemoveFavoriteActor()
 
   const handleAddFavoriteActor = () => {
+    setLiked(true)
     addFavoriteActorMutation.mutate(params.id)
   }
 
@@ -52,11 +31,11 @@ export default function Actor({ params }) {
     removeFavoriteActorMutation.mutate(params.id)
   }
 
-  // useEffect(() => {
-  //   if (isliked !== undefined) {
-  //     setLiked(isliked);
-  //   }
-  // }, [isliked]);
+  useEffect(() => {
+    if (isliked !== undefined) {
+      setLiked(isliked);
+    }
+  }, [isliked]);
 
   return (
     <div className=" max-w-4xl mx-auto">
@@ -85,6 +64,9 @@ export default function Actor({ params }) {
           }
           <span className='text-sm '>16)</span>
         </div>
+        <Button onClick={() => { handleAddFavoriteActor() }}>
+          Yêu thích
+        </Button>
         {
           liked
             ?
@@ -134,7 +116,7 @@ export default function Actor({ params }) {
           <DynamicImageGallery />
         </div>
       </div>
-      <div className='mt-4'>
+      {/* <div className='mt-4'>
         <Title title="Phim tham gia" isMore={false} />
         {
           !actorMovieography
@@ -144,7 +126,7 @@ export default function Actor({ params }) {
             <div className='flex mt-4'>
               <Carousel className='w-full h-auto'>
                 <CarouselContent>
-                  {/* {actorMovieography} */}
+                  {actorMovieography}
                   <CarouselItem className="pl-1 md:basis-1/2 lg:basis-1/4 flex justify-center">
                     <CardMovie direction='vertical' />
                   </CarouselItem>
@@ -166,7 +148,7 @@ export default function Actor({ params }) {
               </Carousel>
             </div>
         }
-      </div>
+      </div> */}
     </div>
   )
 }

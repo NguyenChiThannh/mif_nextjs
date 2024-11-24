@@ -1,16 +1,13 @@
 'use client'
 import CardMember, { CardMemberSkeleton } from '@/components/card-member'
 import Post, { PostSkeleton } from '@/components/post'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
-import { Plus, Search } from 'lucide-react'
-import React, { useEffect, useRef } from 'react'
+import { Search } from 'lucide-react'
+import React from 'react'
 
 export default function MembersSection({ members, group, pendingInvitations, isOwner }) {
-    console.log('🚀 ~ MembersSection ~ group:', group)
     return (
         <>
             {

@@ -21,9 +21,6 @@ export const authApi = {
                 mutationFn: login,
                 onSuccess: () => {
                     toast.success(t('login_successful'))
-                },
-                onError: () => {
-                    toast.error(t('login_failed'))
                 }
             })
         }

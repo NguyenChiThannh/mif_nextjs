@@ -19,12 +19,16 @@ export const QUERY_KEY = {
     // Category
     allmovieCategories: 'all_categories',
     categoryById: (id) => ['category', id],
-    // favoriteActors
+    // FavoriteActors
     isActorFavorite: (actorId) => ['is_actor_favorite', actorId],
     // user
     userInfoById: (id) => ['user_info', id],
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
     // group_rules
-    groupRules: (groupId) => ['group_rules', groupId]
+    groupRules: (groupId) => ['group_rules', groupId],
+    // movie Rating
+    movieRatings: (page, size, movieId) => ['movie_ratings', { page, size, movieId }],
+    // SavedMovie 
+    savedMovie: (page, size) => ['saved_movie', { page, size }]
 }

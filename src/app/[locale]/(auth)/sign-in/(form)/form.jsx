@@ -1,6 +1,5 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,10 +17,9 @@ import { getUserIdFromToken } from '@/lib/helper'
 import Loading from '@/components/loading'
 
 export default function FormLogin({ t }) {
-    const [rememberMe, setRememberMe] = useState(false);
-
-    const router = useRouter();
-    const dispatch = useAppDispatch();
+    const [rememberMe, setRememberMe] = useState(false)
+    const router = useRouter()
+    const dispatch = useAppDispatch()
 
     const { register, handleSubmit, reset } = useForm({
         resolver: zodResolver(schemaLogin),
@@ -29,7 +27,6 @@ export default function FormLogin({ t }) {
 
     useEffect(() => {
         const rememberLogin = JSON.parse(localStorage.getItem('rememberLogin'))
-        console.log('🚀 ~ useEffect ~ rememberLogin:', rememberLogin)
         if (rememberLogin) {
             const { isRememberMe, ...data } = rememberLogin
             reset(data)
@@ -38,7 +35,7 @@ export default function FormLogin({ t }) {
     }, [])
 
     const mutation = authApi.mutation.useLogin()
-    const hanleLogin = (data) => {
+    const handleLogin = (data) => {
         mutation.mutate(data, {
             onSuccess: (data) => {
                 const id = getUserIdFromToken(data.access_token)
@@ -49,16 +46,14 @@ export default function FormLogin({ t }) {
                     id,
                 }
                 dispatch(setAuthState(authState))
-                router.push('/home');
+                router.push('/home')
             },
-        });
+        })
         if (rememberMe) {
-            const rememberLogin = {
-                email: data.email,
-                password: data.password,
-                isRememberMe: true
-            }
-            localStorage.setItem('rememberLogin', JSON.stringify(rememberLogin))
+            localStorage.setItem(
+                'rememberLogin',
+                JSON.stringify({ ...data, isRememberMe: true })
+            )
         } else {
             localStorage.removeItem('rememberLogin')
         }
@@ -67,7 +62,7 @@ export default function FormLogin({ t }) {
     return (
         <>
             {mutation.isPending && <Loading />}
-            <form onSubmit={handleSubmit(hanleLogin)}>
+            <form onSubmit={handleSubmit(handleLogin)} className="grid gap-6">
                 <div className="grid gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="email">{t('email')}</Label>
@@ -75,41 +70,38 @@ export default function FormLogin({ t }) {
                             id="email"
                             type="email"
                             placeholder={t('email_placeholder')}
-                            required
                             {...register("email")}
+                            className="bg-input border border-border"
                         />
                     </div>
                     <div className="grid gap-2">
-                        <div className="flex items-center">
-                            <Label htmlFor="password">{t('password')}</Label>
-                        </div>
+                        <Label htmlFor="password">{t('password')}</Label>
                         <PasswordInput
                             id="password"
                             placeholder={t('password_placeholder')}
-                            required
                             {...register("password")}
+                            className="bg-input border border-border"
                         />
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2">
                         <Checkbox
                             id="rememberMe"
                             checked={rememberMe}
                             onCheckedChange={setRememberMe}
+                            className="bg-muted"
                         />
                         <Label htmlFor="rememberMe">{t('remember_me')}</Label>
                         <ForgetPassword t={t} />
                     </div>
-                    <Button type="submit" className="w-full">
-                        {t('login_action')}
+                </div>
+                <Button type="submit" className="w-full">{t('login_action')}</Button>
+                <div className="grid gap-2">
+                    <Button variant="outline" className="w-full" type="button">
+                        {t('login_with_google')}
                     </Button>
-                    <div className="flex gap-2">
-                        <Button variant="outline" className="w-full" type='button'>
-                            {t('login_with_google')}
-                        </Button>
-                        <Button variant="outline" className="w-full" type='button'>
-                            {t('login_with_facebook')}
-                        </Button>
-                    </div>
+                    <Button variant="outline" className="w-full" type="button">
+                        {t('login_with_facebook')}
+                    </Button>
                 </div>
             </form>
         </>

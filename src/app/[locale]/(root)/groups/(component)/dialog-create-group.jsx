@@ -21,8 +21,8 @@ import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 export function DialogCreateGroup({ movieCategories }) {
-    const [isOpen, setIsOpen] = useState(false);
     const t = useTranslations('Groups')
+    const [isOpen, setIsOpen] = useState(false);
     const { control, handleSubmit, register, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schemaGroup),
         defaultValues: {

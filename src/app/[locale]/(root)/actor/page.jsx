@@ -18,7 +18,7 @@ export default function Actor() {
         <div className='grid grid-cols-3 gap-10'>
             <div className='grid col-span-2'>
                 <Title title={t('title')} isMore={false} />
-                <div className='mt-4'>
+                <div>
                     {
                         isLoading
                             ?

@@ -15,6 +15,10 @@ export default function DialogCategory({ isOpenDialog, setIsOpenDialog, queryCli
         resolver: zodResolver(schemaCategory),
     });
 
+    const { data: category, isLoading: isLoadingCategory } = categoryApi.query.useGetCategoryById(idEdit, !!idEdit)
+    const createCategoryMutation = categoryApi.mutation.useCreateCategory()
+    const updateCategoryMutation = categoryApi.mutation.useDeleteCategory()
+
     useEffect(() => {
         if (category) {
             reset({
@@ -23,10 +27,6 @@ export default function DialogCategory({ isOpenDialog, setIsOpenDialog, queryCli
             });
         }
     }, [category, reset]);
-
-    const { data: category, isLoading: isLoadingCategory } = categoryApi.query.useGetCategoryById(idEdit, !!idEdit)
-    const createCategoryMutation = categoryApi.mutation.useCreateCategory()
-    const updateCategoryMutation = categoryApi.mutation.useDeleteCategory()
 
     const onSubmit = (data) => {
         idEdit ?

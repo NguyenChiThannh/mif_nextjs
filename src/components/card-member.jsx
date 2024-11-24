@@ -39,6 +39,7 @@ export default function CardMember({ member, groupId, type, isOwner }) {
         })
     }
 
+
     return (
         <div className="bg-background rounded-lg shadow-md p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">

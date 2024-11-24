@@ -3,7 +3,7 @@ import { DialogTrigger, Dialog, DialogContent, DialogHeader, DialogTitle, Dialog
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { groupRulesApi } from "@/services/groupRules";
+import { groupRulesApi } from "@/services/groupRulesApi";
 import { groupsApi } from "@/services/groupsApi";
 import { Loader2, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -45,6 +45,36 @@ export default function DialogAddOrEditRuleToGroup({ groupId, rule, isOpen, setI
                 }
             })
     };
+
+    // const queryClient = useQueryClient()
+    // const onSubmit = (data) => {
+    //     if (!data.ruleDescription) { 
+    //         toast.error('Mô tả quy tắc không được để trống'); 
+    //         return; 
+    //     }
+    //     if (isOwner) { 3 
+    //             const addRuleMutation = useMutation({ 
+    //                 mutationFn: async ({ groupId, data }) => {
+    //                     try {
+    //                         await privateApi.post(`/groups/${groupId}/rules`, data); 
+    //                     } catch (error) {
+    //                         return Promise.reject(error); 
+    //                     }
+    //                 },
+    //                 onSuccess: () => {
+    //                     toast.success('Thêm quy tắc nhóm thành công'); 
+    //                     queryClient.invalidateQueries({ queryKey: ['groupRules', groupId] });
+    //                 },
+    //                 onError: () => {
+    //                     toast.error('Thêm quy tắc nhóm thất bại'); 
+    //                 }
+    //             });
+    //             addRuleMutation.mutate({ groupId, data }); 
+    //     } else {
+    //         // Nếu không phải owner
+    //         toast.error('Bạn không có quyền thêm quy tắc');
+    //     }
+    // };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>

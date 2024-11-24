@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { store } from '@/redux/store.js'
+import { toast } from "react-toastify"
 
 const BASE_URL = 'http://localhost:8080/'
 export const dynamic = 'force-dynamic'
@@ -17,12 +18,22 @@ publicApi.interceptors.request.use(
     config => {
         return config;
     },
-    error => Promise.reject(error)
+    error => {
+        toast.error()
+        return Promise.reject(error)
+    }
 );
 
 publicApi.interceptors.response.use(
     response => response.data,
-    error => Promise.reject(error)
+    error => {
+        if (error.response?.data?.message) {
+            toast.error(error.response.data.message);
+        } else {
+            toast.error('Something is wrong');
+        }
+        return Promise.reject(error);
+    }
 );
 
 const privateApi = axios.create({
@@ -46,7 +57,7 @@ privateApi.interceptors.request.use(
             }
             return config;
         } catch (error) {
-            console.error('Error in request interceptor:', error);
+            toast.error(error.message)
             return Promise.reject(error);
         }
     },
@@ -58,12 +69,16 @@ privateApi.interceptors.response.use(
     error => {
         const { response, config } = error;
         const status = response?.status;
-
+        console.log(response)
         if (status === 401 || status === 403) {
             console.log('🚀 ~ status === 403:')
             // Chúng ta sẽ Thực hiện kịch bản refresh token tại đây
         }
-
+        if (error.response?.data?.message) {
+            toast.error(error.response.data.message);
+        } else {
+            toast.error('Something is wrong');
+        }
         return Promise.reject(error);
     }
 );

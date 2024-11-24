@@ -22,6 +22,7 @@ export default function FeedSection({ group }) {
         isFetchingNextPage,
         isLoading,
     } = groupPostApi.query.useGetPostsByGroupIdInfinite(group.id)
+    console.log('🚀 ~ FeedSection ~ data:', data)
 
     const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
 
@@ -63,7 +64,7 @@ export default function FeedSection({ group }) {
                         <PostSkeleton />
                     </>
                 )}
-                {data?.pages?.map((page, pageIndex) =>
+                {data?.pages?.map((page, index) =>
                     page.content.map((post) => (
                         <Post key={post.id} post={post} />
                     ))

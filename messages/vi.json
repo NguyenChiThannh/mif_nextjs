@@ -107,6 +107,11 @@
             "content_placeholder": "Nhập quy tắc...",
             "button_submit": "Gửi"
         },
+        "DialogCreateGroup": {
+            "create_group": "Tạo nhóm",
+            "group_name": "Tên nhóm",
+            "category": "Thể loại"
+        },
         "DialogCreatePost": {
             "create_post": "Tạo bài viết",
             "title": "Tiêu đề",
@@ -162,7 +167,6 @@
         "create_movie_successful": "Tạo phim thành công",
         "create_movie_failed": "Tạo phim thất bại",
         "login_successful": "Đăng nhập thành công",
-        "login_failed": "Email hoặc mật khẩu không đúng",
         "create_group_successful": "Tạo nhóm thành công",
         "create_group_failed": "Tạo nhóm thất bại",
         "add_pending_invitation_successful": "Gửi lời mời thành công",
@@ -193,7 +197,9 @@
         "copy_link_failed": "Liên kết sao chép thất bại",
         "add_rule_successful": "Thêm quy tắc thành công",
         "update_rule_successful": "Cập nhật quy tắc thành công",
-        "delete_rule_successful": "Xóa quy tắc thành công"
+        "delete_rule_successful": "Xóa quy tắc thành công",
+        "create_rating_movie_successful": "Rating phim  thành công",
+        "delete_rating_movie_successful": "Xóa rating thành công"
     },
     "duration": "Thời lượng",
     "minutes": "phút",

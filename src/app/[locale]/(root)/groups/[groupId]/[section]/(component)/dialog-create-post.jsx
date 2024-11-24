@@ -39,6 +39,7 @@ export default function CreatePostDialog({ groupId }) {
     }, [groupId, setValue]);
 
     const onSubmit = (data) => {
+        console.log('🚀 ~ onSubmit ~ data:', data)
         const formData = new FormData();
         formData.append("title", data.title);
         formData.append("content", data.content);
@@ -53,7 +54,60 @@ export default function CreatePostDialog({ groupId }) {
                 setOpen(false)
             }
         })
-    };
+    }
+
+    // const onSubmit = (data) => {
+    //     if (!data.title) {
+    //         toast.error('Tiêu đề không được để trống');
+    //         return;
+    //     }
+
+    //     if (data.title.length < 5) {
+    //         toast.error('Tiêu đề phải có ít nhất 5 ký tự');
+    //         return;
+    //     }
+
+    //     if (data.title.length > 100) {
+    //         toast.error('Tiêu đề không được quá 100 ký tự');
+    //         return;
+    //     }
+
+    //     if (!data.content) {
+    //         toast.error('Nội dung không được để trống');
+    //         return;
+    //     }
+
+    //     if (data.content.length < 10) {
+    //         toast.error('Nội dung phải có ít nhất 10 ký tự');
+    //         return;
+    //     }
+
+    //     // Tạo FormData để gửi lên server nếu validation thành công
+    //     const formData = new FormData();
+    //     formData.append("title", data.title);
+    //     formData.append("content", data.content);
+    //     formData.append("images", image);
+
+    //     const createPostMutation = useMutation({
+    //         mutationFn: async (formData) => {
+    //             try {
+    //                 const res = await privateApi.post(`/group-posts`, formData);
+    //                 return res.data;
+    //             } catch (error) {
+    //                 return Promise.reject(error);
+    //             }
+    //         },
+    //         onSuccess: () => {
+    //             toast.success(t('create_post_successful'));
+    //         },
+    //         onError: () => {
+    //             toast.error(t('create_post_failed'));
+    //         }
+    //     });
+
+    //     // Thực hiện gọi API khi form được submit
+    //     createPostMutation.mutate(formData);
+    // };
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);

@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { schemaMovie } from '@/lib/schemas/movie.schema';
 import { movieApi } from '@/services/movieApi';
+import { categoryApi } from '@/services/movieCategoriesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { X } from 'lucide-react';

@@ -34,8 +34,8 @@ export default function AuthLayout({ children }) {
       <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-blu-none z-10 h-screen"></div>
 
       {/* Content */}
-      <div className="relative z-20 flex justify-center items-center lg:min-h-screen xl:min-h-screen">
-        <div className="bg-background p-6 rounded-lg shadow-lg border-2 border-background w-fit mx-auto flex justify-center opacity-100">
+      <div className="relative z-20 flex items-center justify-center lg:min-h-screen xl:min-h-screen">
+        <div className="bg-background border border-border rounded-lg shadow-md mx-auto w-fit max-w-md sm:max-w-lg">
           {children}
         </div>
       </div>

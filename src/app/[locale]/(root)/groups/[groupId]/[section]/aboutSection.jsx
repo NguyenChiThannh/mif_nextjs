@@ -9,6 +9,7 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function AboutSection({ group, members }) {
+    console.log('🚀 ~ AboutSection ~ group:', group)
     return (
         <>
             <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
@@ -16,11 +17,7 @@ export default function AboutSection({ group, members }) {
                     <div className="grid gap-4 mt-6">
                         <p className="font-bold flex items-center">Giới thiệu về nhóm</p>
                         <Separator />
-                        <p className='text-sm'>Nơi giao lưu, trao đổi, học hỏi kiến thức về Front-end.
-                            Có thể đăng tin tuyển dụng IT, mọi hình thức quảng cáo,câu kéo member khác sẽ bị ban.
-                            Chỉ được phép đăng bài tuyển dụng nhân sự, các khoá học lập trình vào CN. Cố tình vi phạm sẽ rời khỏi nhóm
-                            Chung tay vì 1 cộng đồng Front-end phát triển.. :)
-                        </p>
+                        <p className='text-sm'>{group.description}</p>
                         {
                             group.isPublic
                                 ?

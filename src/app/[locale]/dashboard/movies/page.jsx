@@ -19,10 +19,9 @@ export default function Movies() {
 
     const router = useRouter();
 
-    const { isLoadingMovies, moviesData } = movieApi.query.useGetAllMovies(0, 10)
-
-
+    const { isLoadingMovies, data: moviesData } = movieApi.query.useGetAllMovies(0, 10)
     console.log('🚀 ~ Movies ~ moviesData:', moviesData)
+
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage)
@@ -100,6 +99,8 @@ export default function Movies() {
                             return (
                                 <TableRow key={movie.id}>
                                     <TableCell>{movie.title}</TableCell>
+                                    <TableCell>10</TableCell>
+                                    <TableCell>10</TableCell>
                                     <TableCell>10</TableCell>
                                     <TableCell>10</TableCell>
                                     <TableCell>{movie.awards.length}</TableCell>

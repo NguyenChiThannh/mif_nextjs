@@ -2,67 +2,79 @@
 import Rating from '@/components/rating'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { BookmarkPlus } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-export default function CardMovie({ direction, movie }) {
+export default function CardMovie({ direction = 'horizontal', movie }) {
     const router = useRouter();
-    const t = useTranslations('Movie')
+    const t = useTranslations('Movie');
 
     const handleDetailMovie = () => {
-        router.push(`/movie/${movie.id}`)
+        router.push(`/movies/${movie.id}`);
     }
-    const yearRelease = movie?.releaseDate?.split('-')[0]
+
+    const yearRelease = movie?.releaseDate?.split('-')[0] ?? 'N/A';
+    const { title, posterUrl, duration, ratings } = movie;
 
     return (
         <div
-            className={`gap-4 h-fit ${direction == 'vertical' ? 'flex-col w-fit flex' : 'grid grid-cols-2'}`}
-            onClick={() => handleDetailMovie()}
+            className={`gap-4 h-fit ${direction === 'vertical' ? 'flex-col w-fit flex' : 'grid grid-cols-2'}`}
+            onClick={handleDetailMovie}
         >
+            {/* Movie Poster */}
             <div className='relative'>
                 <Image
-                    src={movie?.posterUrl}
-                    alt="Movie"
+                    src={posterUrl}
+                    alt={title}
                     height={400}
                     width={300}
                     className="rounded-lg object-cover aspect-[3/4]"
                 />
             </div>
 
+            {/* Movie Details */}
             <div className="grid gap-2">
-                <p className="text-lg md:text-xl lg:text-2xl sm:max-w-64 max-w-full font-bold line-clamp-2 h-fit">
-                    {movie?.title}
+                {/* Movie Title */}
+                <p className="text-lg md:text-xl lg:text-2xl font-bold line-clamp-2">
+                    {title}
                 </p>
-                {direction == 'vertical' ? (
-                    <p className="text-muted-foreground text-sm">{yearRelease} &middot; {movie?.duration}</p>
+
+                {/* Movie Information */}
+                {direction === 'vertical' ? (
+                    <p className="text-muted-foreground text-sm">
+                        {yearRelease} &middot; {duration}
+                    </p>
                 ) : (
                     <>
                         <p className="text-muted-foreground text-sm">{t('year_release')}: {yearRelease}</p>
-                        <p className="text-muted-foreground text-sm">{t('duration')}: {movie?.duration}p</p>
+                        <p className="text-muted-foreground text-sm">{t('duration')}: {duration}p</p>
                     </>
                 )}
+
+                {/* Rating Section */}
                 <div className="flex items-center space-x-1">
                     <Rating
-                        // Rating 1111
-                        ratingInPercent={movie?.ratings?.averageRating * 10}
+                        value={ratings?.averageRating / 2}
                         iconSize="m"
                         showOutOf={true}
                         enableUserInteraction={false}
                     />
-                    <span className="text-xs md:text-sx lg:text-sx">{movie?.ratings?.averageRating}/10</span>
+                    <span className="text-xs">{ratings?.averageRating ?? 'N/A'}/10</span>
                 </div>
+
+                {/* Watch Trailer Button */}
                 <Button>{t('button_watch_trailer')}</Button>
             </div>
         </div>
     )
 }
 
-export const CardMovieSkeleton = ({ direction }) => {
+export const CardMovieSkeleton = ({ direction = 'horizontal' }) => {
     return (
-        <div className={`grid grid-cols-2 gap-4 h-fit ${direction == 'vertical' ? 'flex-col w-fit' : ''}`}>
+        <div className={`grid gap-4 h-fit ${direction === 'vertical' ? 'flex-col w-fit' : 'grid-cols-2'}`}>
+            {/* Skeleton for Poster */}
             <div>
                 <Skeleton
                     height={100}
@@ -71,12 +83,13 @@ export const CardMovieSkeleton = ({ direction }) => {
                 />
             </div>
 
-            <div className="flex gap-2 flex-col h-full justify-around">
-                <Skeleton className='h-2/6' />
-                <Skeleton className='w-3/4 h-1/6' />
-                <Skeleton className='w-3/4 h-1/6' />
-                <Skeleton className='h-1/6' />
+            {/* Skeleton for Details */}
+            <div className="flex gap-2 flex-col justify-around h-full">
+                <Skeleton className="h-2/6" />
+                <Skeleton className="w-3/4 h-1/6" />
+                <Skeleton className="w-3/4 h-1/6" />
+                <Skeleton className="h-1/6" />
             </div>
         </div>
-    )
-}
+    );
+};

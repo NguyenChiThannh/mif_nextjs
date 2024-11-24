@@ -162,3 +162,10 @@ export const navGroupConfig = (t) => [
         }
     }
 ]
+
+export const tabSearchConfig = (t) => [
+    { title: t('all'), tab: 'all' },
+    { title: t('movie'), tab: 'movie' },
+    { title: t('group'), tab: 'group' },
+    { title: t('director_actor'), tab: 'director_actor' },
+];

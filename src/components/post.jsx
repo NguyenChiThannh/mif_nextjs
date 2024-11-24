@@ -32,6 +32,35 @@ export default function Post({ className, post }) {
         }
     };
 
+    // const handleUpvote = (postId) => {
+    //     const upvoteMutation = useMutation({
+    //         mutationFn: async (postId) => {
+    //             try {
+    //                 await privateApi.post(`/group-posts/${postId}/vote`, { type: 'UPVOTE' });
+    //             } catch (error) {
+    //                 return Promise.reject(error);
+    //             }
+    //         },
+    //         onSuccess: () => {
+    //             queryClient.invalidateQueries('group_posts');
+    //         },
+    //         onError: () => {
+    //             toast('Có lỗi, vui lòng thử lại');
+    //         },
+    //     });
+
+    //     setVote('UPVOTE');
+    //     if (vote === 'DOWNVOTE') {
+    //         setVoteNumber(voteNumber + 2)
+    //     }
+    //     else {
+    //         setVoteNumber(voteNumber + 1)
+    //     }
+    //     upvoteMutation.mutate(postId);
+    // }
+    // }
+
+
     const handleDownvote = (postId) => {
         if (vote === 'DOWNVOTE') {
             setVote(null);
