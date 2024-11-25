@@ -68,6 +68,7 @@ privateApi.interceptors.response.use(
     response => response.data,
     error => {
         const { response, config } = error;
+        console.log('🚀 ~ error:', error)
         const status = response?.status;
         console.log(response)
         if (status === 401 || status === 403) {

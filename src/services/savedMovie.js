@@ -43,17 +43,11 @@ export const savedMovieApi = {
         useSaveMovie() {
             return useMutation({
                 mutationFn: saveMovie,
-                onSuccess: () => {
-
-                }
             })
         },
         useUnSaveMovie() {
             return useMutation({
                 mutationFn: unSaveMovie,
-                onSuccess: () => {
-
-                }
             })
         },
         useBatchCheckSavedStatus() {

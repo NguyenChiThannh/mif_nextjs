@@ -1,6 +1,7 @@
 // import Image from "next/image";
 // import "./style.css"
 'use client'
+import OTPDialog from "@/components/dialog-otp";
 import { FancyMultiSelect } from "@/components/fancy-multi-select";
 
 
@@ -90,7 +91,6 @@ export default function MovieForm() {
                 <p className="text-2xl font-bold">Create Movie</p>
                 <button type="submit" className="btn-primary">Submit</button>
             </div>
-
             {/* FancyMultiSelect */}
             <div className="grid grid-cols-1 gap-4">
                 <div className="col-span-1">

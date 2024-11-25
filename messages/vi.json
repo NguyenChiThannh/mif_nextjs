@@ -164,9 +164,11 @@
         "not_found": "Không có kế quả tìm kiếm phù hợp"
     },
     "Toast": {
+        "register_successful": "Mã OTP được gửi về Email. Vui lòng nhập để xác nhận tài khoản.",
+        "login_successful": "Đăng nhập thành công",
+        "verify_otp_successful": "Xác thực tài khoản thành công",
         "create_movie_successful": "Tạo phim thành công",
         "create_movie_failed": "Tạo phim thất bại",
-        "login_successful": "Đăng nhập thành công",
         "create_group_successful": "Tạo nhóm thành công",
         "create_group_failed": "Tạo nhóm thất bại",
         "add_pending_invitation_successful": "Gửi lời mời thành công",

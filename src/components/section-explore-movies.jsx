@@ -9,7 +9,7 @@ export function SectionExploreMovies() {
     return (
         <div className='grid col-span-1 h-fit'>
             <Title title='Khám phá' isMore={false} />
-            <div className='grid mt-8 gap-2'>
+            <div className='grid mt-8 gap-4'>
                 {
                     isLoading
                         ?

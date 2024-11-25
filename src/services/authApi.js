@@ -8,6 +8,11 @@ const register = async (data) => {
     return res.data
 }
 
+const verifyOTP = async (data) => {
+    const res = await publicApi.post('auth/register/OTP', data)
+    return res.data
+}
+
 const login = async (data) => {
     const res = await publicApi.post('auth/login', data)
     return res.data
@@ -21,6 +26,24 @@ export const authApi = {
                 mutationFn: login,
                 onSuccess: () => {
                     toast.success(t('login_successful'))
+                }
+            })
+        },
+        useRegister() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: register,
+                onSuccess: () => {
+                    toast.success(t('register_successful'))
+                }
+            })
+        },
+        useVerifyOTP() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: verifyOTP,
+                onSuccess: () => {
+                    toast.success(t('verify_otp_successful'))
                 }
             })
         }
