@@ -25,6 +25,7 @@ export const QUERY_KEY = {
     userInfoById: (id) => ['user_info', id],
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
+    postById: (postId) => ['detail_post', postId],
     // group_rules
     groupRules: (groupId) => ['group_rules', groupId],
     // movie Rating

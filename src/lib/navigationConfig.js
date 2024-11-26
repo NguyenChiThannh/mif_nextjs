@@ -36,59 +36,45 @@ export const navDashboardMenuConfig = (t) => [
         title: t('home'),
         href: '/dashboard',
         icon: HouseIcon,
-        active: function (pathname) {
-            return pathname.replace(/^\/[a-z]{2}/, '') == this.href
-        }
+        active: (pathname) => pathname.replace(/^\/[a-z]{2}/, '') === '/dashboard',
     },
     {
         title: t('news'),
         href: '/dashboard/news',
         icon: NewspaperIcon,
-        active: function (pathname) {
-            return pathname.includes(this.href)
-        }
+        active: (pathname) => pathname.includes('/dashboard/news'),
     },
     {
         title: t('movies'),
         href: '/dashboard/movies',
         icon: ClapperboardIcon,
-        active: function (pathname) {
-            return pathname.includes(this.href)
-        }
+        active: (pathname) => pathname.includes('/dashboard/movies'),
     },
     {
         title: t('category'),
         href: '/dashboard/categories',
         icon: LayoutListIcon,
-        active: function (pathname) {
-            return pathname.includes(this.href)
-        }
+        active: (pathname) => pathname.includes('/dashboard/categories'),
     },
     {
         title: t('actor'),
         href: '/dashboard/actors',
         icon: UserRoundIcon,
-        active: function (pathname) {
-            return pathname.includes(this.href)
-        }
+        active: (pathname) => pathname.includes('/dashboard/actors'),
     },
     {
         title: t('group'),
         href: '/dashboard/groups',
         icon: UsersIcon,
-        active: function (pathname) {
-            return pathname.includes(this.href)
-        }
+        active: (pathname) => pathname.includes('/dashboard/groups'),
     },
     {
         title: t('analytics'),
         href: '/dashboard/analytics',
         icon: LineChartIcon,
-        active: function (pathname) {
-            return pathname.includes(this.href)
-        }
+        active: (pathname) => pathname.includes('/dashboard/analytics'),
     },
-]
+];
 
 export const navProfileUserConfig = (t) => [
     {

@@ -1,10 +1,10 @@
 import { privateApi } from '@/services/config'
 import { QUERY_KEY } from '@/services/key';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslations } from 'next-intl';
 import { toast } from 'react-toastify';
 
-export const getPostsByGroupId = async ({ pageParam = 0, queryKey }) => {
+const getPostsByGroupId = async ({ pageParam = 0, queryKey }) => {
     const [_key, { groupId }] = queryKey;
     const res = await privateApi.get(`/groups/${groupId}/posts`, {
         params: {
@@ -29,8 +29,13 @@ const removevotePost = async (postId) => {
     return res.data
 }
 
-export const createPost = async (data) => {
+const createPost = async (data) => {
     const res = await privateApi.post(`/group-posts`, data)
+    return res.data
+}
+
+const getPostById = async (postId) => {
+    const res = await privateApi.get(`/group-posts/${postId}`)
     return res.data
 }
 
@@ -45,6 +50,12 @@ export const groupPostApi = {
                     return lastPage.last ? undefined : nextPage;
                 },
             });
+        },
+        useGetPostByPostId(postId) {
+            return useQuery({
+                queryKey: QUERY_KEY.postById(postId),
+                queryFn: ({ queryKey }) => getPostById(queryKey[1]),
+            })
         }
     },
     mutation: {

@@ -1,4 +1,5 @@
 'use client'
+
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
@@ -12,51 +13,62 @@ export default function DialogAddMemberToGroup({ groupId }) {
     const [isOpen, setIsOpen] = useState(false);
 
     const { handleSubmit, register, reset } = useForm();
-
-    const mutation = groupsApi.mutation.useAddMemberToGroup()
+    const mutation = groupsApi.mutation.useAddMemberToGroup();
 
     const onSubmit = (data) => {
-        data = {
-            ...data,
-            groupId
-        }
-        mutation.mutate(data, {
-            onSuccess: () => {
-                reset();
-                setIsOpen(false);
+        mutation.mutate(
+            { ...data, groupId },
+            {
+                onSuccess: () => {
+                    reset();
+                    setIsOpen(false);
+                },
             }
-        });
+        );
     };
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button className="h-8 gap-1" size='sm' onClick={() => setIsOpen(true)}>
+                <Button
+                    size="sm"
+                    className="h-8 gap-1"
+                    onClick={() => setIsOpen(true)}
+                >
                     <Plus className="h-4 w-4" />
                     Mời
                 </Button>
-
             </DialogTrigger>
-            <DialogContent className="sm:max-w-2xl w-fit">
-                <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
+            <DialogContent className="max-w-md">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <DialogHeader>
-                        <DialogTitle>Mời thành viên</DialogTitle>
+                        <DialogTitle className="text-lg font-semibold">
+                            Mời thành viên
+                        </DialogTitle>
                     </DialogHeader>
-                    <div className="flex items-center gap-4 w-fit">
-                        <Label htmlFor="userId" className="text-right">
+                    <div className="flex flex-col gap-2">
+                        <Label htmlFor="userId" className="text-sm text-muted-foreground">
                             Link/Id của người dùng
                         </Label>
                         <Input
-                            id="id"
+                            id="userId"
+                            placeholder="Nhập link hoặc ID..."
                             {...register('userId', { required: true })}
+                            className="border rounded-md"
                             required
                         />
                     </div>
                     <DialogFooter>
-                        <Button type="submit" disabled={mutation.isLoading}>Mời</Button>
+                        <Button
+                            type="submit"
+                            className="w-full"
+                            disabled={mutation.isLoading}
+                        >
+                            {mutation.isLoading ? 'Đang gửi...' : 'Mời'}
+                        </Button>
                     </DialogFooter>
                 </form>
             </DialogContent>
         </Dialog>
-    )
+    );
 }

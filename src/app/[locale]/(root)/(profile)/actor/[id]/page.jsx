@@ -1,23 +1,24 @@
 'use client'
+
 import DynamicImageGallery from '@/components/dynamic-image-gallery'
 import Title from '@/components/title'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { actorApi } from '@/services/actorApi'
-import { addFavoriteActor, favoriteActorsApi, removeFavoriteActor } from '@/services/favoriteActorsApi'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { favoriteActorsApi } from '@/services/favoriteActorsApi'
 import { Award, Camera, ChevronDown, HeartOff, Triangle } from 'lucide-react'
-import React, { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useEffect, useState } from 'react'
+import { Skeleton } from '@/components/ui/skeleton'
+import CardMovie from '@/components/card-movie'
 
 export default function Actor({ params }) {
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(false)
 
-  const { data: actor } = actorApi.query.useGetActorById(params.id)
-  // const { data: actorMovieography } = actorApi.query.useGetActorMovieography(params.id)
-  const { data: isliked, isLoading } = favoriteActorsApi.query.useIsActorFavorite(params.id)
+  const { data: actor, isLoading: actorLoading } = actorApi.query.useGetActorById(params.id)
+  const { data: isLiked } = favoriteActorsApi.query.useIsActorFavorite(params.id)
+  const { data: actorFilmography } = actorApi.query.useGetActorFilmography(params.id)
+
   const addFavoriteActorMutation = favoriteActorsApi.mutation.useAddFavoriteActor()
   const removeFavoriteActorMutation = favoriteActorsApi.mutation.useRemoveFavoriteActor()
 
@@ -32,123 +33,118 @@ export default function Actor({ params }) {
   }
 
   useEffect(() => {
-    if (isliked !== undefined) {
-      setLiked(isliked);
-    }
-  }, [isliked]);
+    if (isLiked !== undefined) setLiked(isLiked)
+  }, [isLiked])
 
   return (
-    <div className=" max-w-4xl mx-auto">
-      <div className="flex flex-col justify-center items-center gap-2 h-fit">
-        <div className='relative'>
-          <Avatar className="w-32 h-32">
-            <AvatarImage src={actor?.profilePictureUrl} alt="User Avatar" />
-            <AvatarFallback>Actor</AvatarFallback>
-          </Avatar>
-          <Button variant="ghost" className="absolute -right-1 -bottom-1 rounded-full bg-card w-12 h-12">
-            <Camera />
+    <div className="max-w-4xl mx-auto p-4 space-y-8">
+      {/* Header Section */}
+      <div className="flex flex-col items-center gap-4">
+        <div className="relative">
+          {actorLoading ? (
+            <Skeleton className="w-32 h-32 rounded-full" />
+          ) : (
+            <Avatar className="w-32 h-32">
+              <AvatarImage src={actor?.profilePictureUrl} alt={actor?.name || 'Actor Avatar'} />
+              <AvatarFallback>Actor</AvatarFallback>
+            </Avatar>
+          )}
+          <Button
+            variant="ghost"
+            className="absolute -right-1 -bottom-1 rounded-full bg-card w-12 h-12 shadow-lg"
+          >
+            <Camera className="w-6 h-6 text-primary" />
           </Button>
         </div>
-        <div className="font-bold text-xl">{actor?.name}</div>
-        <div className="flex items-center gap-2 text-sm font-semibold">
-          <span>Mức độ yêu thích: 10</span>
+
+        <div className="text-xl font-bold text-center">
+          {actorLoading ? <Skeleton className="w-32 h-6" /> : actor?.name}
         </div>
-        <div className='flex justify-center items-center text-sm font-semibold gap-[2px]'>
-          <span className='text-sm'>Rank: #16(</span>
-          {
-            true
-              ?
-              <Triangle className="fill-green-500 text-green-500" size="10px" />
-              :
-              <Triangle className="rotate-180 fill-red-500 text-red-500" size="10px" />
-          }
-          <span className='text-sm '>16)</span>
+
+        <div className="text-sm font-medium">
+          Mức độ yêu thích: {actorLoading ? <Skeleton className="w-12 h-4" /> : 10}
         </div>
-        <Button onClick={() => { handleAddFavoriteActor() }}>
-          Yêu thích
-        </Button>
-        {
-          liked
-            ?
-            <Button onClick={() => { handleAddFavoriteActor() }}>
-              Yêu thích
-            </Button>
-            :
-            <DropdownMenu modal={false} >
-              <DropdownMenuTrigger asChild>
-                <Button variant="secondary" className="gap-1">
-                  <span className="sr-only sm:not-sr-only font-bold">Đã yêu thích</span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => { handleRemoveFavoriteActor() }}>
-                  <HeartOff className="h-4 w-4 mr-2 font-bold" />
-                  Hủy yêu thích
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-        }
+
+        <div className="flex items-center text-sm font-medium">
+          <span>Rank: #16 (</span>
+          <Triangle
+            className={`${true ? 'fill-green-500 text-green-500' : 'rotate-180 fill-red-500 text-red-500'} mx-1`}
+            size="10px"
+          />
+          <span>16)</span>
+        </div>
+
+        {/* Favorite Actions */}
+        {liked ? (
+          <DropdownMenu modal={false}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" className="flex items-center gap-1">
+                <span>Đã yêu thích</span>
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleRemoveFavoriteActor}>
+                <HeartOff className="w-4 h-4 mr-2" />
+                Hủy yêu thích
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button onClick={handleAddFavoriteActor} className="flex items-center gap-2">
+            <HeartOff className="w-4 h-4" />
+            <span>Yêu thích</span>
+          </Button>
+        )}
       </div>
-      <div className="mt-10 bg-card rounded-lg drop-shadow-xl">
-        <p className='text-justify px-8 py-4'>
-          {actor?.bio}
-        </p>
-      </div>
-      {actor?.awards.length != 0 &&
-        <div className='mt-8 grid gap-4'>
+
+      {/* Biography Section */}
+      {actor?.bio && (
+        <div className="bg-card rounded-lg p-4 shadow">
+          <p className="text-justify">{actor.bio}</p>
+        </div>
+      )}
+
+      {/* Awards Section */}
+      {actor?.awards?.length > 0 && (
+        <div>
           <Title title="Giải thưởng" isMore={false} />
-          {actor?.awards.map((award) => {
-            return (<div className='flex gap-2 font-bold' key={award.id}>
-              <Award className='text-yellow-500' />
-              <p>
-                {award.name}
-              </p>
-              <p>
-                - {award?.date?.split('-')[0]}
-              </p>
-            </div>)
-          })}
-        </div>}
-      <div className='mt-4'>
+          <ul className="mt-4 space-y-2">
+            {actor.awards.map((award) => (
+              <li key={award.id} className="flex items-center gap-2 font-medium">
+                <Award className="text-yellow-500 w-5 h-5" />
+                <span>{award.name} - {award?.date?.split('-')[0]}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Images Section */}
+      <div>
         <Title title="Ảnh" isMore={false} />
-        <div className='flex mt-4 w-full'>
+        <div className="mt-4">
           <DynamicImageGallery />
         </div>
       </div>
-      {/* <div className='mt-4'>
+
+      {/* Filmography Section */}
+      <div>
         <Title title="Phim tham gia" isMore={false} />
-        {
-          !actorMovieography
-            ?
-            <div className='flex mt-4 font-bold justify-center mb-8'>Chưa tham gia bộ phim nào</div>
-            :
-            <div className='flex mt-4'>
-              <Carousel className='w-full h-auto'>
-                <CarouselContent>
-                  {actorMovieography}
-                  <CarouselItem className="pl-1 md:basis-1/2 lg:basis-1/4 flex justify-center">
-                    <CardMovie direction='vertical' />
-                  </CarouselItem>
-                  <CarouselItem className="pl-1 md:basis-1/2 lg:basis-1/4 flex justify-center">
-                    <CardMovie direction='vertical' />
-                  </CarouselItem>
-                  <CarouselItem className="pl-1 md:basis-1/2 lg:basis-1/4 flex justify-center">
-                    <CardMovie direction='vertical' />
-                  </CarouselItem>
-                  <CarouselItem className="pl-1 md:basis-1/2 lg:basis-1/4 flex justify-center">
-                    <CardMovie direction='vertical' />
-                  </CarouselItem>
-                  <CarouselItem className="pl-1 md:basis-1/2 lg:basis-1/4 flex justify-center">
-                    <CardMovie direction='vertical' />
-                  </CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
+        {!actorFilmography ? (
+          <div className="flex justify-center mt-4 font-bold mb-8">Chưa tham gia bộ phim nào</div>
+        ) : (
+          <div className="flex mt-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {actorFilmography.map((movie) => (
+                <div key={movie.id} className="pl-1 flex justify-center">
+                  <CardMovie movie={movie} direction="vertical" />
+                </div>
+              ))}
             </div>
-        }
-      </div> */}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

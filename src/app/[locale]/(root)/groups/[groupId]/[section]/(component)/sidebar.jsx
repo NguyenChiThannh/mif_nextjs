@@ -1,55 +1,53 @@
-import { navGroupConfig } from '@/lib/navigationConfig'
-import { ChartLine, Users } from 'lucide-react'
-import Link from 'next/link'
-import React from 'react'
+import { navGroupConfig } from "@/lib/navigationConfig"
+import { ChartLine, Users } from "lucide-react"
+import Link from "next/link"
 
 export default function SideBar({ isOwner, groupId, pendingInvitations, t, section }) {
     return (
         <div className="h-full border-r bg-background">
-            <div className="flex h-full flex-col gap-2 p-4">
-                {
-                    navGroupConfig(t).map((item, index) => {
-                        const { icon: Icon } = item
-                        return (
-                            <Link
-                                key={index}
-                                href={item.href(groupId)}
-                                className=
-                                {`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors 
-                                            hover:bg-accent hover:text-primary 
-                                            ${item.active(section) ? 'text-primary bg-accent' : 'text-muted-foreground'} `}
-                                prefetch={false}
-                            >
-                                <Icon className="h-4 w-4" />
-                                {item.title}
-                            </Link>
-                        )
-                    }
+            <div className="flex flex-col gap-2 p-4">
+                {navGroupConfig(t).map((item, index) => {
+                    const { icon: Icon } = item
+                    return (
+                        <Link
+                            key={index}
+                            href={item.href(groupId)}
+                            prefetch={false}
+                            className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors 
+                                ${item.active(section) ? 'bg-accent text-primary' : 'text-muted-foreground hover:bg-accent hover:text-primary'}`}
+                        >
+                            <Icon className="h-4 w-4" />
+                            {item.title}
+                        </Link>
                     )
-                }
+                })}
+
                 <Link
                     href={`/groups/${groupId}/members`}
-                    className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-primary ${section === 'members' ? 'text-primary bg-accent' : 'text-muted-foreground'} `}
                     prefetch={false}
+                    className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors 
+                        ${section === 'members' ? 'bg-accent text-primary' : 'text-muted-foreground hover:bg-accent hover:text-primary'}`}
                 >
                     <Users className="h-4 w-4" />
                     {t('members')}
-                    {
-                        (isOwner && pendingInvitations.numberOfElements !== 0 &&
-                            <div className="flex items-center bg-primary rounded-full text-primary-foreground h-5 w-5 justify-center">{pendingInvitations.numberOfElements}</div>) || undefined
-                    }
+                    {isOwner && pendingInvitations.numberOfElements !== 0 && (
+                        <div className="flex items-center justify-center bg-primary text-primary-foreground h-5 w-5 rounded-full">
+                            {pendingInvitations.numberOfElements}
+                        </div>
+                    )}
                 </Link>
-                {
-                    isOwner &&
+
+                {isOwner && (
                     <Link
                         href={`/groups/${groupId}/statistical`}
-                        className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-primary ${section === 'statistical' ? 'text-primary bg-accent' : 'text-muted-foreground'} `}
                         prefetch={false}
+                        className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors 
+                            ${section === 'statistical' ? 'bg-accent text-primary' : 'text-muted-foreground hover:bg-accent hover:text-primary'}`}
                     >
                         <ChartLine className="h-4 w-4" />
                         {t('statistical')}
                     </Link>
-                }
+                )}
             </div>
         </div>
     )

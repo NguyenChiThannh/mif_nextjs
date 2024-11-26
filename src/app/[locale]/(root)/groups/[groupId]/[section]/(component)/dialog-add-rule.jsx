@@ -46,36 +46,6 @@ export default function DialogAddOrEditRuleToGroup({ groupId, rule, isOpen, setI
             })
     };
 
-    // const queryClient = useQueryClient()
-    // const onSubmit = (data) => {
-    //     if (!data.ruleDescription) { 
-    //         toast.error('Mô tả quy tắc không được để trống'); 
-    //         return; 
-    //     }
-    //     if (isOwner) { 3 
-    //             const addRuleMutation = useMutation({ 
-    //                 mutationFn: async ({ groupId, data }) => {
-    //                     try {
-    //                         await privateApi.post(`/groups/${groupId}/rules`, data); 
-    //                     } catch (error) {
-    //                         return Promise.reject(error); 
-    //                     }
-    //                 },
-    //                 onSuccess: () => {
-    //                     toast.success('Thêm quy tắc nhóm thành công'); 
-    //                     queryClient.invalidateQueries({ queryKey: ['groupRules', groupId] });
-    //                 },
-    //                 onError: () => {
-    //                     toast.error('Thêm quy tắc nhóm thất bại'); 
-    //                 }
-    //             });
-    //             addRuleMutation.mutate({ groupId, data }); 
-    //     } else {
-    //         // Nếu không phải owner
-    //         toast.error('Bạn không có quyền thêm quy tắc');
-    //     }
-    // };
-
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -111,3 +81,34 @@ export default function DialogAddOrEditRuleToGroup({ groupId, rule, isOpen, setI
         </Dialog>
     )
 }
+
+
+    // const queryClient = useQueryClient()
+    // const onSubmit = (data) => {
+    //     if (!data.ruleDescription) { 
+    //         toast.error('Mô tả quy tắc không được để trống'); 
+    //         return; 
+    //     }
+    //     if (isOwner) { 3 
+    //             const addRuleMutation = useMutation({ 
+    //                 mutationFn: async ({ groupId, data }) => {
+    //                     try {
+    //                         await privateApi.post(`/groups/${groupId}/rules`, data); 
+    //                     } catch (error) {
+    //                         return Promise.reject(error); 
+    //                     }
+    //                 },
+    //                 onSuccess: () => {
+    //                     toast.success('Thêm quy tắc nhóm thành công'); 
+    //                     queryClient.invalidateQueries({ queryKey: ['groupRules', groupId] });
+    //                 },
+    //                 onError: () => {
+    //                     toast.error('Thêm quy tắc nhóm thất bại'); 
+    //                 }
+    //             });
+    //             addRuleMutation.mutate({ groupId, data }); 
+    //     } else {
+    //         // Nếu không phải owner
+    //         toast.error('Bạn không có quyền thêm quy tắc');
+    //     }
+    // };

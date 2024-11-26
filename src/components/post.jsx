@@ -6,15 +6,13 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDateTime } from '@/lib/formatter'
 import { groupPostApi } from '@/services/groupPostApi'
-import { Bookmark, Ellipsis, EllipsisVertical, Forward, LogOut, MessageCircle, MessageSquareWarning, Play, Trash2 } from 'lucide-react'
+import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, Play, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import Link from 'next/link'
 import React, { useState } from 'react'
-import { toast } from 'react-toastify'
 
 export default function Post({ className, post }) {
-    const [vote, setVote] = useState(post.userVotes);
-    const [voteNumber, setVoteNumber] = useState(post.voteNumber);
+    const [vote, setVote] = useState(post?.userVotes || null);
+    const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
 
     const upvoteMutation = groupPostApi.mutation.useUpVotePost()
     const downvoteMutation = groupPostApi.mutation.useDownVotePost()
@@ -31,35 +29,6 @@ export default function Post({ className, post }) {
             upvoteMutation.mutate(postId);
         }
     };
-
-    // const handleUpvote = (postId) => {
-    //     const upvoteMutation = useMutation({
-    //         mutationFn: async (postId) => {
-    //             try {
-    //                 await privateApi.post(`/group-posts/${postId}/vote`, { type: 'UPVOTE' });
-    //             } catch (error) {
-    //                 return Promise.reject(error);
-    //             }
-    //         },
-    //         onSuccess: () => {
-    //             queryClient.invalidateQueries('group_posts');
-    //         },
-    //         onError: () => {
-    //             toast('Có lỗi, vui lòng thử lại');
-    //         },
-    //     });
-
-    //     setVote('UPVOTE');
-    //     if (vote === 'DOWNVOTE') {
-    //         setVoteNumber(voteNumber + 2)
-    //     }
-    //     else {
-    //         setVoteNumber(voteNumber + 1)
-    //     }
-    //     upvoteMutation.mutate(postId);
-    // }
-    // }
-
 
     const handleDownvote = (postId) => {
         if (vote === 'DOWNVOTE') {
@@ -210,3 +179,31 @@ export const PostSkeleton = () => {
         </div>
     )
 }
+
+// const handleUpvote = (postId) => {
+//     const upvoteMutation = useMutation({
+//         mutationFn: async (postId) => {
+//             try {
+//                 await privateApi.post(`/group-posts/${postId}/vote`, { type: 'UPVOTE' });
+//             } catch (error) {
+//                 return Promise.reject(error);
+//             }
+//         },
+//         onSuccess: () => {
+//             queryClient.invalidateQueries('group_posts');
+//         },
+//         onError: () => {
+//             toast('Có lỗi, vui lòng thử lại');
+//         },
+//     });
+
+//     setVote('UPVOTE');
+//     if (vote === 'DOWNVOTE') {
+//         setVoteNumber(voteNumber + 2)
+//     }
+//     else {
+//         setVoteNumber(voteNumber + 1)
+//     }
+//     upvoteMutation.mutate(postId);
+// }
+// }

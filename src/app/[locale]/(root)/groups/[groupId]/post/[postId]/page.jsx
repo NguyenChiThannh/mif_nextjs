@@ -8,90 +8,15 @@ import { Input } from "@/components/ui/input";
 import { Ellipsis, MessageCircle, Play, Send } from "lucide-react";
 import { useParams } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
-import Comment from "@/components/comment";
+import { mockComments } from "@/app/[locale]/(root)/groups/[groupId]/post/[postId]/(component)/mock-data";
+import Comment from "@/app/[locale]/(root)/groups/[groupId]/post/[postId]/(component)/comment";
+import { groupPostApi } from "@/services/groupPostApi";
 
 export default function DetailPost() {
     const { postId } = useParams();
+    const [comments, setComments] = useState(mockComments);
 
-    const [comments, setComments] = useState([
-        {
-            id: 1,
-            author: "quietpillsx",
-            content: "Comment 1",
-            timestamp: "8h ago",
-            upvotes: 6,
-            replies: [
-                {
-                    id: 2,
-                    author: "Nerdy_Chick_6868",
-                    content: "Comment 4 comment này dài ơi là dài khiến bạn phải thấy nó dài, vẫn chưa đủ dài nó vẫn quá ngắn, Comment 4 comment này dài ơi là dài khiến bạn phải thấy nó dài, vẫn chưa đủ dài nó vẫn quá ngắn,Comment 4 comment này dài ơi là dài khiến bạn phải thấy nó dài, vẫn chưa đủ dài nó vẫn quá ngắn",
-                    timestamp: "8h ago",
-                    upvotes: 1,
-                    replies: [
-                        {
-                            id: 3,
-                            author: "quietpillsx",
-                            content: "Comment 3",
-                            timestamp: "8h ago",
-                            upvotes: 2,
-                            replies: [
-                                {
-                                    id: 4,
-                                    author: "Nerdy_Chick_6868",
-                                    content: "Comment 4",
-                                    timestamp: "8h ago",
-                                    upvotes: 1,
-                                    replies: [
-                                        {
-                                            id: 8,
-                                            author: "Nerdy_Chick_6868",
-                                            content: "Comment 4",
-                                            timestamp: "8h ago",
-                                            upvotes: 1,
-                                            replies: [
-                                                {
-                                                    id: 9,
-                                                    author: "Nerdy_Chick_6868",
-                                                    content: "Comment 4 comment này dài ơi là dài khiến bạn phải thấy nó dài, vẫn chưa đủ dài nó vẫn quá ngắn",
-                                                    timestamp: "8h ago",
-                                                    upvotes: 1,
-                                                },
-                                            ],
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    ],
-                },
-                {
-                    id: 5,
-                    author: "Nerdy_Chick_6868",
-                    content: "Comment 5",
-                    timestamp: "8h ago",
-                    upvotes: 1,
-                    replies: [
-                        {
-                            id: 6,
-                            author: "quietpillsx",
-                            content: "Comment 6",
-                            timestamp: "8h ago",
-                            upvotes: 2,
-                            replies: [
-                                {
-                                    id: 7,
-                                    author: "Nerdy_Chick_6868",
-                                    content: "Comment 7",
-                                    timestamp: "8h ago",
-                                    upvotes: 1,
-                                },
-                            ],
-                        },
-                    ],
-                },
-            ],
-        },
-    ]);
+    const { data: post, isLoading: isLoadingPost } = groupPostApi.query.useGetPostByPostId(postId);
 
     const [replyContent, setReplyContent] = useState("");
     const [replyTo, setReplyTo] = useState(null);
@@ -127,6 +52,7 @@ export default function DetailPost() {
         setReplyContent("");
         setReplyTo(null);
     };
+
     const renderComments = (comments, level = 1) => {
         return comments.map((comment, index) => (
             <div key={comment.id} className={`${level === 1 ? 'relative' : 'ml-8 relative'}`}>
@@ -142,7 +68,7 @@ export default function DetailPost() {
                 {level > 1 && (
                     <div
                         className={`absolute h-full border-t-2 w-4 -left-4 top-4 z-10 border-l-2 border-t-muted 
-                            ${index === (comments.length - 1) ? "border-s-card" : "border-s-muted"}`} // Extend the line to the last element of the parent element
+                ${index === (comments.length - 1) ? "border-s-card" : "border-s-muted"}`} // Extend the line to the last element of the parent element
                         style={{
                             height: 'calc(100% - 20px)',
                         }}
@@ -154,9 +80,14 @@ export default function DetailPost() {
                         <Input
                             placeholder="Nhập bình luận..."
                             className="h-auto resize-none overflow-hidden"
+                            value={replyContent}
+                            onChange={(e) => setReplyContent(e.target.value)}
                         />
-                        <Button size="icon" onClick={() => handleReply(comment.id, replyContent, level)}>
-                            <Send className='w-4 h-4' />
+                        <Button
+                            size="icon"
+                            onClick={() => handleReply(comment.id, replyContent, level)}
+                        >
+                            <Send className="w-4 h-4" />
                             <span className="sr-only">Send</span>
                         </Button>
                     </div>
@@ -165,23 +96,28 @@ export default function DetailPost() {
             </div>
         ));
     };
+
     return (
-        <div className="w-full max-w-3xl mx-auto shadow-xl mb-12 rounded-lg	bg-card">
-            <PostSkeleton className="drop-shadow-none" />
+        <div className="w-full max-w-3xl mx-auto shadow-xl mb-12 rounded-lg bg-card">
+            {isLoadingPost ? (
+                <PostSkeleton />
+            ) : (
+                <Post post={post} className={'drop-shadow-lg'} />
+            )}
             <div className="flex items-center gap-2 px-2 mt-4">
                 <Textarea
                     placeholder="Nhập bình luận..."
                     rows={1}
                     className="h-auto resize-none overflow-hidden"
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
                 />
-                <Button size="icon">
-                    <Send className='w-4 h-4' />
+                <Button size="icon" >
+                    <Send className="w-4 h-4" />
                     <span className="sr-only">Send</span>
                 </Button>
             </div>
-            <div>
-                <div className="space-y-1 mx-2 bg-inherit mt-4">{renderComments(comments)}</div>
-            </div>
+            <div className="space-y-1 mx-2 bg-inherit py-4">{renderComments(comments)}</div>
         </div>
     );
 }

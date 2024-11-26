@@ -1,8 +1,9 @@
 
-import { Button } from '@/components/ui/button'; // Chỉnh sửa đường dẫn theo cấu trúc của bạn
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input'; // Chỉnh sửa đường dẫn theo cấu trúc của bạn
+import { Input } from '@/components/ui/input';
 import { authApi } from '@/services/authApi';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function DialogOTP() {
@@ -34,7 +35,7 @@ export default function DialogOTP() {
         verifyOTPmutation.mutate(data, {
             onSuccess: () => {
                 setIsDialogOpen(false);
-                router.push('/sign-up');
+                router.push('/sign-in');
             }
         })
     };

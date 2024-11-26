@@ -20,7 +20,6 @@ export default function Movies() {
     const router = useRouter();
 
     const { isLoadingMovies, data: moviesData } = movieApi.query.useGetAllMovies(0, 10)
-    console.log('🚀 ~ Movies ~ moviesData:', moviesData)
 
 
     const handlePageChange = (newPage) => {

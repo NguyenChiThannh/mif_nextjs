@@ -21,8 +21,8 @@ const getActorById = async (actorId) => {
     return res.data
 }
 
-const getActorMovieography = async (actorId) => {
-    const res = await privateApi.get(`/actors/${actorId}/movieography`)
+const getActorFilmography = async (actorId) => {
+    const res = await privateApi.get(`/actors/${actorId}/filmography`)
     return res.data
 }
 
@@ -39,10 +39,10 @@ const deleteActor = async (id) => {
 
 export const actorApi = {
     query: {
-        useGetActorMovieography(actorId) {
+        useGetActorFilmography(actorId) {
             return useQuery({
                 queryKey: QUERY_KEY.actorMovieography(actorId),
-                queryFn: ({ queryKey }) => getActorMovieography(queryKey[1]),
+                queryFn: ({ queryKey }) => getActorFilmography(queryKey[1]),
             })
         },
         useGetActorById(actorId, enabled = true) {
