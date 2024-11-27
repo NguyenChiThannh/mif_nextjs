@@ -38,7 +38,10 @@ export default function FormLogin({ t }) {
     const handleLogin = (data) => {
         mutation.mutate(data, {
             onSuccess: (data) => {
+                console.log('Here 1')
+
                 const id = getUserIdFromToken(data.access_token)
+                console.log('🚀 ~ handleLogin ~ id:', id)
 
                 const authState = {
                     isLogin: true,
