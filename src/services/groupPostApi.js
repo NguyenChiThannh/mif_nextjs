@@ -93,9 +93,6 @@ export const groupPostApi = {
                 onSuccess: () => {
                     toast.success(t('create_post_successful'))
                 },
-                onError: () => {
-                    toast.error(t('create_post_failed'))
-                }
             })
         }
     },
