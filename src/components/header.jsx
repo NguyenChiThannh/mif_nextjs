@@ -26,7 +26,7 @@ export default function Header() {
     const [activeIndex, setActiveIndex] = useState(0);
 
     useEffect(() => {
-        const paths = ['/home', '/movies', '/news', '/groups'];
+        const paths = ['/home', '/movies', '/actor', '/groups'];
         const matchPath = paths.find(path => currentPath.includes(path));
         if (matchPath) {
             const index = paths.indexOf(matchPath);
@@ -61,7 +61,6 @@ export default function Header() {
                                             prefetch={false}>
                                             {item.title}
                                         </Link>
-
                                     )
                                 })}
                             </div>

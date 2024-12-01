@@ -1,6 +1,6 @@
 import { privateApi } from "@/services/config"
 import { QUERY_KEY } from "@/services/key"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
 export const addFavoriteActor = async (actorId) => {
     const res = await privateApi.post(`/favoriteActors/${actorId}`)
@@ -17,37 +17,38 @@ const isActorFavorite = async (actorId) => {
     return res.data
 }
 
-const getFavoriteActors = async ({ queryKey }) => {
+const getFavoriteActors = async ({ queryKey, pageParam = 0 }) => {
     const res = await privateApi.get('/favoriteActors')
     return res.data
 }
 
 export const favoriteActorsApi = {
     query: {
-        useIsActorFavorite(actorId) {
-            return useQuery({
+        useGetFavoriteActors(actorId) {
+            return useInfiniteQuery({
                 queryKey: QUERY_KEY.isActorFavorite(actorId),
-                queryFn: ({ queryKey }) => isActorFavorite(queryKey[1]),
+                queryFn: getFavoriteActors,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
             });
         },
     },
     mutation: {
         useAddFavoriteActor() {
-            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: addFavoriteActor,
-                // onSuccess: () => {
-                //     queryClient.invalidateQueries('group_posts')
-                // },
             })
         },
         useRemoveFavoriteActor() {
-            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: removeFavoriteActor,
-                // onSuccess: () => {
-                //     queryClient.invalidateQueries('group_posts')
-                // },
+            })
+        },
+        useIsActorFavorite() {
+            return useMutation({
+                mutationFn: isActorFavorite,
             })
         }
     }

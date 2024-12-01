@@ -1,5 +1,5 @@
 import { QUERY_KEY } from "@/services/key"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
 
 const { privateApi } = require("@/services/config")
 
@@ -8,15 +8,14 @@ const saveMovie = async (movieId) => {
     return res.data
 }
 
-const getSavedMovies = async ({ queryKey }) => {
-    const [_key, { page, size }] = queryKey;
+const getSavedMovies = async ({ queryKey, pageParam = 0 }) => {
+    const [_key, userId] = queryKey;
     const res = await privateApi.get('saved-movies', {
         params: {
-            page,
-            size,
+            page: pageParam,
         },
-    })
-    return res.data
+    });
+    return res.data;
 }
 
 const unSaveMovie = async (movieId) => {
@@ -31,13 +30,16 @@ const batchCheckSavedStatus = async (data) => {
 
 export const savedMovieApi = {
     query: {
-        useGetSavedMovies(page = 0, size = 5) {
-            return useQuery({
-                queryKey: QUERY_KEY.movieRatings(page, size),
+        useGetSavedMovies(userId) {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.savedMovie(userId),
                 queryFn: getSavedMovies,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
             })
         },
-
     },
     mutation: {
         useSaveMovie() {

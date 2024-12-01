@@ -102,7 +102,7 @@ export default function DetailPost() {
             {isLoadingPost ? (
                 <PostSkeleton />
             ) : (
-                <Post post={post} className={'drop-shadow-lg'} />
+                <Post post={post} className={'drop-shadow-sm'} />
             )}
             <div className="flex items-center gap-2 px-2 mt-4">
                 <Textarea

@@ -6,17 +6,49 @@ import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatDateTime } from '@/lib/formatter'
 import { groupPostApi } from '@/services/groupPostApi'
+import { savedPostApi } from '@/services/savedPostApi'
 import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, Play, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
 
 export default function Post({ className, post }) {
     const [vote, setVote] = useState(post?.userVotes || null);
     const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
+    const [saved, setSaved] = useState(false);
 
     const upvoteMutation = groupPostApi.mutation.useUpVotePost()
     const downvoteMutation = groupPostApi.mutation.useDownVotePost()
     const removevoteMutation = groupPostApi.mutation.useRemoveVotePost()
+
+    const savePostMutation = savedPostApi.mutation.useSavePost()
+    const unSavePostMutation = savedPostApi.mutation.useUnsavePost()
+    const batchCheckSavedStatusMutation = savedPostApi.mutation.useBatchCheckSavedStatus()
+
+    const checkSavedStatus = () => {
+        batchCheckSavedStatusMutation.mutate(
+            { postIds: [post.id] },
+            {
+                onSuccess: (data) => {
+                    console.log('🚀 ~ checkSavedStatus ~ data[post.id]:', data[post.id])
+                    setSaved(data[post.id]);
+                },
+            }
+        );
+    };
+
+    useEffect(() => {
+        checkSavedStatus();
+    }, [post.id]);
+
+
+    const handleSaveStatusChange = (action) => {
+        const mutation = action === "save" ? savePostMutation : unSavePostMutation;
+        action === "save" ? setSaved(true) : setSaved(false)
+        mutation.mutate(post.id, {
+            onSuccess: checkSavedStatus,
+        });
+    };
 
     const handleUpvote = (postId) => {
         if (vote === 'UPVOTE') {
@@ -80,15 +112,19 @@ export default function Post({ className, post }) {
                 <p className='text-lg font-bold'>{post?.title}</p>
                 <ContentWithReadMore content={post.content} maxLength={200} />
             </div>
-            <div className="w-full">
-                <Image
-                    src="https://intietkiem.com/wp-content/uploads/2019/07/poster-ngang.jpg"
-                    width={1000}
-                    height={1000}
-                    alt="Image"
-                    className="w-full aspect-[16/6] object-cover"
-                />
-            </div>
+            {
+                post?.mediaUrls
+                &&
+                <div className="w-full">
+                    <Image
+                        src={post.mediaUrls[0]}
+                        width={1000}
+                        height={1000}
+                        alt="Image"
+                        className="w-full object-cover"
+                    />
+                </div>
+            }
             <Separator />
             <div className='flex justify-around items-center'>
                 <div className='flex items-center'>
@@ -104,17 +140,24 @@ export default function Post({ className, post }) {
                         />
                     </Button>
                 </div>
-                {/* <Link
+                <Link
                     href={`/groups/${post.groupId}/post/${post.id}`}
                 >
                     <Button variant="ghost" className="gap-1 items-center rounded-full">
                         <MessageCircle className='h-5 w-5' />
                         Bình luận
                     </Button>
-                </Link> */}
-                <Button variant="ghost" className="gap-1 items-center rounded-full">
-                    <Bookmark className='h-5 w-5' />
-                    Lưu
+                </Link>
+                <Button
+                    variant="ghost"
+                    className={`flex items-center gap-1 rounded-full ${saved ? 'text-yellow-500 hover:text-yellow-500' : ''
+                        }`}
+                    onClick={() => handleSaveStatusChange(saved ? "unsave" : "save")}
+                >
+                    <Bookmark
+                        className={`h-5 w-5 ${saved ? 'fill-yellow-500' : 'fill-none'}`}
+                    />
+                    {saved ? 'Đã lưu' : 'Lưu'}
                 </Button>
             </div>
         </div>

@@ -30,7 +30,7 @@ export function MainCarousel() {
     }
 
     return (
-        <div className="relative rounded-lg overflow-hidden"> {/* Bo góc cho thẻ ngoài */}
+        <div className="relative rounded-lg overflow-hidden">
             <Carousel
                 opts={{ align: 'start', loop: true }}
                 plugins={[Autoplay({ delay: 3000 })]}

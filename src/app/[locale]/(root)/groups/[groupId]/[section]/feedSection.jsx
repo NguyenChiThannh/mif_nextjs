@@ -22,7 +22,6 @@ export default function FeedSection({ group }) {
         isFetchingNextPage,
         isLoading,
     } = groupPostApi.query.useGetPostsByGroupIdInfinite(group.id)
-    console.log('🚀 ~ FeedSection ~ data:', data)
 
     const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
 
@@ -32,7 +31,7 @@ export default function FeedSection({ group }) {
             <div className="grid gap-8 mt-4 col-span-2">
                 <div className="flex justify-between mt-2 items-center">
                     <CreatePostDialog groupId={group?.id} />
-                    <DropdownMenu modal={false}>
+                    {/* <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm" className="h-8 gap-1">
                                 <Filter className="h-4 w-4" />
@@ -55,7 +54,7 @@ export default function FeedSection({ group }) {
                                 Trending
                             </DropdownMenuItem>
                         </DropdownMenuContent>
-                    </DropdownMenu>
+                    </DropdownMenu> */}
                 </div>
                 {isLoading && (
                     <>

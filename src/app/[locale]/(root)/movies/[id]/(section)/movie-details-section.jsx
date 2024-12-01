@@ -30,7 +30,7 @@ export default function MovieDetailsSection({ movie, isSavedMovie, handleSaveSta
                     <div className="flex flex-col items-center gap-2">
                         <p className="text-muted-foreground font-semibold text-sm">Điểm đánh giá</p>
                         <div className="flex items-center gap-1 text-base font-bold text-primary">
-                            {Number(movie.ratings?.averageRating) * 2}/10
+                            {(Number(movie.ratings?.averageRating) * 2) || '0.0'}/10
                         </div>
                     </div>
 
@@ -51,7 +51,7 @@ export default function MovieDetailsSection({ movie, isSavedMovie, handleSaveSta
                     {/* Nhận xét */}
                     <div className="flex flex-col items-center gap-2">
                         <p className="text-muted-foreground font-semibold text-sm">Nhận xét</p>
-                        <div className="text-base font-bold text-primary">{movie.ratings?.numberOfRatings}</div>
+                        <div className="text-base font-bold text-primary">{movie.ratings?.numberOfRatings || 0}</div>
                     </div>
                 </div>
 

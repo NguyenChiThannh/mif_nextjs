@@ -23,19 +23,19 @@ export const timeAgo = (timestamp) => {
     const secondsPast = (now.getTime() - timestamp) / 1000
 
     if (secondsPast < 60) {
-        return `${Math.floor(secondsPast)} giây trước`
+        return `${Math.floor(secondsPast)} giây`
     }
     if (secondsPast < 3600) {
-        return `${Math.floor(secondsPast / 60)} phút trước`
+        return `${Math.floor(secondsPast / 60)} phút`
     }
     if (secondsPast < 86400) {
-        return `${Math.floor(secondsPast / 3600)} giờ trước`
+        return `${Math.floor(secondsPast / 3600)} giờ`
     }
     if (secondsPast < 2592000) {
-        return `${Math.floor(secondsPast / 86400)} ngày trước`
+        return `${Math.floor(secondsPast / 86400)} ngày`
     }
     if (secondsPast < 31536000) {
-        return `${Math.floor(secondsPast / 2592000)} tháng trước`
+        return `${Math.floor(secondsPast / 2592000)} tháng`
     }
-    return `${Math.floor(secondsPast / 31536000)} năm trước`
+    return `${Math.floor(secondsPast / 31536000)} năm`
 }

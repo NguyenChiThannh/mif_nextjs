@@ -18,10 +18,12 @@ import { groupPostApi } from "@/services/groupPostApi";
 import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
 import { useTranslations } from "next-intl";
+import useUploadImage from "@/hooks/useUploadImage";
+
 
 export default function CreatePostDialog({ groupId }) {
     const [open, setOpen] = useState(false);
-    const [images, setImages] = useState([]);
+    const { images, setImages, handleImageChange, removeImage, uploadImage } = useUploadImage();
 
     const userId = useUserId();
     const { data: userInfo } = userApi.query.useGetUserInfoById(userId);
@@ -32,18 +34,19 @@ export default function CreatePostDialog({ groupId }) {
     });
 
     const createPostMutation = groupPostApi.mutation.useCreatePost();
-
     useEffect(() => {
         if (groupId) setValue("groupId", groupId);
     }, [groupId, setValue]);
 
-    const onSubmit = (data) => {
-        const formData = new FormData();
-        formData.append("title", data.title);
-        formData.append("content", data.content);
-        images.forEach((image) => formData.append("images", image));
+    const onSubmit = async (data) => {
+        const mediaUrls = await Promise.all(images.map((image) => uploadImage(image)));
 
-        createPostMutation.mutate(formData, {
+        const updatedData = {
+            ...data,
+            mediaUrls,
+        };
+
+        createPostMutation.mutate(updatedData, {
             onSuccess: () => {
                 reset();
                 setImages([]);
@@ -52,12 +55,6 @@ export default function CreatePostDialog({ groupId }) {
         });
     };
 
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        setImages((prevImages) => [...prevImages, ...files]);
-    };
-
-    const removeImage = (index) => setImages(images.filter((_, i) => i !== index));
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -126,7 +123,7 @@ export default function CreatePostDialog({ groupId }) {
                                         alt={`image-${index}`}
                                         width={64}
                                         height={64}
-                                        className="w-16 h-16 rounded object-cover"
+                                        className="w-32 h-32 rounded object-cover"
                                     />
                                     <Button
                                         size="icon"

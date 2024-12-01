@@ -1,6 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Triangle } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 export default function CardActor({ actor }) {
@@ -19,7 +20,11 @@ export default function CardActor({ actor }) {
 
             {/* Actor Details */}
             <div className="pb-2">
-                <p className="flex justify-center text-base font-bold">{name}</p>
+                <Link
+                    href={`/actor/${actor.id}`}
+                >
+                    <p className="flex justify-center text-base font-bold">{name}</p>
+                </Link>
 
                 <div className="flex justify-center items-center gap-[2px]">
                     <span className="text-sm">#{rank} (</span>

@@ -9,7 +9,7 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function AboutSection({ group, members }) {
-    console.log('🚀 ~ AboutSection ~ group:', group)
+
     return (
         <>
             <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
@@ -81,7 +81,7 @@ export default function AboutSection({ group, members }) {
                         <p className="flex gap-2 font-bold items-center">
                             <CalendarDays className="h-4 w-4" />
                             Bài viết </p>
-                        <p>&middot; {group?.weeklyPostCount} bài viết tuần này </p>
+                        <p>&middot; {group?.weeklyPostCount || 0} bài viết tuần này </p>
                     </div>
                 </CardContent>
             </Card>

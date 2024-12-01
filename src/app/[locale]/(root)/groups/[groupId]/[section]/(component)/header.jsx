@@ -24,10 +24,10 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                     <div className="rounded-full bg-muted px-3 py-1 text-sm text-muted-foreground">{group.memberCount} {t('members')}</div>
                 </Link>
                 <div className="flex items-center gap-2">
-                    <div className="hidden md:block relative">
+                    {/* <div className="hidden md:block relative">
                         <Input type="text" placeholder="Tìm kiếm..." className="pr-10 h-8" />
                         <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5" />
-                    </div>
+                    </div> */}
                     {
                         isOwner &&
                         <DialogAddMemberToGroup groupId={group.id} />

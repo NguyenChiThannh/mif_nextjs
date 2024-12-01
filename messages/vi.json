@@ -2,7 +2,7 @@
     "Header": {
         "home_link": "Trang Chủ",
         "movie_link": "Phim nổi bật",
-        "news_link": "Tin tức",
+        "actor_link": "Diễn viên",
         "groups_link": "Nhóm",
         "input_placeholder": "Tìm kiếm...",
         "login": "Đăng nhập"
@@ -35,7 +35,7 @@
         "title_section_actor": "Diễn viên nổi bật",
         "title_section_news": "Tin tức",
         "title_section_hot_moives": "Phim hot gần đây",
-        "title_section_random_moives": "Phim hot gần đây",
+        "title_section_random_moives": "Phim ngẫu nhiên",
         "more": "Xem thêm",
         "button_watch_trailer": "Xem trailer"
     },
@@ -98,6 +98,7 @@
             "rules": "Quy tắc",
             "about": "Giới thiệu",
             "members": "Thành viên",
+            "event": "Sự kiện",
             "statistical": "Thống kê"
         },
         "DialogAddOrEditRule": {
@@ -134,7 +135,8 @@
                 "info": "Thông tin",
                 "posts_saved": "Bài viết đã lưu",
                 "movies_saved": "Phim đã lưu",
-                "favorate_actors": "Diễn viên yêu thích"
+                "favorate_actors": "Diễn viên yêu thích",
+                "event": "Sự kiện"
             },
             "info": "Thông tin",
             "edit_profile": "Chỉnh sửa hồ sơ",
@@ -192,9 +194,7 @@
         "update_category_successful": "Cập nhật category thành công",
         "update_category_failed": "Cập nhật category thất bại",
         "update_user_info_successful": "Cập nhật thông tin người dùng thành công",
-        "update_user_info_failed": "Cập nhật thông tin người dùng thất bại",
         "create_post_successful": "Tạo bài viết thành công",
-        "create_post_failed": "Tạo bài viết thất bại",
         "copy_link_successful": "Liên kết đã được sao chép!",
         "copy_link_failed": "Liên kết sao chép thất bại",
         "add_rule_successful": "Thêm quy tắc thành công",

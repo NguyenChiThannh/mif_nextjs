@@ -1,4 +1,4 @@
-import { BookIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
+import { BookIcon, CalendarCheckIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
 
 export const headerMenuConfig = (t) => [
     {
@@ -16,8 +16,8 @@ export const headerMenuConfig = (t) => [
         }
     },
     {
-        title: t('news_link'),
-        href: '/news',
+        title: t('actor_link'),
+        href: '/actor',
         active: function (pathname) {
             return pathname.includes(this.href)
         }
@@ -100,7 +100,7 @@ export const navProfileUserConfig = (t) => [
     },
     {
         title: t('movies_saved'),
-        href: (id) => `/user/${id}/movie_saved`,
+        href: (id) => `/user/${id}/movies_saved`,
         active: function (pathname, id) {
             return pathname.includes(this.href(id))
         }
@@ -108,6 +108,13 @@ export const navProfileUserConfig = (t) => [
     {
         title: t('favorate_actors'),
         href: (id) => `/user/${id}/favorate_actors`,
+        active: function (pathname, id) {
+            return pathname.includes(this.href(id))
+        }
+    },
+    {
+        title: t('event'),
+        href: (id) => `/user/${id}/event`,
         active: function (pathname, id) {
             return pathname.includes(this.href(id))
         }
@@ -146,7 +153,15 @@ export const navGroupConfig = (t) => [
         active: function (section) {
             return (section === 'about')
         }
-    }
+    },
+    {
+        title: t('event'),
+        href: (groupId) => `/groups/${groupId}/event`,
+        icon: CalendarCheckIcon,
+        active: function (section) {
+            return (section === 'event')
+        }
+    },
 ]
 
 export const tabSearchConfig = (t) => [

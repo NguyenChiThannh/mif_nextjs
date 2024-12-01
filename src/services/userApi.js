@@ -1,6 +1,6 @@
 import { privateApi } from "@/services/config"
 import { QUERY_KEY } from "@/services/key"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { toast } from "react-toastify"
 
@@ -29,7 +29,17 @@ export const userApi = {
                 queryKey: QUERY_KEY.userInfoById(id),
                 queryFn: ({ queryKey }) => getUserInfoById(queryKey[1]),
             })
-        }
+        },
+        useGetProfilePostByUserId(id) {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.profilePostByUserId(id),
+                queryFn: getProfilePostByUserId,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            });
+        },
     },
     mutation: {
         useUpdateUserProfile(id) {
@@ -41,9 +51,6 @@ export const userApi = {
                     toast.success(t('update_user_info_successful'))
                     queryClient.invalidateQueries(QUERY_KEY.userInfoById(id))
                 },
-                onError: () => {
-                    toast.error(t('update_user_info_failed'))
-                }
             })
         }
     }

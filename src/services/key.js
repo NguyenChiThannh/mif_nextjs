@@ -20,9 +20,10 @@ export const QUERY_KEY = {
     allmovieCategories: 'all_categories',
     categoryById: (id) => ['category', id],
     // FavoriteActors
-    isActorFavorite: (actorId) => ['is_actor_favorite', actorId],
+    favoriteActors: (userId) => ['favorite_actors', userId],
     // user
     userInfoById: (id) => ['user_info', id],
+    profilePostByUserId: (id) => ['post_user', id],
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
     postById: (postId) => ['detail_post', postId],
@@ -31,5 +32,8 @@ export const QUERY_KEY = {
     // movie Rating
     movieRatings: (page, size, movieId) => ['movie_ratings', { page, size, movieId }],
     // SavedMovie 
-    savedMovie: (page, size) => ['saved_movie', { page, size }]
+    savedMovie: (userId) => ['saved_movie', { userId }],
+    // savedPost
+    savedPosts: (userId) => ['saved_posts', { userId }],
+
 }

@@ -40,13 +40,16 @@ export default function CardMovieHorizontal({ movie }) {
                     <p className="text-muted-foreground text-sm">
                         {t('duration')}: {duration} {t('minutes')}
                     </p>
+                    <p className="text-muted-foreground text-sm">
+                        <strong>{movie.country}</strong>
+                    </p>
                 </div>
             </div>
 
             {/* Bookmark Icon */}
-            <div className="ml-auto flex items-center gap-1 cursor-pointer">
+            {/* <div className="ml-auto flex items-center gap-1 cursor-pointer">
                 <Bookmark />
-            </div>
+            </div> */}
         </div>
     );
 }

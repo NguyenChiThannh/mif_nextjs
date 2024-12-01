@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
@@ -11,9 +12,7 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
     const router = useRouter();
     const t = useTranslations('Movie');
 
-    const handleDetailMovie = () => {
-        router.push(`/movies/${movie.id}`);
-    }
+
 
     const yearRelease = movie?.releaseDate?.split('-')[0] ?? 'N/A';
     const { title, posterUrl, duration, ratings } = movie;
@@ -21,8 +20,9 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
     return (
         <div
             className={`gap-4 h-fit ${direction === 'vertical' ? 'flex-col w-fit flex' : 'grid grid-cols-2'}`}
-            onClick={handleDetailMovie}
         >
+
+
             {/* Movie Poster */}
             <div className='relative'>
                 <Image
@@ -37,10 +37,13 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
             {/* Movie Details */}
             <div className="grid gap-2">
                 {/* Movie Title */}
-                <p className="text-lg md:text-xl lg:text-2xl font-bold line-clamp-2">
-                    {title}
-                </p>
+                <Link
 
+                    href={`/movies/${movie.id}`}>
+                    <p className="text-lg md:text-xl lg:text-2xl font-bold line-clamp-2 hover:underline">
+                        {title}
+                    </p>
+                </Link>
                 {/* Movie Information */}
                 {direction === 'vertical' ? (
                     <p className="text-muted-foreground text-sm">
@@ -50,6 +53,7 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
                     <>
                         <p className="text-muted-foreground text-sm">{t('year_release')}: {yearRelease}</p>
                         <p className="text-muted-foreground text-sm">{t('duration')}: {duration}p</p>
+                        <p className="text-muted-foreground text-sm"><strong>{movie.country}</strong></p>
                     </>
                 )}
 
@@ -61,19 +65,19 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
                         showOutOf={true}
                         enableUserInteraction={false}
                     />
-                    <span className="text-xs">{ratings?.averageRating ?? 'N/A'}/10</span>
+                    <span className="text-xs">{ratings?.averageRating ?? '0.0'}/10</span>
                 </div>
 
                 {/* Watch Trailer Button */}
                 <Button>{t('button_watch_trailer')}</Button>
             </div>
-        </div>
+        </div >
     )
 }
 
 export const CardMovieSkeleton = ({ direction = 'horizontal' }) => {
     return (
-        <div className={`grid gap-4 h-fit ${direction === 'vertical' ? 'flex-col w-fit' : 'grid-cols-2'}`}>
+        <div className={`grid gap-4 h-full ${direction === 'vertical' ? 'flex-col w-fit' : 'grid-cols-2 w-full'}`}>
             {/* Skeleton for Poster */}
             <div>
                 <Skeleton

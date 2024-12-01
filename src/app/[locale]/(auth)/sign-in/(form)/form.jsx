@@ -38,10 +38,7 @@ export default function FormLogin({ t }) {
     const handleLogin = (data) => {
         mutation.mutate(data, {
             onSuccess: (data) => {
-                console.log('Here 1')
-
                 const id = getUserIdFromToken(data.access_token)
-                console.log('🚀 ~ handleLogin ~ id:', id)
 
                 const authState = {
                     isLogin: true,
@@ -110,3 +107,50 @@ export default function FormLogin({ t }) {
         </>
     )
 }
+
+
+
+// const handleLogin = (data) => {
+//     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+//     if (!emailRegex.test(data.email)) {
+//         toast.error('Email không hợp lệ');
+//         return;
+//     }
+
+//     if (data.password.length < 6) {
+//         toast.error('Mật khẩu cần ít nhất 6 ký tự');
+//         return;
+//     }
+
+//     const loginMutation = useMutation({
+//         mutationFn: async (data) => {
+//             try {
+//                 const res = await publicApi.post('auth/login', data)
+//                 return res.data
+//             } catch (error) {
+//                 throw error
+//             }
+//         },
+//         onSuccess: (data) => {
+//             toast.success('Đăng nhập thành công')
+//             const authState = {
+//                 isLogin: true,
+//                 accessToken: data.access_token,
+//             }
+//             dispatch(setAuthState(authState))
+//             router.push('/home')
+//         },
+//         onError: () => {
+//             toast.error('Email hoặc mật khẩu sai. Vui lòng thử lại')
+//         }
+//     })
+//     if (rememberMe) {
+//         localStorage.setItem(
+//             'rememberLogin',
+//             JSON.stringify({ ...data, isRememberMe: true })
+//         )
+//     } else {
+//         localStorage.removeItem('rememberLogin')
+//     }
+//     loginMutation.mutate(data)
+// }

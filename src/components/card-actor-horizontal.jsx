@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Triangle, Heart } from 'lucide-react'
+import Link from 'next/link';
 import React from 'react'
 
 export default function CardActorHorizontal({ actor, isTopRanked }) {
@@ -17,7 +18,11 @@ export default function CardActorHorizontal({ actor, isTopRanked }) {
                     <AvatarFallback>X</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-2 py-2">
-                    <p className="leading-none font-bold">{name}</p>
+                    <Link
+                        href={`/actor/${actor.id}`}
+                    >
+                        <p className="leading-none font-bold">{name}</p>
+                    </Link>
                     <div className="flex items-center gap-1">
                         <span className="text-sm">#1(</span>
                         <Triangle
