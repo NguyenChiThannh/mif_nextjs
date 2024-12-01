@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export default function CardMovieHorizontal({ movie }) {
+export default function CardMovieSmall({ movie }) {
     const router = useRouter();
     const t = useTranslations('Movie');
 
@@ -54,7 +54,7 @@ export default function CardMovieHorizontal({ movie }) {
     );
 }
 
-export function CardMovieHorizontalSkeleton() {
+export function CardMovieSmallSkeleton() {
     return (
         <div className="flex items-center w-full gap-4">
             {/* Skeleton for Movie Poster */}

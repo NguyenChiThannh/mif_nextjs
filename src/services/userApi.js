@@ -4,11 +4,14 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tansta
 import { useTranslations } from "next-intl"
 import { toast } from "react-toastify"
 
-const getProfilePostByUserId = async (id) => {
+const getProfilePostByUserId = async ({ queryKey, pageParam = 0 }) => {
+    const [_key, id] = queryKey;
     const res = await privateApi.get(`users/${id}/posts`, {
-        params:
-            page
+        params: {
+            page: pageParam,
+        }
     })
+    console.log('🚀 ~ getProfilePostByUserId ~ res.data:', res.data)
     return res.data
 }
 
@@ -31,6 +34,7 @@ export const userApi = {
             })
         },
         useGetProfilePostByUserId(id) {
+            console.log('Here')
             return useInfiniteQuery({
                 queryKey: QUERY_KEY.profilePostByUserId(id),
                 queryFn: getProfilePostByUserId,

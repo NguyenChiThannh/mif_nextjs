@@ -1,7 +1,6 @@
 import { QUERY_KEY } from "@/services/key"
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
-
-const { privateApi } = require("@/services/config")
+import { privateApi } from "@/services/config"
 
 const saveMovie = async (movieId) => {
     const res = await privateApi.post(`saved-movies/${movieId}`)

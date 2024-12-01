@@ -1,5 +1,5 @@
 'use client'
-import CardMovieHorizontal, { CardMovieHorizontalSkeleton } from '@/components/card-movie-horizontal'
+import CardMovieSmall, { CardMovieSmallSkeleton } from '@/components/card-movie-horizontal'
 import { ComboboxMovieCategory } from '@/components/combobox-category-movie'
 import Loading from '@/components/loading'
 import { SectionExploreMovies } from '@/components/section-explore-movies'
@@ -31,7 +31,7 @@ export default function MoviePage() {
                 </div>
                 <div className='grid mt-4 gap-2'>
                     {data.content.map((movie, index) => (
-                        <CardMovieHorizontal movie={movie} key={index} />
+                        <CardMovieSmall movie={movie} key={index} />
                     ))}
                 </div>
             </div>

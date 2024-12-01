@@ -1,4 +1,4 @@
-import CardMovieHorizontal, { CardMovieHorizontalSkeleton } from '@/components/card-movie-horizontal';
+import CardMovieSmall, { CardMovieSmallSkeleton } from '@/components/card-movie-horizontal';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { savedMovieApi } from '@/services/savedMovie';
 import React from 'react'
@@ -20,19 +20,19 @@ export default function MoviesSavedSection({ id }) {
             <div className="grid gap-8 mt-4 col-span-2">
                 {isLoading && (
                     <>
-                        <CardMovieHorizontalSkeleton />
-                        <CardMovieHorizontalSkeleton />
-                        <CardMovieHorizontalSkeleton />
-                        <CardMovieHorizontalSkeleton />
+                        <CardMovieSmallSkeleton />
+                        <CardMovieSmallSkeleton />
+                        <CardMovieSmallSkeleton />
+                        <CardMovieSmallSkeleton />
                     </>
                 )}
                 {data?.pages?.map((page) =>
                     page.content.map((movie) => (
-                        <CardMovieHorizontal key={movie.id} movie={movie} />
+                        <CardMovieSmall key={movie.id} movie={movie} />
                     ))
                 )}
                 {isFetchingNextPage && (
-                    <CardMovieHorizontalSkeleton />
+                    <CardMovieSmallSkeleton />
                 )}
                 <div ref={observerElem}></div>
                 {!hasNextPage && (

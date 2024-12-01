@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { actorApi } from '@/services/actorApi'
 import { favoriteActorsApi } from '@/services/favoriteActorsApi'
-import { Award, Camera, ChevronDown, HeartOff, Triangle } from 'lucide-react'
+import { Award, Camera, ChevronDown, Heart, HeartOff, Triangle } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import CardMovie, { CardMovieSkeleton } from '@/components/card-movie'
@@ -116,7 +116,7 @@ export default function Actor({ params }) {
           </DropdownMenu>
         ) : (
           <Button onClick={handleAddFavoriteActor} className="flex items-center gap-2">
-            <HeartOff className="w-4 h-4" />
+            <Heart className="w-4 h-4" />
             <span>Yêu thích</span>
           </Button>
         )}
@@ -159,7 +159,7 @@ export default function Actor({ params }) {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, index) => (
               <div key={index} className="pl-1 flex justify-center">
-                <CardMovieSkeleton />
+                <CardMovieSkeleton direction="vertical" />
               </div>
             ))}
           </div>

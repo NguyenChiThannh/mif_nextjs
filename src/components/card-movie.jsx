@@ -12,8 +12,6 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
     const router = useRouter();
     const t = useTranslations('Movie');
 
-
-
     const yearRelease = movie?.releaseDate?.split('-')[0] ?? 'N/A';
     const { title, posterUrl, duration, ratings } = movie;
 
@@ -21,7 +19,6 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
         <div
             className={`gap-4 h-fit ${direction === 'vertical' ? 'flex-col w-fit flex' : 'grid grid-cols-2'}`}
         >
-
 
             {/* Movie Poster */}
             <div className='relative'>
@@ -69,7 +66,15 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
                 </div>
 
                 {/* Watch Trailer Button */}
-                <Button>{t('button_watch_trailer')}</Button>
+                <Button>
+                    <Link
+                        href={`/movies/${movie.id}`}
+                    >
+                        {t('button_watch_trailer')}
+                    </Link>
+
+                </Button>
+
             </div>
         </div >
     )
@@ -77,7 +82,7 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
 
 export const CardMovieSkeleton = ({ direction = 'horizontal' }) => {
     return (
-        <div className={`grid gap-4 h-full ${direction === 'vertical' ? 'flex-col w-fit' : 'grid-cols-2 w-full'}`}>
+        <div className={`grid gap-4 h-full ${direction === 'vertical' ? 'flex-col w-full' : 'grid-cols-2'}`}>
             {/* Skeleton for Poster */}
             <div>
                 <Skeleton
@@ -88,7 +93,7 @@ export const CardMovieSkeleton = ({ direction = 'horizontal' }) => {
             </div>
 
             {/* Skeleton for Details */}
-            <div className="flex gap-2 flex-col justify-around h-full">
+            <div className={`flex gap-2 flex-col justify-around ${direction === 'vertical' ? 'h-40' : 'h-full'}`}>
                 <Skeleton className="h-2/6" />
                 <Skeleton className="w-3/4 h-1/6" />
                 <Skeleton className="w-3/4 h-1/6" />

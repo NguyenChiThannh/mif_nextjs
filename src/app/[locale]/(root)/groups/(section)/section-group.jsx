@@ -84,11 +84,17 @@ export function SectionGroup({ movieCategories, userId }) {
                                 ))}
                             {activeTab === 'all' && (
                                 <>
-                                    {ownerGroups.content.map(group => (
-                                        <CardGroups key={group.id} group={group} initialStatus="joined" categories={movieCategories} />
-                                    ))}
-                                    {userGroups.content.map(group => (
-                                        <CardGroups key={group.id} group={group} initialStatus="joined" categories={movieCategories} />
+                                    {Array.from(
+                                        new Map(
+                                            [...ownerGroups.content, ...userGroups.content].map(group => [group.id, group])
+                                        ).values()
+                                    ).map(group => (
+                                        <CardGroups
+                                            key={group.id}
+                                            group={group}
+                                            initialStatus="joined"
+                                            categories={movieCategories}
+                                        />
                                     ))}
                                 </>
                             )}

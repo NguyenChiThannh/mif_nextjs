@@ -1,4 +1,4 @@
-import CardMovieHorizontal, { CardMovieHorizontalSkeleton } from '@/components/card-movie-horizontal'
+import CardMovieSmall, { CardMovieSmallSkeleton } from '@/components/card-movie-horizontal'
 import Title from '@/components/title'
 import { movieApi } from '@/services/movieApi'
 import React from 'react'
@@ -14,11 +14,11 @@ export function SectionExploreMovies() {
                     isLoading
                         ?
                         Array.from({ length: 4 }).map((_, index) => (
-                            <CardMovieHorizontalSkeleton key={index} />
+                            <CardMovieSmallSkeleton key={index} />
                         ))
                         :
                         data.map((movie, index) => (
-                            <CardMovieHorizontal movie={movie} key={index} />
+                            <CardMovieSmall movie={movie} key={index} />
                         ))
                 }
             </div>

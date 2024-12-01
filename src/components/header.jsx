@@ -15,6 +15,7 @@ import useUserId from "@/hooks/useUserId"
 import SearchHeader from "@/components/search-header"
 import { headerMenuConfig } from "@/lib/navigationConfig"
 import { useTranslations } from "next-intl"
+import Image from "next/image"
 
 export default function Header() {
     const [open, setOpen] = useState(false)
@@ -70,7 +71,12 @@ export default function Header() {
 
                 {/* Display logo for screen desktop */}
                 <Link href="/home" className="hidden md:flex items-center gap-2" prefetch={false}>
-                    <Film />
+                    <Image
+                        src="/logo.png"
+                        alt="Logo"
+                        width={40}
+                        height={40}
+                    />
                     <span className="text-xl font-bold gap-2 tracking-[.25em]">MIF</span>
                 </Link>
 

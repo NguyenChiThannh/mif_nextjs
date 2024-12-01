@@ -1,7 +1,7 @@
 'use client'
 
 import CardActorHorizontal from '@/components/card-actor-horizontal'
-import CardMovieHorizontal from '@/components/card-movie-horizontal'
+import CardMovieSmall from '@/components/card-movie-horizontal'
 import CardGroups from '@/components/card-groups'
 import Title from '@/components/title'
 import { Button } from '@/components/ui/button'
@@ -63,7 +63,7 @@ export default function Page() {
                             <Title title="Phim" isMore={false} />
                             <div className="grid gap-2 mt-4">
                                 {movies?.content?.map((movie) => (
-                                    <CardMovieHorizontal key={movie.id} movie={movie} />
+                                    <CardMovieSmall key={movie.id} movie={movie} />
                                 ))}
                             </div>
                         </div>
