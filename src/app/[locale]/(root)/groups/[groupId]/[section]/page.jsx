@@ -13,6 +13,7 @@ import Loading from "@/components/loading"
 import SideBar from "@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/sidebar"
 import HeaderGroup from "@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/header"
 import { useIsGroupOwner } from "@/hooks/useIsGroupOwner"
+import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/eventsSection"
 
 export default function Page() {
     const { groupId, section } = useParams()
@@ -73,6 +74,7 @@ export default function Page() {
                     )}
                     {section === 'rules' && <RulesSection isOwner={isOwner} group={group} />}
                     {section === 'about' && <AboutSection group={group} members={members} isOwner={isOwner} />}
+                    {section === 'events' && <EventsSection />}
                 </div>
             </div>
         </div>

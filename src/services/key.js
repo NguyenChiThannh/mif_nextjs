@@ -12,12 +12,13 @@ export const QUERY_KEY = {
     detailGroup: (id) => ['group', id],
     memberGroup: (id) => ['member_group', id],
     pendingInvitations: (groupId, size) => ['pending_invitations', { groupId, size }],
+    searchGroupByGroupName: (search) => ['search_group_by_group_name', search],
     // Actor
     actorMovieography: (actorId) => ['actor_movieography', actorId],
     actorById: (actorId) => ['actor', actorId],
     topActors: (page, size) => ['top_actor', { page, size }],
     // Category
-    allmovieCategories: 'all_categories',
+    allmovieCategories: () => 'all_categories',
     categoryById: (id) => ['category', id],
     // FavoriteActors
     favoriteActors: (userId) => ['favorite_actors', userId],

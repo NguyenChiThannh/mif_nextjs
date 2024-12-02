@@ -1,29 +1,65 @@
-import React, { useState } from 'react'
-import { Card, CardContent } from "@/components/ui/card"
-import { Users, CalendarDays } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import Image from 'next/image'
-import { Skeleton } from '@/components/ui/skeleton'
-import { useRouter } from 'next/navigation'
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Users, CalendarDays } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
+import { groupsApi } from "@/services/groupsApi";
+import useUserId from "@/hooks/useUserId";
 
 export default function CardGroups({ initialStatus, group, categories }) {
-  const [joinStatus, setJoinStatus] = useState(initialStatus);
-
+  const userId = useUserId()
+  const [joinStatus, setJoinStatus] = useState(initialStatus || null);
+  const statusGroupMutation = groupsApi.mutation.useGetUserStatusInGroups();
+  const addPendingInvitationMutation = groupsApi.mutation.useAddPendingInvitation()
+  const rejectInvationMutation = groupsApi.mutation.useRejectInvation()
   const router = useRouter();
 
+  const fetchGroupStatus = () => {
+    statusGroupMutation.mutate(
+      { groupIds: [group.id] },
+      {
+        onSuccess: (data) => {
+          const status = data[group.id];
+          if (status) {
+            setJoinStatus(status);
+          }
+        },
+      }
+    );
+  };
+
+  useEffect(() => {
+    fetchGroupStatus();
+  }, [group]);
+
+
   const handleJoinGroup = () => {
-    setJoinStatus('pending');
+    setJoinStatus("PENDING");
+    addPendingInvitationMutation.mutate({
+      userId,
+      groupId: group.id
+    })
   };
+
+
   const handleUnjoinGroup = () => {
-    setJoinStatus('join');
+    setJoinStatus("NOT_JOIN");
+    rejectInvationMutation.mutate({
+      userId,
+      groupId: group.id
+    })
+
   };
+
   const handleDetailGroup = () => {
     router.push(`/groups/${group.id}`);
   };
 
   return (
     <Card className="drop-shadow-lg animate-fade-in hover:scale-105 transition-transform duration-300 ease-in-out">
-      <CardContent className="flex flex-col gap-2 p-0 ">
+      <CardContent className="flex flex-col gap-2 p-0">
         <Image
           src="/group_default.jpg"
           alt="Group"
@@ -39,15 +75,19 @@ export default function CardGroups({ initialStatus, group, categories }) {
             </p>
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
-              <span className="text-sm text-muted-foreground">{group?.memberCount} thành viên</span>
+              <span className="text-sm text-muted-foreground">
+                {group?.memberCount} thành viên
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <CalendarDays className="w-4 h-4" />
-              <span className="text-sm text-muted-foreground">{group?.weeklyPostCount} bài viết tuần này</span>
+              <span className="text-sm text-muted-foreground">
+                {group?.weeklyPostCount} bài viết tuần này
+              </span>
             </div>
           </div>
 
-          {joinStatus === 'join' && (
+          {joinStatus === "NOT_JOIN" && (
             <Button
               onClick={handleJoinGroup}
               variant="outline"
@@ -56,16 +96,16 @@ export default function CardGroups({ initialStatus, group, categories }) {
               Tham gia nhóm
             </Button>
           )}
-          {joinStatus === 'pending' && (
+          {joinStatus === "PENDING" && (
             <Button
               onClick={handleUnjoinGroup}
               variant="outline"
-              className="w-full hover:bg-primary hover:text-primary-foreground text-primary transition-all duration-200"
+              className="w-full"
             >
-              Hủy tham gia
+              Đang chờ duyệt
             </Button>
           )}
-          {joinStatus === 'joined' && (
+          {joinStatus === "JOINED" && (
             <Button
               onClick={handleDetailGroup}
               className="w-full hover:bg-primary hover:text-primary-foreground transition-all duration-200"
@@ -78,7 +118,6 @@ export default function CardGroups({ initialStatus, group, categories }) {
     </Card>
   );
 }
-
 
 export const CardGroupsSkeleton = () => {
   return (
@@ -99,4 +138,3 @@ export const CardGroupsSkeleton = () => {
     </Card>
   );
 };
-

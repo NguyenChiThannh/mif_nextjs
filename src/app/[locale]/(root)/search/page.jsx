@@ -5,9 +5,8 @@ import CardMovieSmall from '@/components/card-movie-horizontal'
 import CardGroups from '@/components/card-groups'
 import Title from '@/components/title'
 import { Button } from '@/components/ui/button'
-import { searchGroupByGroupName } from '@/services/groupsApi'
+import { groupsApi } from '@/services/groupsApi'
 import { movieApi } from '@/services/movieApi'
-import { useQuery } from '@tanstack/react-query'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { categoryApi } from '@/services/movieCategoriesApi'
@@ -22,10 +21,7 @@ export default function Page() {
 
     const { isLoading: isLoadingMovies, data: movies } = movieApi.query.useSearchMoviesByTitle(0, 10, search)
 
-    const { isLoading: isLoadingGroup, data: groups } = useQuery({
-        queryKey: ['search_group', { name: search, page: 0, size: 10 }],
-        queryFn: searchGroupByGroupName,
-    })
+    const { isLoading: isLoadingGroup, data: groups } = groupsApi.query.useSearchGroupByGroupName(search)
 
     const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
     const noResults = groups?.content?.length === 0 && movies?.content?.length === 0

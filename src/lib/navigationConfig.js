@@ -156,10 +156,10 @@ export const navGroupConfig = (t) => [
     },
     {
         title: t('event'),
-        href: (groupId) => `/groups/${groupId}/event`,
+        href: (groupId) => `/groups/${groupId}/events`,
         icon: CalendarCheckIcon,
         active: function (section) {
-            return (section === 'event')
+            return (section === 'events')
         }
     },
 ]

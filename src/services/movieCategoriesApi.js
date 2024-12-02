@@ -34,7 +34,7 @@ export const categoryApi = {
     query: {
         useGetAllmovieCategories() {
             return useQuery({
-                queryKey: QUERY_KEY.allmovieCategories,
+                queryKey: QUERY_KEY.allmovieCategories(),
                 queryFn: getAllmovieCategories,
             });
         },
@@ -54,7 +54,7 @@ export const categoryApi = {
                 mutationFn: createCategory,
                 onSuccess: () => {
                     toast.success(t('create_category_successful'))
-                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories);
+                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories());
                 },
                 onError: () => {
                     toast.error(t('create_category_failed'))
@@ -68,7 +68,7 @@ export const categoryApi = {
                 mutationFn: deleteCategory,
                 onSuccess: () => {
                     toast.success(t('delete_category_successful'));
-                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories);
+                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories());
                 },
                 onError: () => {
                     toast.error(t('delete_category_failed'));
@@ -82,7 +82,7 @@ export const categoryApi = {
                 mutationFn: updateCategory,
                 onSuccess: () => {
                     toast.success('Update Cateogry Successfully')
-                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories);
+                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories());
                 },
                 onError: () => {
                     toast.error('Update Cateogry Fail')

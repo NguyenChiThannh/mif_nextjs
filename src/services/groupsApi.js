@@ -23,6 +23,7 @@ const removeMemberFromGroup = async (data) => {
     const res = await privateApi.delete(`/groups/${data.groupId}/members/${data.userId}`)
     return res.data
 }
+
 const findByOwnerId = async ({ queryKey }) => {
     const [_key, { page, size }] = queryKey;
     const res = await privateApi.get('/my-groups', {
@@ -90,15 +91,20 @@ const removePendingInvitation = async (data) => {
     return res.data
 }
 
-export const searchGroupByGroupName = async ({ queryKey }) => {
-    const [_key, { page, size, name }] = queryKey
+const searchGroupByGroupName = async ({ queryKey }) => {
+    const [_key, name] = queryKey
     const res = await privateApi.get('/groups/search', {
         params: {
             name,
-            page,
-            size,
+            page: 0,
+            size: 10,
         }
     })
+    return res.data
+}
+
+const getUserStatusInGroups = async (data) => {
+    const res = await privateApi.post('/groups/batch-status', data)
     return res.data
 }
 
@@ -140,6 +146,12 @@ export const groupsApi = {
                 queryKey: QUERY_KEY.pendingInvitations(groupId, size),
                 queryFn: getPendingInvitations,
             })
+        },
+        useSearchGroupByGroupName(name) {
+            return useQuery({
+                queryKey: QUERY_KEY.searchGroupByGroupName(name),
+                queryFn: searchGroupByGroupName,
+            })
         }
     },
     mutation: {
@@ -158,17 +170,15 @@ export const groupsApi = {
                 }
             })
         },
-        useAddPendingInvitation(setJoinStatus) {
+        useAddPendingInvitation() {
             const t = useTranslations('Toast');
+            const queryClinet = useQueryClient()
             return useMutation({
                 mutationFn: addPendingInvitation,
                 onSuccess: () => {
                     toast.success(t('add_pending_invitation_successful'))
+                    // queryClinet.invalidateQueries({ queryKey: })
                 },
-                onError: () => {
-                    toast.error(t('add_pending_invitation_failed'))
-                    setJoinStatus('join')
-                }
             })
         },
         useAcceptInvitation() {
@@ -202,9 +212,6 @@ export const groupsApi = {
                 onSuccess: () => {
                     toast.success(t('remove_member_group_successful'))
                 },
-                onError: () => {
-                    toast.error(t('remove_member_group_failed'))
-                }
             })
         },
         useAddMemberToGroup() {
@@ -218,6 +225,12 @@ export const groupsApi = {
                     toast.error(t('add_member_group_failed'))
                 }
             })
+        },
+        useGetUserStatusInGroups() {
+            return useMutation({
+                mutationFn: getUserStatusInGroups,
+            })
         }
+
     },
 }
