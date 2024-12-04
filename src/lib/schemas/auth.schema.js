@@ -1,20 +1,32 @@
 import { z } from "zod"
 
-export const schemaLogin = z.object({
-    email: z.string().email(),
-    password: z.string(),
-})
-
-export const schemaRegister = z.object({
-    displayName: z.string().min(2, "Full name must be at least 2 characters."),
-    email: z.string().email("Invalid email address."),
+export const schemaLogin = (t) => z.object({
+    email: z
+        .string()
+        .email(t('emailInvalid')),
     password: z
         .string()
-        .min(6, "Password must be at least 6 characters."),
+        .min(6, t('passwordMin'))
+    // .regex(
+    //     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+    //     t('passwordComplexity')
+    // )
+});
+
+export const schemaRegister = (t) => z.object({
+    displayName: z
+        .string()
+        .min(2, t('displayNameMin')),
+    email: z
+        .string()
+        .email(t('emailInvalid')),
+    password: z
+        .string()
+        .min(6, t('passwordMin')),
     repeatPassword: z
         .string()
-        .min(6, "Password must be at least 6 characters."),
+        .min(6, t('passwordMin')),
 }).refine((data) => data.password === data.repeatPassword, {
     path: ["repeatPassword"],
-    message: "Passwords must match.",
+    message: t('passwordMismatch'),
 });

@@ -3,13 +3,11 @@ import { QUERY_KEY } from "@/services/key";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 
 const getSavedPosts = async ({ queryKey, pageParam = 0 }) => {
-    console.log('Here 1')
     const res = await privateApi.get('/saved-posts', {
         params: {
             page: pageParam,
         }
     })
-    console.log('Here 2')
     return res.data
 }
 

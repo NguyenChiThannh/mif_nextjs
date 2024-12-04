@@ -1,81 +1,84 @@
-
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
 import { authApi } from '@/services/authApi';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { cn } from "@/lib/utils";
+import { OTPInput } from "input-otp";
 
-export default function DialogOTP() {
-    const [otp, setOtp] = useState(['', '', '', '', '', '']);
-
+export default function DialogOTP({ t }) {
+    const [otp, setOtp] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(true);
 
-    const verifyOTPmutation = authApi.mutation.useVerifyOTP()
+    const verifyOTPmutation = authApi.mutation.useVerifyOTP();
+    const router = useRouter();
 
-    const router = useRouter()
-
-    const handleChange = (e, index) => {
-        const value = e.target.value;
-        if (/[^0-9]/.test(value)) return; // Chỉ cho phép nhập số
-        const newOtp = [...otp];
-        newOtp[index] = value;
-        setOtp(newOtp);
-        if (value && index < otp.length - 1) {
-            // Tự động chuyển sang input tiếp theo
-            const nextInput = document.getElementById(`otp-input-${index + 1}`);
-            nextInput?.focus();
-        }
+    const handleChange = (value) => {
+        setOtp(value);
     };
 
     const handleSubmit = () => {
-        const data = {
-            otp: otp.join('')
-        }
+        const data = { otp: otp.join('') };
         verifyOTPmutation.mutate(data, {
             onSuccess: () => {
                 setIsDialogOpen(false);
                 router.push('/sign-in');
-            }
-        })
+            },
+        });
+    };
+
+    const handleClose = () => {
+        setIsDialogOpen(false);
     };
 
     return (
-        <Dialog open={isDialogOpen}>
-            {/* <DialogTrigger asChild>
-                <Button className="w-full">Nhập mã OTP</Button>
-            </DialogTrigger> */}
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+            </DialogTrigger>
 
-            <DialogContent className="w-[90%] sm:w-[400px] p-6 bg-background border border-border rounded-lg shadow-lg">
+            <DialogContent className="w-fit p-6 bg-background border border-border rounded-lg shadow-lg">
                 <DialogHeader className="text-center">
-                    <h2 className="text-2xl font-semibold text-foreground">Xác nhận OTP</h2>
-                    <p className="text-sm text-muted-foreground mt-2">Nhập mã OTP gửi đến số điện thoại của bạn</p>
+                    <h2 className="text-2xl font-semibold text-foreground">{t("otp_title")}</h2>
+                    <p className="text-sm text-muted-foreground mt-2">{t("otp_description")}</p>
                 </DialogHeader>
 
-                <div className="flex justify-center space-x-2 mt-6">
-                    {otp.map((digit, index) => (
-                        <Input
-                            key={index}
-                            id={`otp-input-${index}`}
-                            value={digit}
-                            onChange={(e) => handleChange(e, index)}
-                            type="text"
-                            maxLength={1}
-                            className="w-12 h-12 text-center text-xl border border-border rounded-lg focus:ring-2 focus:ring-primary focus:outline-none"
-                            autoFocus={index === 0}
-                        />
-                    ))}
+                <div className="flex justify-center">
+                    <OTPInput
+                        id="input-58"
+                        containerClassName="flex items-center gap-3 has-[:disabled]:opacity-50"
+                        maxLength={6}
+                        value={otp}
+                        onChange={handleChange}
+                        render={({ slots }) => (
+                            <div className="flex gap-2">
+                                {slots.map((slot, idx) => (
+                                    <Slot key={idx} {...slot} />
+                                ))}
+                            </div>
+                        )}
+                    />
                 </div>
 
                 <DialogFooter className="mt-6 flex justify-center gap-4">
-                    {/* <Button variant="outline" onClick={() => alert('OTP đã hết hạn!')} className="w-1/3">
-                        Hủy
-                    </Button> */}
                     <Button onClick={handleSubmit} className="w-1/3">
-                        Xác nhận
+                        {t("otp_action")}
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
+    );
+}
+
+
+function Slot(props) {
+    return (
+        <div
+            className={cn(
+                "flex size-9 items-center justify-center rounded-lg border border-input bg-background font-medium text-foreground shadow-sm shadow-black/5 transition-shadow",
+                { "z-10 border border-ring ring-[3px] ring-ring/20": props.isActive },
+            )}
+        >
+            {props.char !== null && <div>{props.char}</div>}
+        </div>
     );
 }

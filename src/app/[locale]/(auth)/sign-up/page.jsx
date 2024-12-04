@@ -24,6 +24,7 @@ export default function SignUp() {
 
                 {/* SignUp Form */}
                 <SignUpForm t={t} />
+
                 {/* Social Login */}
                 <div className="grid gap-2">
                     <Button variant="outline" className="w-full" type="button">

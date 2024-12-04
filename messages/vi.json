@@ -7,6 +7,15 @@
         "input_placeholder": "Tìm kiếm...",
         "login": "Đăng nhập"
     },
+    "Schema": {
+        "auth": {
+            "emailInvalid": "Email không hợp lệ",
+            "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+            "passwordComplexity": "Mật khẩu phải bao gồm ít nhất một chữ hoa, một chữ thường và một chữ số",
+            "displayNameMin": "Tên đầy đủ phải có ít nhất 2 ký tự",
+            "passwordMismatch": "Mật khẩu phải khớp."
+        }
+    },
     "Login_register": {
         "login_title": "Đăng nhập",
         "login_description": "Nhập email của bạn bên dưới để đăng nhập vào tài khoản của bạn",
@@ -29,7 +38,10 @@
         "you_have_account_yet": "Bạn đã có tài khoản?",
         "forget_password_title": "Quên mật khẩu",
         "forget_password_description": "Nhập email để quên mật khẩu",
-        "forget_password_action": "Nhận mã xác nhận"
+        "forget_password_action": "Nhận mã xác nhận",
+        "otp_title": "Xác nhận OTP",
+        "otp_description": "Xác nhận OTP",
+        "otp_action": "Xác nhận"
     },
     "Home": {
         "title_section_actor": "Diễn viên nổi bật",

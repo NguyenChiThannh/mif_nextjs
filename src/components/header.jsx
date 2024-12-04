@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useRef, useState } from "react"
+import { memo, useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { Film, MessageCircle, AlignJustify } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -17,7 +17,8 @@ import { headerMenuConfig } from "@/lib/navigationConfig"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
 
-export default function Header() {
+// export default function Header() {
+const Header = memo(() => {
     const [open, setOpen] = useState(false)
     const t = useTranslations('Header')
     const isLogin = useIsLogin();
@@ -134,4 +135,8 @@ export default function Header() {
             </div>
         </div >
     )
-}
+})
+
+Header.displayName = "Header";
+
+export default Header;

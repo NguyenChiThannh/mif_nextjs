@@ -99,6 +99,7 @@ const nextConfig = {
         ],
     },
     crossOrigin: 'anonymous',
+    reactStrictMode: false
 };
 
 export default withNextIntl(nextConfig);

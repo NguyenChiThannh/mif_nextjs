@@ -9,15 +9,15 @@ import { useForm } from "react-hook-form";
 import { authApi } from "@/services/authApi";
 import Loading from "@/components/loading";
 import DialogOTP from "@/components/dialog-otp";
-import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 
-
-const SignUpForm = ({ t }) => {
+export default function SignUpForm({ t }) {
     const [isRegistered, setIsRegistered] = useState(false);
+    const tSchema = useTranslations('Schema.auth');
 
     const registerMutation = authApi.mutation.useRegister()
     const form = useForm({
-        resolver: zodResolver(schemaRegister),
+        resolver: zodResolver(schemaRegister(tSchema)),
         defaultValues: {
             displayName: "",
             email: "",
@@ -33,7 +33,6 @@ const SignUpForm = ({ t }) => {
         formState: { errors },
     } = form;
 
-    // Handle form submission
     const onSubmit = async (data) => {
         registerMutation.mutate(data, {
             onSuccess: () => {
@@ -49,7 +48,7 @@ const SignUpForm = ({ t }) => {
             {registerMutation.isPending && <Loading />}
 
             {/* Display DialogOTP when register success */}
-            {isRegistered && <DialogOTP />}
+            {isRegistered && <DialogOTP t={t} />}
 
             {/* Full Name */}
             <div className="grid gap-2">
@@ -121,8 +120,6 @@ const SignUpForm = ({ t }) => {
         </form>
     );
 };
-
-export default SignUpForm;
 
 
 // const onSubmit = async (data) => {

@@ -15,6 +15,7 @@ export default function AuthLayout({ children }) {
     if (authState.isLogin)
       router.push('/home')
   }, [router, authState.isLogin])
+
   return (
     <main className="relative w-full lg:min-h-screen xl:min-h-screen bg-black h-screen">
 

@@ -11,7 +11,6 @@ const getProfilePostByUserId = async ({ queryKey, pageParam = 0 }) => {
             page: pageParam,
         }
     })
-    console.log('🚀 ~ getProfilePostByUserId ~ res.data:', res.data)
     return res.data
 }
 
@@ -34,7 +33,6 @@ export const userApi = {
             })
         },
         useGetProfilePostByUserId(id) {
-            console.log('Here')
             return useInfiniteQuery({
                 queryKey: QUERY_KEY.profilePostByUserId(id),
                 queryFn: getProfilePostByUserId,

@@ -1,41 +1,84 @@
-import { DatePickerPopover } from "@/components/date-picker-popover"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { z } from "zod";
+import { useState } from "react";
+import { DatePickerPopover } from "@/components/date-picker-popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
-import useUserId from "@/hooks/useUserId"
-import { schemaPost } from "@/lib/schemas/post-group.schema"
-import { userApi } from "@/services/userApi"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2, Upload, X } from "lucide-react"
-import { useTranslations } from "next-intl"
-import Image from "next/image"
-import { useForm } from "react-hook-form"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Textarea } from "@/components/ui/textarea";
+import { Controller, useForm } from "react-hook-form";
+import InputDemo, { DateTimePicker } from "@/components/date-and-time-picker";
+import useUserId from "@/hooks/useUserId";
+import { userApi } from "@/services/userApi";
+import { schemaEvent } from "@/lib/schemas/event.chema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import useUploadImage from "@/hooks/useUploadImage";
+import { eventApi } from "@/services/eventApi";
 
-export function DialogCreateEvent() {
-    const t = useTranslations('Groups')
-    const userId = useUserId();
-    const { data: userInfo } = userApi.query.useGetUserInfoById(userId)
+export function DialogCreateEvent({ groupId }) {
+    const [eventType, setEventType] = useState(null);
 
-    const { register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
-        resolver: zodResolver(schemaPost),
+
+    const createEventMutation = eventApi.mutation.useCreateEvent()
+    const {
+        images,
+        handleImageChange,
+        removeImage,
+        uploadImage,
+    } = useUploadImage();
+
+    const { register, handleSubmit, formState: { errors }, reset, control } = useForm({
+        resolver: zodResolver(schemaEvent),
+        defaultValues: {
+            eventName: "",
+            description: "",
+            groupId,
+            time: null,
+            eventType: null,
+            socialType: "OTHER",
+            link: "",
+            location: "",
+        },
     });
+
+    const userId = useUserId();
+    const { data: userInfo } = userApi.query.useGetUserInfoById(userId);
+
+    const onSubmit = async (data) => {
+        const { year, month, day, hour, minute, second, millisecond } = data.startDate;
+        const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second, millisecond));
+
+        // Chuyển startDate thành chuỗi ISO
+        const startDateIsoString = date.toISOString();
+
+        const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));
+        const formData = {
+            ...data,
+            eventType,
+            startDate: startDateIsoString,
+            eventPicture: uploadedImageUrls[0],
+        };
+        console.log('🚀 ~ onSubmit ~ formData:', formData)
+
+        createEventMutation.mutate(formData)
+
+        // reset();
+
+    };
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button size="sm">
+                <Button size="sm" className="bg-primary hover:bg-primary-dark">
                     Tạo sự kiện
                 </Button>
             </DialogTrigger>
@@ -44,119 +87,148 @@ export function DialogCreateEvent() {
                     <DialogTitle className="text-lg font-bold">Tạo sự kiện</DialogTitle>
                 </DialogHeader>
                 <Separator />
-                <form
-                    // onSubmit={handleSubmit(onSubmit)}
-                    className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    {/* User Info */}
                     <div className="flex items-center gap-3">
-                        <Avatar className="w-10 h-10">
+                        <Avatar className="w-12 h-12">
                             <AvatarImage src={userInfo?.profilePictureUrl} />
                             <AvatarFallback className="uppercase">
                                 {userInfo?.displayName?.[0]}
                             </AvatarFallback>
                         </Avatar>
-                        <p className="text-sm font-semibold">{userInfo?.displayName}</p>
+                        <p className="text-sm font-semibold">{userInfo?.displayName} &middot;</p>
+                        <p className="text-xs text-secondary-foreground">Người tạo event</p>
                     </div>
 
+                    {/* Event Name */}
                     <div>
-                        <Label htmlFor="title" className="text-sm font-medium">Tên sự kiện</Label>
+                        <Label htmlFor="eventName" className="text-sm font-medium">Tên sự kiện</Label>
                         <Input
-                            id="title"
-                            placeholder={t("title_placeholder")}
-                            {...register("title", { required: true })}
+                            id="eventName"
+                            placeholder="Nhập tên sự kiện"
+                            {...register("eventName", { required: "Tên sự kiện là bắt buộc" })}
                             className="mt-2"
-                            required
                         />
-                        {errors.title && <p className="text-red-500 text-xs">{t("title_error")}</p>}
+                        {errors.eventName && (
+                            <p className="text-red-500 text-xs">{errors.eventName.message}</p>
+                        )}
                     </div>
 
+                    {/* Event Description */}
                     <div>
-                        <Label htmlFor="content" className="text-sm font-medium">Mô tả</Label>
+                        <Label htmlFor="description" className="text-sm font-medium">Mô tả</Label>
                         <Textarea
-                            id="content"
-                            placeholder={t("content_placeholder")}
-                            {...register("content", { required: true })}
+                            id="description"
+                            placeholder="Nhập mô tả sự kiện"
+                            {...register("description")}
                             className="mt-2"
-                            rows={5}
+                            rows={3}
                         />
-                        {errors.content && <p className="text-red-500 text-xs">{t("content_error")}</p>}
                     </div>
 
+                    {/* Date and Time Picker */}
                     <div>
-                        <Label htmlFor="imageUpload" className="cursor-pointer flex items-center gap-2 text-sm font-medium">
-                            <Upload className="w-4 h-4" />
-                            Ảnh sự kiện
-                        </Label>
-                        <input
-                            type="file"
-                            id="imageUpload"
-                            className="hidden"
-                            multiple
-                        // onChange={handleImageChange}
+                        <Label htmlFor="time" className="text-sm font-medium">Thời gian</Label>
+                        <Controller
+                            name="startDate"
+                            control={control}
+                            rules={{ required: "Thời gian là bắt buộc" }}
+                            render={({ field }) => (
+                                <DateTimePicker
+                                    id="time"
+                                    aria-label="Chọn ngày và giờ"
+                                    granularity="minute"
+                                    value={field.value}
+                                    onChange={(date) => {
+                                        field.onChange(date);
+                                    }}
+                                />
+                            )}
                         />
-                        <div className="flex flex-wrap gap-3 mt-3">
-                            {/* {images.map((image, index) => (
-                                <div key={index} className="relative group">
-                                    <Image
-                                        src={URL.createObjectURL(image)}
-                                        alt={`image-${index}`}
-                                        width={64}
-                                        height={64}
-                                        className="w-32 h-32 rounded object-cover"
-                                    />
-                                    <Button
-                                        size="icon"
-                                        variant="destructive"
-                                        onClick={() => removeImage(index)}
-                                        className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition"
-                                    >
-                                        <X className="w-4 h-4" />
-                                    </Button>
-                                </div>
-                            ))} */}
+                        {errors.time && (
+                            <p className="text-red-500 text-xs">{errors.time.message}</p>
+                        )}
+                    </div>
+
+                    {/* Event Type */}
+                    <div>
+                        <Label htmlFor="eventType" className="text-sm font-medium">Hình thức</Label>
+                        <Controller
+                            name="eventType"
+                            control={control}
+                            defaultValue={null}
+                            rules={{ required: "Hình thức sự kiện là bắt buộc" }}
+                            render={({ field }) => (
+                                <Select
+                                    onValueChange={(value) => {
+                                        field.onChange(value);
+                                        setEventType(value);
+                                    }}
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Chọn hình thức sự kiện" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectGroup>
+                                            <SelectItem value="OFFLINE">Trực tiếp</SelectItem>
+                                            <SelectItem value="ONLINE">Online</SelectItem>
+                                        </SelectGroup>
+                                    </SelectContent>
+                                </Select>
+                            )}
+                        />
+                        {errors.socialType && (
+                            <p className="text-red-500 text-xs">{errors.socialType.message}</p>
+                        )}
+
+                    </div>
+
+                    {/* Conditional Inputs */}
+                    {eventType === "ONLINE" && (
+                        <div>
+                            <Label htmlFor="link" className="text-sm font-medium">Link online</Label>
+                            <Input
+                                id="link"
+                                placeholder="Nhập link sự kiện"
+                                {...register("link", { required: "Link sự kiện là bắt buộc" })}
+                            />
+                            {errors.link && <p className="text-red-500 text-xs">{errors.link.message}</p>}
                         </div>
-                    </div>
-                    <div className="flex">
-                        <Label htmlFor="content" className="text-sm font-medium">Thời gian</Label>
-                        <DatePickerPopover
-                        // selected={field.value ?? undefined}
-                        // onSelect={field.onChange}
-                        />
+                    )}
+
+                    {eventType === "OFFLINE" && (
+                        <div>
+                            <Label htmlFor="location" className="text-sm font-medium">Địa điểm</Label>
+                            <Input
+                                id="location"
+                                placeholder="Nhập địa điểm tổ chức sự kiện"
+                                {...register("location", { required: "Địa điểm là bắt buộc" })}
+                            />
+                            {errors.location && <p className="text-red-500 text-xs">{errors.location.message}</p>}
+                        </div>
+                    )}
+
+                    {/* Image Upload */}
+                    <div>
+                        <Label htmlFor="eventImage" className="text-sm font-medium">Ảnh sự kiện</Label>
                         <Input
-                            id="title"
-                            placeholder={t("title_placeholder")}
-                            {...register("title", { required: true })}
-                            className="mt-2"
-                            required
+                            type="file"
+                            id="eventImage"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            multiple
                         />
                     </div>
 
-                    <div >
-                        <Label htmlFor="content" className="text-sm font-medium">Hình thức</Label>
-                        <Select>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Select a fruit" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Fruits</SelectLabel>
-                                    <SelectItem value="apple">Apple</SelectItem>
-                                    <SelectItem value="banana">Banana</SelectItem>
-                                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                                    <SelectItem value="grapes">Grapes</SelectItem>
-                                    <SelectItem value="pineapple">Pineapple</SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-
-
+                    {/* Submit Button */}
                     <div className="flex justify-end">
-                        <Button type="submit" >
-                            Tạo
+                        <Button type="submit" className="bg-primary hover:bg-primary-dark">
+                            Tạo sự kiện
                         </Button>
                     </div>
                 </form>
             </DialogContent>
         </Dialog>
-    )
+    );
 }
+

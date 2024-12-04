@@ -30,7 +30,6 @@ export default function Post({ className, post }) {
             { postIds: [post.id] },
             {
                 onSuccess: (data) => {
-                    console.log('🚀 ~ checkSavedStatus ~ data[post.id]:', data[post.id])
                     setSaved(data[post.id]);
                 },
             }
@@ -113,7 +112,7 @@ export default function Post({ className, post }) {
                 <ContentWithReadMore content={post.content} maxLength={200} />
             </div>
             {
-                post?.mediaUrls
+                post?.mediaUrls.length !== 0
                 &&
                 <div className="w-full">
                     <Image

@@ -36,5 +36,11 @@ export const QUERY_KEY = {
     savedMovie: (userId) => ['saved_movie', { userId }],
     // savedPost
     savedPosts: (userId) => ['saved_posts', { userId }],
+    // notification
+    notifications: () => ['notifications'],
+    unreadNotificationCount: () => ['unread_notification_count'],
+    // event
+    getSubscribedEvents: () => ['subscribed_events'],
+    getEventsByGroupId: (groupId) => ['events_by_groupId', groupId],
 
 }
