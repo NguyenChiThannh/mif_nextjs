@@ -20,9 +20,11 @@ import { Check, Copy, Heart, Triangle } from "lucide-react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useTranslations } from "use-intl"
 
 
 export default function DetailMovie() {
+    const t = useTranslations('Movie.Detail')
     const { id } = useParams();
     const [isSavedMovie, setIsSavedMovie] = useState('false')
 
@@ -76,12 +78,12 @@ export default function DetailMovie() {
                                     ?
                                     <Button size="lg" onClick={() => handleSaveStatusChange("unsave")}>
                                         <Check className="w-5 h-5 mr-2 " />
-                                        Đã lưu phim
+                                        {t("saved_movie")}
                                     </Button>
                                     :
                                     <Button size="lg" onClick={() => handleSaveStatusChange("save")}>
                                         <Heart className="w-5 h-5 mr-2 " />
-                                        Lưu phim
+                                        {t("save_movie")}
                                     </Button>
                             }
 
@@ -89,7 +91,7 @@ export default function DetailMovie() {
                     </div>
                 </div>
 
-                {/* Poster + trailer */}
+                {/* Poster + Trailer */}
                 <div className="grid grid-cols-10 gap-1">
                     <div className="col-span-3 flex justify-center">
                         <Image
@@ -107,9 +109,9 @@ export default function DetailMovie() {
                     </div>
                 </div>
 
-                {/* Thông tin phim */}
+                {/* Info film */}
                 <div className="grid gap-8 grid-cols-10">
-                    <MovieDetailsSection movie={movie} isSavedMovie={isSavedMovie} handleSaveStatusChange={handleSaveStatusChange} />
+                    <MovieDetailsSection movie={movie} isSavedMovie={isSavedMovie} handleSaveStatusChange={handleSaveStatusChange} t={t} />
 
                 </div>
 
@@ -123,13 +125,13 @@ export default function DetailMovie() {
 
                         <div className="grid gap-4 mt-6">
 
-                            <Title title="Đánh giá" isMore={true} redirect={`/movies/${id}/review`} />
+                            <Title title={t("review")} isMore={true} redirect={`/movies/${id}/review`} />
                             <SectionReviewMovie movieId={id} />
                         </div>
 
 
                         <div className="grid gap-6 mt-6">
-                            <Title title="Diễn viên" isMore={true} />
+                            <Title title={t("actor")} isMore={true} />
                             <SectionActorMovie actors={movie.director} />
                         </div>
                     </div>

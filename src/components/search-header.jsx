@@ -11,7 +11,7 @@ export default function SearchHeader() {
 
     const handleSearch = () => {
         if (search.trim()) {
-            router.push(`search?q=${search}`)
+            router.push(`/search?q=${search}`)
             setSearch('')
         }
     }

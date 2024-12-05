@@ -20,12 +20,10 @@ const getRandomMovies = async () => {
     return res.data
 }
 
-const getAllMovies = async ({ queryKey }) => {
-    const [_key, { page, size }] = queryKey
+const getAllMovies = async ({ queryKey, pageParam = 0 }) => {
     const res = await privateApi.get('/movies', {
         params: {
-            page,
-            size,
+            page: pageParam,
         }
     })
     return res.data
@@ -67,10 +65,14 @@ export const movieApi = {
                 queryFn: getRandomMovies,
             })
         },
-        useGetAllMovies(page, size) {
+        useGetAllMovies() {
             return useQuery({
-                queryKey: QUERY_KEY.allMovies(page, size),
+                queryKey: QUERY_KEY.allMovies(),
                 queryFn: getAllMovies,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
             })
         },
         useSearchMoviesByTitle(page, size, title) {

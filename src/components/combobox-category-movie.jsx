@@ -19,8 +19,10 @@ import {
 import Loading from "@/components/loading"
 import { useState } from "react"
 import { categoryApi } from "@/services/movieCategoriesApi"
+import { useTranslations } from "next-intl"
 
 export function ComboboxMovieCategory() {
+    const t = useTranslations("Category")
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState("")
 
@@ -45,15 +47,15 @@ export function ComboboxMovieCategory() {
                 >
                     {value
                         ? formattedCategories.find((category) => category.value === value)?.label
-                        : "Thể loại"}
+                        : t("category")}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
                 <Command>
-                    <CommandInput placeholder="Thể loại" />
+                    <CommandInput placeholder={t("category")} />
                     <CommandList>
-                        <CommandEmpty>Không tìm thấy category</CommandEmpty>
+                        <CommandEmpty>{t("category_not_found")}</CommandEmpty>
                         <CommandGroup>
                             {formattedCategories.map((category) => (
                                 <CommandItem

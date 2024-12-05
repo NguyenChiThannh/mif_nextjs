@@ -57,7 +57,22 @@
         "year_release": "Năm",
         "duration": "Thời lượng",
         "minutes": "p",
-        "button_watch_trailer": "Xem trailer"
+        "button_watch_trailer": "Xem trailer",
+        "Detail": {
+            "image": "Ảnh",
+            "review": "Đánh giá",
+            "actor": "Diễn viên",
+            "about_movie": "Về phim",
+            "release_year": "Năm phát hành",
+            "duration": "Thời lượng",
+            "rating_score": "Điểm đánh giá",
+            "director": "Đạo diễn",
+            "ranking": "Xếp hạng",
+            "save_movie": "Lưu phim",
+            "saved_movie": "Đã lưu phim",
+            "share": "Share",
+            "category": "Thể loại"
+        }
     },
     "News": {
         "title": "Tin tức"
@@ -72,6 +87,10 @@
             "group": "Nhóm",
             "analytics": "Phân tích"
         }
+    },
+    "Category": {
+        "category": "Thể loại",
+        "category_not_found": "Không tìm thấy category"
     },
     "Groups": {
         "title": "Nhóm",
@@ -184,7 +203,7 @@
         "movie": "Phim",
         "group": "Nhóm",
         "director_actor": "Đạo diễn/Diễn viên",
-        "not_found": "Không có kế quả tìm kiếm phù hợp"
+        "no_matching_results_found": "Không có kế quả tìm kiếm phù hợp"
     },
     "Toast": {
         "register_successful": "Mã OTP được gửi về Email. Vui lòng nhập để xác nhận tài khoản.",
