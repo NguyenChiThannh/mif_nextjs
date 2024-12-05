@@ -23,8 +23,12 @@ const unsubscribeFromEvent = async (id) => {
     return res.data
 }
 
-const getSubscribedEvents = async () => {
-    const res = await privateApi.get('/subscribed-events')
+const getSubscribedEvents = async ({ queryKey, pageParam = 0 }) => {
+    const res = await privateApi.get('/subscribed-events', {
+        params: {
+            page: pageParam,
+        }
+    })
     return res.data
 }
 

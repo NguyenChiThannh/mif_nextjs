@@ -36,9 +36,6 @@ export default function PostsSection({ id }) {
                     <PostSkeleton />
                 )}
                 <div ref={observerElem}></div>
-                {!hasNextPage && (
-                    <div className="text-center my-4 text-sm text-muted-foreground">Bạn đã xem hết bài viết</div>
-                )}
             </div>
         </div>
     )

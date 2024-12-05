@@ -12,20 +12,25 @@ import { useEffect, useState } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
 import CardMovie, { CardMovieSkeleton } from '@/components/card-movie'
 import Loading from '@/components/loading'
+import { useTranslations } from 'next-intl'
+import FilmographySection from '@/app/[locale]/(root)/(profile)/actor/[id]/(section)/filmography-section'
+import { useParams } from 'next/navigation'
 
-export default function Actor({ params }) {
+export default function Actor() {
+  const t = useTranslations('Profile.Actor')
+  const { id } = useParams()
   const [liked, setLiked] = useState(false)
   const [isInitialLoading, setIsInitialLoading] = useState(true)
 
-  const { data: actor, isLoading: isActorLoading } = actorApi.query.useGetActorById(params.id)
-  const { data: actorFilmography, isLoading: isActorFilmographyLoading } = actorApi.query.useGetActorFilmography(params.id)
+  const { data: actor, isLoading: isActorLoading } = actorApi.query.useGetActorById(id)
+
 
   const addFavoriteActorMutation = favoriteActorsApi.mutation.useAddFavoriteActor()
   const removeFavoriteActorMutation = favoriteActorsApi.mutation.useRemoveFavoriteActor()
   const isActorFavoriteMutation = favoriteActorsApi.mutation.useIsActorFavorite()
 
   useEffect(() => {
-    isActorFavoriteMutation.mutate(params.id, {
+    isActorFavoriteMutation.mutate(id, {
       onSuccess: (isFavorite) => {
         setLiked(isFavorite)
         setIsInitialLoading(false)
@@ -34,28 +39,23 @@ export default function Actor({ params }) {
         setIsInitialLoading(false)
       },
     })
-  }, [params.id])
+  }, [id])
 
 
   if (isInitialLoading || isActorLoading) {
     return <Loading />
   }
-  // if (true || isActorLoading) {
-  //   return <Loading />
-  // }
 
   const handleAddFavoriteActor = () => {
     setLiked(true)
-    addFavoriteActorMutation.mutate(params.id, {
-      onSuccess: () => setLiked(true),
+    addFavoriteActorMutation.mutate(id, {
       onError: () => setLiked(false),
     })
   }
 
   const handleRemoveFavoriteActor = () => {
     setLiked(false)
-    removeFavoriteActorMutation.mutate(params.id, {
-      onSuccess: () => setLiked(false),
+    removeFavoriteActorMutation.mutate(id, {
       onError: () => setLiked(true),
     })
   }
@@ -65,32 +65,20 @@ export default function Actor({ params }) {
       {/* Header Section */}
       <div className="flex flex-col items-center gap-4">
         <div className="relative">
-          {isActorLoading ? (
-            <Skeleton className="w-32 h-32 rounded-full" />
-          ) : (
-            <Avatar className="w-32 h-32">
-              <AvatarImage src={actor?.profilePictureUrl} alt={actor?.name || 'Actor Avatar'} />
-              <AvatarFallback>Actor</AvatarFallback>
-            </Avatar>
-          )}
-          <Button
-            variant="ghost"
-            className="absolute -right-1 -bottom-1 rounded-full bg-card w-12 h-12 shadow-lg"
-          >
-            <Camera className="w-6 h-6 text-primary" />
-          </Button>
+          <Avatar className="w-32 h-32">
+            <AvatarImage src={actor.profilePictureUrl} alt={actor.name || 'Actor Avatar'} />
+            <AvatarFallback>Actor</AvatarFallback>
+          </Avatar>
         </div>
 
-        <div className="text-xl font-bold text-center">
-          {isActorLoading ? <Skeleton className="w-32 h-6" /> : actor?.name}
-        </div>
+        <div className="text-xl font-bold text-center">{actor.name}</div>
 
         <div className="text-sm font-medium">
-          Mức độ yêu thích: {isActorLoading ? <Skeleton className="w-12 h-4" /> : 10}
+          {t("like_level")}: {10}
         </div>
 
         <div className="flex items-center text-sm font-medium">
-          <span>Rank: #16 (</span>
+          <span>{t("rank")}: #16 (</span>
           <Triangle
             className={`${true ? 'fill-green-500 text-green-500' : 'rotate-180 fill-red-500 text-red-500'} mx-1`}
             size="10px"
@@ -103,21 +91,21 @@ export default function Actor({ params }) {
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" className="flex items-center gap-1">
-                <span>Đã yêu thích</span>
+                <span>{t("liked")}</span>
                 <ChevronDown className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem onClick={handleRemoveFavoriteActor}>
                 <HeartOff className="w-4 h-4 mr-2" />
-                Hủy yêu thích
+                {t("unlike")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <Button onClick={handleAddFavoriteActor} className="flex items-center gap-2">
             <Heart className="w-4 h-4" />
-            <span>Yêu thích</span>
+            <span>{t("like")}</span>
           </Button>
         )}
       </div>
@@ -153,32 +141,7 @@ export default function Actor({ params }) {
       </div>
 
       {/* Filmography Section */}
-      <div>
-        <Title title="Phim tham gia" isMore={false} />
-        {isActorFilmographyLoading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {Array.from({ length: 8 }).map((_, index) => (
-              <div key={index} className="pl-1 flex justify-center">
-                <CardMovieSkeleton direction="vertical" />
-              </div>
-            ))}
-          </div>
-        ) : actorFilmography?.length === 0 ? (
-          <div className="flex justify-center mt-4 font-bold mb-8">
-            Chưa tham gia bộ phim nào
-          </div>
-        ) : (
-          <div className="flex mt-4">
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {actorFilmography.map((movie) => (
-                <div key={movie.id} className="pl-1 flex justify-center">
-                  <CardMovie movie={movie} direction="vertical" />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+      <FilmographySection actorId={id} t={t} />
     </div>
   )
 }

@@ -8,9 +8,9 @@ import { DialogEditProfile } from '@/app/[locale]/(root)/(profile)/user/[id]/(co
 import { userApi } from '@/services/userApi'
 
 export default function InfoSection({ id }) {
+    const t = useTranslations('Profile.User')
     const [openDialogEdit, setOpenDialogEdit] = useState(false)
     const { data: infoUser, isLoading } = userApi.query.useGetUserInfoById(id)
-    const t = useTranslations('Profile.User')
 
     if (isLoading) return <Loading />
 

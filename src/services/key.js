@@ -17,11 +17,12 @@ export const QUERY_KEY = {
     actorMovieography: (actorId) => ['actor_movieography', actorId],
     actorById: (actorId) => ['actor', actorId],
     topActors: (page, size) => ['top_actor', { page, size }],
+    topActorsInfinite: () => ['top_actor'],
     // Category
     allmovieCategories: () => 'all_categories',
     categoryById: (id) => ['category', id],
     // FavoriteActors
-    favoriteActors: (userId) => ['favorite_actors', userId],
+    favoriteActors: () => ['favorite_actors'],
     // user
     userInfoById: (id) => ['user_info', id],
     profilePostByUserId: (id) => ['post_user', id],

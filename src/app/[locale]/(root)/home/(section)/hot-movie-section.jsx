@@ -3,7 +3,7 @@ import CardMovie, { CardMovieSkeleton } from '@/components/card-movie';
 import { movieApi } from '@/services/movieApi';
 import React from 'react'
 
-export default function SectionHotMovie() {
+export default function MovieHotSection() {
     const { isLoading, data } = movieApi.query.useGetNewestMovie(0, 5)
     if (isLoading)
         return (

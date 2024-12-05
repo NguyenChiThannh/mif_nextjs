@@ -2,9 +2,9 @@ import ActorCarousel from "@/components/actor-carousel"
 import { MainCarousel } from "@/components/main-carousel"
 import Title from "@/components/title"
 import { useTranslations } from "next-intl"
-import SectionHotMovie from "@/app/[locale]/(root)/home/(section)/section-hot-movie"
-import SectionNews from "@/app/[locale]/(root)/home/(section)/section-news"
-import SectionRandomMovie from "@/app/[locale]/(root)/home/(section)/section-random-movie"
+import MovieHotSection from "@/app/[locale]/(root)/home/(section)/hot-movie-section"
+import PostPublicSection from "@/app/[locale]/(root)/home/(section)/post-public-section"
+import RandomMovieSection from "@/app/[locale]/(root)/home/(section)/random-movie-section"
 
 
 export default function Home() {
@@ -12,7 +12,6 @@ export default function Home() {
   return (
     <>
       <div className="w-full">
-
         <MainCarousel />
 
         <div className="pt-8 md:pt-12 lg:pt-16">
@@ -25,7 +24,7 @@ export default function Home() {
           <div className="col-span-2">
             <Title title={t('title_section_news')} isMore='true' redirect='/news' />
             <div className="mb-4 lg:mb-24">
-              <SectionNews />
+              <PostPublicSection />
             </div>
           </div>
 
@@ -33,11 +32,11 @@ export default function Home() {
 
             <Title title={t('title_section_hot_moives')} isMore='true' redirect='/movies' />
             <div className="grid gap-5">
-              <SectionHotMovie />
+              <MovieHotSection />
             </div>
             <Title title={t('title_section_random_moives')} isMore='true' redirect='/movies' />
             <div className="grid gap-5">
-              <SectionRandomMovie />
+              <RandomMovieSection />
             </div>
           </div>
         </div>

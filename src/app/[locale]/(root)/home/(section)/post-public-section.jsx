@@ -1,7 +1,7 @@
 import News, { NewsSkeleton } from '@/components/news'
 import React from 'react'
 
-export default function SectionNews() {
+export default function PostPublicSection() {
     return (
         <div>
             <News />

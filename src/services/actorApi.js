@@ -1,5 +1,5 @@
 import { QUERY_KEY } from "@/services/key";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
@@ -11,7 +11,16 @@ export const getTopActors = async ({ queryKey }) => {
         params: {
             page,
             size,
-        },
+        }
+    })
+    return res.data
+}
+
+export const getTopActorsInfinite = async ({ queryKey, pageParam = 0 }) => {
+    const res = await privateApi.get('/actors', {
+        params: {
+            page: pageParam,
+        }
     })
     return res.data
 }
@@ -57,7 +66,17 @@ export const actorApi = {
                 queryKey: QUERY_KEY.topActors(page, size),
                 queryFn: getTopActors,
             })
-        }
+        },
+        useGetTopActorsInfinite() {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.topActorsInfinite(),
+                queryFn: getTopActorsInfinite,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            });
+        },
     },
     mutation: {
         useCreateActor() {
@@ -67,9 +86,6 @@ export const actorApi = {
                 onSuccess: () => {
                     toast.success(t('create_actor_successful'))
                 },
-                onError: () => {
-                    toast.error(t('create_actor_failed'))
-                }
             })
         },
         useDeleteActor() {

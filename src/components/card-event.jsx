@@ -8,24 +8,32 @@ import { groupsApi } from "@/services/groupsApi";
 import useUserId from "@/hooks/useUserId";
 import { formatDateTime } from "@/lib/formatter";
 import { Skeleton } from "@/components/ui/skeleton";
+import { eventApi } from "@/services/eventApi";
 
 export default function CardEvent({ event }) {
-    const userId = useUserId(); // Hook để lấy userId
+    const userId = useUserId();
     const [status, setStatus] = useState("");
 
-    useEffect(() => {
-        if (event.userJoin.some((user) => user.id === userId)) {
-            setStatus("Đã tham gia");
-        } else {
-            setStatus("Chưa tham gia");
-        }
-    }, [event.userJoin, userId]);
+    const subscribeToEventMutation = eventApi.mutation.useSubscribeToEvent();
+    const unsubscribeFromEventMutation = eventApi.mutation.useUnsubscribeFromEvent();
 
-    const handleJoinEvent = () => {
-        // Hàm xử lý khi tham gia sự kiện
-        console.log("Tham gia sự kiện:", event.id);
-        // Gửi API tham gia và cập nhật lại trạng thái nếu cần
-        setStatus("Đã tham gia");
+    useEffect(() => {
+        if (event.userJoin.some((id) => id === userId)) {
+            setStatus("joined");
+        } else {
+            setStatus("join");
+        }
+    }, [userId]);
+
+    const handleEventAction = async (action) => {
+        action === "join" ? setStatus('joined') : setStatus('join')
+        const mutation = action === "join" ? subscribeToEventMutation : unsubscribeFromEventMutation;
+        await mutation.mutateAsync(event.id, {
+            onError: () => {
+                action === "join" ? setStatus('join') : setStatus('joined')
+            }
+        });
+
     };
 
     return (
@@ -44,7 +52,7 @@ export default function CardEvent({ event }) {
                         <div className="flex items-center gap-2">
                             <Users className="w-4 h-4" />
                             <span className="text-sm text-muted-foreground">
-                                {event.userJoin.length} tham gia
+                                {event.userJoin.length || 0} tham gia
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -56,38 +64,29 @@ export default function CardEvent({ event }) {
                         {event.eventType === "ONLINE" ? (
                             <div className="flex items-center gap-2">
                                 <Monitor className="w-4 h-4" />
-                                <span className="text-sm text-muted-foreground">
-                                    Online
-                                </span>
+                                <span className="text-sm text-muted-foreground">Online</span>
                             </div>
                         ) : (
                             <div className="flex items-center gap-2">
                                 <MapPinned className="w-4 h-4" />
-                                <span className="text-sm text-muted-foreground">
-                                    Offline
-                                </span>
+                                <span className="text-sm text-muted-foreground">Offline</span>
                             </div>
                         )}
                     </div>
 
-                    {status === "Đã tham gia" ? (
-                        <p className="text-green-500 text-center font-medium">
-                            {status}
-                        </p>
-                    ) : (
-                        <Button
-                            variant="outline"
-                            className="w-full hover:bg-primary hover:text-primary-foreground transition-all duration-200"
-                            onClick={handleJoinEvent}
-                        >
-                            Tham gia sự kiện
-                        </Button>
-                    )}
+                    <Button
+                        variant="outline"
+                        className={`w-full ${status === "join" ? "hover:bg-primary hover:text-primary-foreground transition-all duration-200" : ""} `}
+                        onClick={() => handleEventAction(status === "joined" ? "leave" : "join")}
+                    >
+                        {status === "joined" ? "Hủy tham gia sự kiện" : "Tham gia sự kiện"}
+                    </Button>
                 </div>
             </CardContent>
         </Card>
     );
 }
+
 
 export const CardEventSkeleton = () => {
     return (

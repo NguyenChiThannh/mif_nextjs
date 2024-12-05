@@ -3,15 +3,10 @@ import CardMovieSmall, { CardMovieSmallSkeleton } from '@/components/card-movie-
 import { ComboboxMovieCategory } from '@/components/combobox-category-movie'
 import Loading from '@/components/loading'
 import { SectionExploreMovies } from '@/components/section-explore-movies'
-import Title from '@/components/title'
-import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { movieApi } from '@/services/movieApi'
-import { Clock, Filter, Star, TrendingUp } from 'lucide-react'
 import React from 'react'
 
 export default function MoviePage() {
-
     const { isLoading, data } = movieApi.query.useGetAllMovies(0, 10)
 
     if (isLoading) return (<Loading />)

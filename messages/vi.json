@@ -161,6 +161,15 @@
             "bio": "Về bản thân",
             "bio_placeholder": "Nhập thông tin về bản thân",
             "button_submit_edit_profile": "Thay đổi"
+        },
+        "Actor": {
+            "like_level": "Mức độ yêu thích",
+            "rank": "Rank",
+            "like": "Yêu thích",
+            "unlike": "Hủy yêu thích",
+            "liked": "Đã yêu thích",
+            "joined_movies": "Phim tham gia",
+            "not_participated_in_any_movie": "Chưa tham gia bộ phim nào"
         }
     },
     "DialogConfirmDelete": {
@@ -196,7 +205,6 @@
         "delete_actor_successful": "Xóa diễn viên thành công",
         "delete_actor_failed": "Xóa diễn viên thất bại",
         "create_actor_successful": "Thêm diễn viên thành công",
-        "create_actor_failed": "Thêm diễn viên thất bại",
         "create_category_successful": "Thêm category thành công",
         "create_category_failed": "Thêm category thất bại",
         "delete_category_successful": "Xóa category thành công",

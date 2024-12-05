@@ -18,15 +18,19 @@ const isActorFavorite = async (actorId) => {
 }
 
 const getFavoriteActors = async ({ queryKey, pageParam = 0 }) => {
-    const res = await privateApi.get('/favoriteActors')
+    const res = await privateApi.get('/favoriteActors', {
+        params: {
+            page: pageParam,
+        }
+    })
     return res.data
 }
 
 export const favoriteActorsApi = {
     query: {
-        useGetFavoriteActors(actorId) {
+        useGetFavoriteActors() {
             return useInfiniteQuery({
-                queryKey: QUERY_KEY.isActorFavorite(actorId),
+                queryKey: QUERY_KEY.favoriteActors(),
                 queryFn: getFavoriteActors,
                 getNextPageParam: (lastPage, allPages) => {
                     const nextPage = allPages.length;

@@ -3,7 +3,6 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 export const useWebSocket = (socketUrl, token, subscriptionPath, callback) => {
-    console.log('🚀 ~ useWebSocket ~ token:', token)
     const [isConnected, setIsConnected] = useState(false);
     const [client, setClient] = useState(null);
 
