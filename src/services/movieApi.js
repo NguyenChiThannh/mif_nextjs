@@ -1,6 +1,6 @@
 import { privateApi } from "@/services/config"
 import { QUERY_KEY } from "@/services/key"
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 
@@ -66,7 +66,7 @@ export const movieApi = {
             })
         },
         useGetAllMovies() {
-            return useQuery({
+            return useInfiniteQuery({
                 queryKey: QUERY_KEY.allMovies(),
                 queryFn: getAllMovies,
                 getNextPageParam: (lastPage, allPages) => {
@@ -96,9 +96,6 @@ export const movieApi = {
                 onSuccess: () => {
                     toast.success(t('create_movie_successful'))
                 },
-                onError: () => {
-                    toast.error(t('create_movie_failed'))
-                }
             })
         }
     }

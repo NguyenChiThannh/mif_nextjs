@@ -71,7 +71,8 @@ function ActorInfo({ actor, isTopRanked }) {
                 <Link href={`/actor/${actor.id}`}>
                     <p className="leading-none font-bold">{actor.name}</p>
                 </Link>
-                <div className="flex items-center gap-1">
+                {/* Rank actor */}
+                {/* <div className="flex items-center gap-1">
                     <span className="text-sm">#1(</span>
                     <Triangle
                         className={isTopRanked
@@ -80,6 +81,10 @@ function ActorInfo({ actor, isTopRanked }) {
                         size="10px"
                     />
                     <span className="text-sm">16)</span>
+                </div> */}
+                <div className="flex items-center gap-1">
+                    <span className="text-sm">Diễn viên</span>
+
                 </div>
             </div>
         </div>

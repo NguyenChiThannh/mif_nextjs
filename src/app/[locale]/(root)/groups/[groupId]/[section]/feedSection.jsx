@@ -29,7 +29,7 @@ export default function FeedSection({ group }) {
         <div className="grid md:grid-cols-3 gap-4 grid-cols-2">
 
             <div className="grid gap-8 col-span-2">
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center mt-4">
                     <CreatePostDialog groupId={group?.id} />
                     {/* <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>

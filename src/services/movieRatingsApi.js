@@ -52,7 +52,7 @@ export const movieRatingsApi = {
             return useMutation({
                 mutationFn: removeRating,
                 onSuccess: () => {
-                    toast.success()
+                    toast.success(t('delete_rating_movie_successful'))
                 }
             })
         }

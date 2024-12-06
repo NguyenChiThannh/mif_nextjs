@@ -26,10 +26,9 @@ export default function CardActor({ actor }) {
                     <p className="flex justify-center text-base font-bold">{name}</p>
                 </Link>
 
-                <div className="flex justify-center items-center gap-[2px]">
+                {/* Rank actor */}
+                {/* <div className="flex justify-center items-center gap-[2px]">
                     <span className="text-sm">#{rank} (</span>
-
-                    {/* Rank Indicator */}
                     <Triangle
                         className={`${true ? 'fill-green-500 text-green-500' : 'rotate-180 fill-red-500 text-red-500'
                             }`}
@@ -37,7 +36,7 @@ export default function CardActor({ actor }) {
                     />
 
                     <span className="text-sm">16)</span>
-                </div>
+                </div> */}
             </div>
         </div>
     );

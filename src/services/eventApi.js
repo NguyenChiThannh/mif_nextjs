@@ -1,7 +1,9 @@
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query"
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { toast } from "react-toastify"
 import { privateApi } from "@/services/config"
 import { QUERY_KEY } from "@/services/key"
+import { useTranslations } from "next-intl"
+
 
 const createEvent = async (data) => {
     const res = await privateApi.post('/events', data)
@@ -19,7 +21,7 @@ const subscribeToEvent = async (id) => {
 }
 
 const unsubscribeFromEvent = async (id) => {
-    const res = await privateApi.post(`/events/${id}/subscribe`)
+    const res = await privateApi.post(`/events/${id}/unsubscribe`)
     return res.data
 }
 
@@ -66,11 +68,14 @@ export const eventApi = {
         }
     },
     mutation: {
-        useCreateEvent() {
+        useCreateEvent(groupId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: createEvent,
                 onSuccess: () => {
-                    toast.success('Tạo sự kiện thành công')
+                    toast.success(t('create_event_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.getEventsByGroupId(groupId) })
                 }
             })
         },

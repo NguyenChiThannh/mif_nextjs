@@ -7,10 +7,8 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { actorApi } from '@/services/actorApi'
 import { favoriteActorsApi } from '@/services/favoriteActorsApi'
-import { Award, Camera, ChevronDown, Heart, HeartOff, Triangle } from 'lucide-react'
+import { Award, ChevronDown, Heart, HeartOff, Triangle } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
-import CardMovie, { CardMovieSkeleton } from '@/components/card-movie'
 import Loading from '@/components/loading'
 import { useTranslations } from 'next-intl'
 import FilmographySection from '@/app/[locale]/(root)/(profile)/actor/[id]/(section)/filmography-section'
@@ -77,14 +75,15 @@ export default function Actor() {
           {t("like_level")}: {10}
         </div>
 
-        <div className="flex items-center text-sm font-medium">
+        {/* Rank actor */}
+        {/* <div className="flex items-center text-sm font-medium">
           <span>{t("rank")}: #16 (</span>
           <Triangle
             className={`${true ? 'fill-green-500 text-green-500' : 'rotate-180 fill-red-500 text-red-500'} mx-1`}
             size="10px"
           />
           <span>16)</span>
-        </div>
+        </div> */}
 
         {/* Favorite Actions */}
         {liked ? (

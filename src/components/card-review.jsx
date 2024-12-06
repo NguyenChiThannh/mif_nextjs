@@ -1,6 +1,7 @@
 import Rating from '@/components/rating'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton'
+import Link from 'next/link'
 import React from 'react'
 
 export default function CardReview({ review }) {
@@ -18,7 +19,12 @@ export default function CardReview({ review }) {
                 {/* User Details */}
                 <div className="flex flex-col w-full gap-2">
                     <div className="flex items-center justify-between">
-                        <p className="text-base font-semibold text-foreground">{review.user.displayName}</p>
+                        <Link
+                            href={`/user/${review.user.id}`}
+                        >
+                            <p className="text-base font-semibold text-foreground">{review.user.displayName}</p>
+                        </Link>
+
                         <div className="flex items-center gap-2">
                             <Rating
                                 value={review.ratingValue}

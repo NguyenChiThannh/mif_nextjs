@@ -51,7 +51,7 @@ export default function AboutSection({ group, members }) {
             <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
                 <CardContent>
                     <div className="grid gap-4 mt-6">
-                        <p className="font-bold flex items-center">Thành viên &middot; &nbsp;<p className='text-sm leading-3 text-muted-foreground'>100</p></p>
+                        <p className="font-bold flex items-center">Thành viên &middot; &nbsp;<p className='text-sm leading-3 text-muted-foreground'>{members?.numberOfElements}</p></p>
                         <Separator />
                         <div className="flex items-center gap-2">
                             <GroupAvatar images={members?.content?.map((user) => user.avatar)} names={members?.content?.map((user) => user?.displayName)} size="w-12 h-12" />

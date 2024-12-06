@@ -57,12 +57,12 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
                 {/* Rating Section */}
                 <div className="flex items-center space-x-1">
                     <Rating
-                        value={ratings?.averageRating / 2}
+                        value={ratings?.averageRating}
                         iconSize="m"
                         showOutOf={true}
                         enableUserInteraction={false}
                     />
-                    <span className="text-xs">{ratings?.averageRating ?? '0.0'}/10</span>
+                    <span className="text-xs">{(Number(movie.ratings?.averageRating) * 2) || '0.0'}/10</span>
                 </div>
 
                 {/* Watch Trailer Button */}

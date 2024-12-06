@@ -17,7 +17,7 @@ export function NotificationPopover() {
     const [liveNotifications, setLiveNotifications] = useState([]);
     const [localUnreadCount, setLocalUnreadCount] = useState(0);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const [isRealtime, setIsRealtime] = useState(false); // Trạng thái xem liệu có dữ liệu realtime hay không
+    const [isRealtime, setIsRealtime] = useState(false);
 
     const {
         data: notifications,
@@ -55,20 +55,19 @@ export function NotificationPopover() {
         unreadNotificationCount + localUnreadCount;
 
     // Kết hợp thông báo từ API và WebSocket
-    // Kết hợp thông báo từ API và WebSocket
     const combinedNotifications = (() => {
         const notificationMap = new Map();
 
         // Thêm các thông báo từ API
         notifications?.pages.forEach((page) => {
             page.content.forEach((notification) => {
-                notificationMap.set(notification.id, notification);
+                notificationMap.set(notification.notifyId, notification);
             });
         });
 
         // Thêm các thông báo từ liveNotifications
         liveNotifications.forEach((notification) => {
-            notificationMap.set(notification.id, notification);
+            notificationMap.set(notification.notifyId, notification);
         });
 
         // Chuyển Map trở lại thành mảng

@@ -54,11 +54,8 @@ export const categoryApi = {
                 mutationFn: createCategory,
                 onSuccess: () => {
                     toast.success(t('create_category_successful'))
-                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories());
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.allmovieCategories() });
                 },
-                onError: () => {
-                    toast.error(t('create_category_failed'))
-                }
             });
         },
         useDeleteCategory() {
@@ -68,10 +65,7 @@ export const categoryApi = {
                 mutationFn: deleteCategory,
                 onSuccess: () => {
                     toast.success(t('delete_category_successful'));
-                    queryClient.invalidateQueries(QUERY_KEY.allmovieCategories());
-                },
-                onError: () => {
-                    toast.error(t('delete_category_failed'));
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.allmovieCategories() });
                 },
             });
         },
@@ -84,10 +78,6 @@ export const categoryApi = {
                     toast.success('Update Cateogry Successfully')
                     queryClient.invalidateQueries(QUERY_KEY.allmovieCategories());
                 },
-                onError: () => {
-                    toast.error('Update Cateogry Fail')
-
-                }
             })
         },
 

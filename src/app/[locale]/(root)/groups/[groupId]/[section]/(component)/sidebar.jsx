@@ -37,7 +37,7 @@ export default function SideBar({ isOwner, groupId, pendingInvitations, t, secti
                     )}
                 </Link>
 
-                {isOwner && (
+                {/* {isOwner && (
                     <Link
                         href={`/groups/${groupId}/statistical`}
                         prefetch={false}
@@ -47,7 +47,7 @@ export default function SideBar({ isOwner, groupId, pendingInvitations, t, secti
                         <ChartLine className="h-4 w-4" />
                         {t('statistical')}
                     </Link>
-                )}
+                )} */}
             </div>
         </div>
     )

@@ -28,7 +28,7 @@ export default function CardEvent({ event }) {
     const handleEventAction = async (action) => {
         action === "join" ? setStatus('joined') : setStatus('join')
         const mutation = action === "join" ? subscribeToEventMutation : unsubscribeFromEventMutation;
-        await mutation.mutateAsync(event.id, {
+        mutation.mutate(event.id, {
             onError: () => {
                 action === "join" ? setStatus('join') : setStatus('joined')
             }
@@ -75,7 +75,7 @@ export default function CardEvent({ event }) {
                     </div>
 
                     <Button
-                        variant="outline"
+                        variant={status === "join" ? "default" : "outline"}
                         className={`w-full ${status === "join" ? "hover:bg-primary hover:text-primary-foreground transition-all duration-200" : ""} `}
                         onClick={() => handleEventAction(status === "joined" ? "leave" : "join")}
                     >

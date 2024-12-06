@@ -23,12 +23,13 @@ import { schemaEvent } from "@/lib/schemas/event.chema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useUploadImage from "@/hooks/useUploadImage";
 import { eventApi } from "@/services/eventApi";
+import { Loader2 } from "lucide-react";
 
 export function DialogCreateEvent({ groupId }) {
     const [eventType, setEventType] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-
-    const createEventMutation = eventApi.mutation.useCreateEvent()
+    const createEventMutation = eventApi.mutation.useCreateEvent(groupId)
     const {
         images,
         handleImageChange,
@@ -67,18 +68,24 @@ export function DialogCreateEvent({ groupId }) {
             startDate: startDateIsoString,
             eventPicture: uploadedImageUrls[0],
         };
-        console.log('🚀 ~ onSubmit ~ formData:', formData)
 
-        createEventMutation.mutate(formData)
-
-        // reset();
+        createEventMutation.mutate(formData, {
+            onSuccess: () => {
+                setIsDialogOpen(false);
+                reset();
+            },
+        })
 
     };
 
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-                <Button size="sm" className="bg-primary hover:bg-primary-dark">
+                <Button
+                    size="sm"
+                    className="bg-primary hover:bg-primary-dark"
+                    onClick={() => setIsDialogOpen(true)}
+                >
                     Tạo sự kiện
                 </Button>
             </DialogTrigger>
@@ -222,7 +229,8 @@ export function DialogCreateEvent({ groupId }) {
 
                     {/* Submit Button */}
                     <div className="flex justify-end">
-                        <Button type="submit" className="bg-primary hover:bg-primary-dark">
+                        <Button type="submit" disabled={createEventMutation.isPending}>
+                            {createEventMutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Tạo sự kiện
                         </Button>
                     </div>

@@ -11,7 +11,7 @@ export const QUERY_KEY = {
     groupsUserNotJoin: (size) => ['groups_user_not_join', { size }],
     detailGroup: (id) => ['group', id],
     memberGroup: (id) => ['member_group', id],
-    pendingInvitations: (groupId, size) => ['pending_invitations', { groupId, size }],
+    pendingInvitations: (groupId) => ['pending_invitations', groupId],
     searchGroupByGroupName: (search) => ['search_group_by_group_name', search],
     // Actor
     actorMovieography: (actorId) => ['actor_movieography', actorId],

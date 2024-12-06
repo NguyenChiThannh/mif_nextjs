@@ -14,9 +14,9 @@ import { toast } from 'react-toastify'
 export default function CardMember({ member, groupId, type, isOwner }) {
     const date = new Date(member?.joinedAt)
 
-    const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation()
-    const rejectInvationMutation = groupsApi.mutation.useRejectInvation()
-    const removeMemberFromGroupMutation = groupsApi.mutation.useRemoveMemberFromGroup()
+    const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation(groupId)
+    const rejectInvationMutation = groupsApi.mutation.useRejectInvation(groupId)
+    const removeMemberFromGroupMutation = groupsApi.mutation.useRemoveMemberFromGroup(groupId)
 
     const handleAcceptInvitation = () => {
         acceptInvitationMutation.mutate({
@@ -49,7 +49,7 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                 </Avatar>
                 <div>
                     <h3 className="font-bold">{member?.displayName}</h3>
-                    {type === 'invitation' || !isOwner || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
+                    {type === 'invitation' || isOwner || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
                 </div>
             </div>
             {type === 'invitation'

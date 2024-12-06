@@ -49,7 +49,7 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                     </div>
 
                     {/* Date of Birth */}
-                    <div className="grid gap-2">
+                    {/* <div className="grid gap-2">
                         <label className="text-sm font-semibold">{t('dob')}</label>
                         <Controller
                             control={control}
@@ -61,6 +61,10 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                                 />
                             )}
                         />
+                    </div> */}
+                    <div className="grid gap-2">
+                        <label className="text-sm font-semibold">{t('dob')}</label>
+                        <Input />
                     </div>
 
                     {/* Bio */}

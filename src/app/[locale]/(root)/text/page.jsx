@@ -61,163 +61,162 @@
 //         </div>
 //     );
 // }
+'use client'
+import { DatePickerPopover } from "@/components/date-picker-popover";
+import { CalendarComponent } from "@/components/ui/calendar";
+import React from "react";
 
-// import React from "react";
+const genres = [
+    { value: 'action', label: 'Action' },
+    { value: 'comedy', label: 'Comedy' },
+    { value: 'drama', label: 'Drama' },
+    { value: 'horror', label: 'Horror' },
+    { value: 'sci-fi', label: 'Sci-Fi' },
+    { value: 'romance', label: 'Romance' },
+];
 
-// const genres = [
-//     { value: 'action', label: 'Action' },
-//     { value: 'comedy', label: 'Comedy' },
-//     { value: 'drama', label: 'Drama' },
-//     { value: 'horror', label: 'Horror' },
-//     { value: 'sci-fi', label: 'Sci-Fi' },
-//     { value: 'romance', label: 'Romance' },
-// ];
+export default function MovieForm() {
+    const [selectedGenres, setSelectedGenres] = React.useState([]);
 
-// export default function MovieForm() {
-//     const [selectedGenres, setSelectedGenres] = React.useState([]);
+    const handleSelectionChange = (selected) => {
+        setSelectedGenres(selected);
+    };
 
-//     const handleSelectionChange = (selected) => {
-//         setSelectedGenres(selected);
-//     };
-
-//     const handleSubmit = (event) => {
-//         event.preventDefault();
-//         // Sử dụng selectedGenres ở đây
-//         console.log("Selected genres:", selectedGenres);
-//     };
-
-//     return (
-//         <form onSubmit={handleSubmit} className="grid gap-4">
-//             <div className="flex justify-between">
-//                 <p className="text-2xl font-bold">Create Movie</p>
-//                 <button type="submit" className="btn-primary">Submit</button>
-//             </div>
-
-
-//             <DialogOTP />
-
-//             {/* FancyMultiSelect */}
-//             <div className="grid grid-cols-1 gap-4">
-//                 <div className="col-span-1">
-//                     <p className="text-sm font-semibold pb-2">Genres</p>
-//                     <FancyMultiSelect
-//                         values={genres}
-//                         initialSelected={[]}
-//                         onSelectionChange={handleSelectionChange}
-//                     />
-//                 </div>
-//             </div>
-
-//             {/* Bạn có thể render các thể loại đã chọn bên dưới */}
-//             <div>
-//                 <p className="text-sm font-semibold">Selected Genres:</p>
-//                 <ul>
-//                     {selectedGenres.map((genre) => (
-//                         <li key={genre.value}>{genre.label}</li>
-//                     ))}
-//                 </ul>
-//             </div>
-//         </form>
-//     );
-// }
-
-
-"use client";
-
-import { useEffect, useState } from "react";
-import SockJS from "sockjs-client";
-import { Client } from "@stomp/stompjs";
-
-// URL của WebSocket
-const SOCKET_URL = "http://localhost:8080/ws"; // Chỉnh sửa URL theo backend của bạn
-
-const NotificationComponent = () => {
-    const [notifications, setNotifications] = useState([]);
-    const [isConnected, setIsConnected] = useState(false);
-    const [client, setClient] = useState(null);
-
-    const token =
-        "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3R1c2VyMkBleGFtcGxlLmNvbSIsInN1YiI6IjY2YzJkZmI4ZWYxNGRlN2YwZGEyZDRlMCIsImlhdCI6MTczMzI0MDUxMCwiZXhwIjoxNzQxODgwNTEwfQ.EN9pQwqJFsOG7rj87DSfNJ9VhExaCGQJEHxgBEYt4JU"; // Thay thế bằng token thực tế của bạn
-
-    // Khởi tạo kết nối WebSocket khi component mount
-    useEffect(() => {
-        // Tạo kết nối SockJS
-        const socket = new SockJS(SOCKET_URL); // Kết nối SockJS với URL của server
-        const stompClient = new Client({
-            webSocketFactory: () => socket, // Sử dụng SockJS làm kết nối WebSocket
-            reconnectDelay: 5000,
-            heartbeatIncoming: 4000,
-            heartbeatOutgoing: 4000,
-            connectHeaders: {
-                Authorization: `Bearer ${token}`, // Đính kèm token vào header khi kết nối
-            },
-            onConnect: (frame) => {
-                console.log("Connected:", frame);
-                setIsConnected(true); // Đánh dấu đã kết nối
-                // Subscribe để nhận thông báo
-                stompClient.subscribe(
-                    `/user/queue/notifications`, // Thay đổi ID người dùng ở đây
-                    (msg) => {
-                        if (msg.body) {
-                            const notification = JSON.parse(msg.body);
-                            setNotifications((prevNotifications) => {
-                                console.log(notification);
-                                // Kiểm tra nếu thông báo đã tồn tại trong list
-                                const isDuplicate = prevNotifications.some(
-                                    (existingNotification) =>
-                                        existingNotification.id === notification.id
-                                );
-                                if (isDuplicate) {
-                                    return prevNotifications; // Nếu trùng lặp, không thêm vào
-                                } else {
-                                    return [...prevNotifications, notification]; // Nếu không trùng lặp, thêm vào
-                                }
-                            });
-                        }
-                    }
-                );
-            },
-            onDisconnect: () => {
-                console.log("Disconnected!");
-                setIsConnected(false); // Đánh dấu đã ngắt kết nối
-            },
-        });
-
-        // Kích hoạt client WebSocket
-        stompClient.activate();
-
-        // Lưu lại client để sử dụng sau này
-        setClient(stompClient);
-
-        // Dọn dẹp khi component unmount
-        return () => {
-            if (stompClient.connected) {
-                stompClient.deactivate();
-            }
-        };
-    }, []); // Chỉ chạy 1 lần khi component mount
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // Sử dụng selectedGenres ở đây
+        console.log("Selected genres:", selectedGenres);
+    };
 
     return (
-        <div>
-            <h1>Notification Center</h1>
-            <div>
-                {isConnected ? "Connected to WebSocket!" : "Connecting to WebSocket..."}
+        <form onSubmit={handleSubmit} className="grid gap-4">
+            <div className="flex justify-between">
+                <p className="text-2xl font-bold">Create Movie</p>
+                <button type="submit" className="btn-primary">Submit</button>
             </div>
-            <div>
-                {notifications.length > 0 ? (
-                    notifications.map((notification, index) => (
-                        <div key={index}>
-                            <strong>{notification.message}</strong>
-                            <p>{notification.type}</p>
-                            <p>{new Date(notification.createdAt).toLocaleString()}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p>No notifications yet</p>
-                )}
-            </div>
-        </div>
-    );
-};
 
-export default NotificationComponent;
+
+            {/* FancyMultiSelect */}
+            <div className="grid grid-cols-1 gap-4">
+                <div className="col-span-1">
+                    <p className="text-sm font-semibold pb-2">Genres</p>
+                    <CalendarComponent
+                        initialFocus
+                        mode="single"
+                        translate="en" />
+                </div>
+            </div>
+
+            {/* Bạn có thể render các thể loại đã chọn bên dưới */}
+            <div>
+                <p className="text-sm font-semibold">Selected Genres:</p>
+                <ul>
+                    {selectedGenres.map((genre) => (
+                        <li key={genre.value}>{genre.label}</li>
+                    ))}
+                </ul>
+            </div>
+        </form>
+    );
+}
+
+
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import SockJS from "sockjs-client";
+// import { Client } from "@stomp/stompjs";
+
+// // URL của WebSocket
+// const SOCKET_URL = "http://localhost:8080/ws"; // Chỉnh sửa URL theo backend của bạn
+
+// const NotificationComponent = () => {
+//     const [notifications, setNotifications] = useState([]);
+//     const [isConnected, setIsConnected] = useState(false);
+//     const [client, setClient] = useState(null);
+
+//     const token =
+//         "eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InRlc3R1c2VyMkBleGFtcGxlLmNvbSIsInN1YiI6IjY2YzJkZmI4ZWYxNGRlN2YwZGEyZDRlMCIsImlhdCI6MTczMzI0MDUxMCwiZXhwIjoxNzQxODgwNTEwfQ.EN9pQwqJFsOG7rj87DSfNJ9VhExaCGQJEHxgBEYt4JU"; // Thay thế bằng token thực tế của bạn
+
+//     // Khởi tạo kết nối WebSocket khi component mount
+//     useEffect(() => {
+//         // Tạo kết nối SockJS
+//         const socket = new SockJS(SOCKET_URL); // Kết nối SockJS với URL của server
+//         const stompClient = new Client({
+//             webSocketFactory: () => socket, // Sử dụng SockJS làm kết nối WebSocket
+//             reconnectDelay: 5000,
+//             heartbeatIncoming: 4000,
+//             heartbeatOutgoing: 4000,
+//             connectHeaders: {
+//                 Authorization: `Bearer ${token}`, // Đính kèm token vào header khi kết nối
+//             },
+//             onConnect: (frame) => {
+//                 console.log("Connected:", frame);
+//                 setIsConnected(true); // Đánh dấu đã kết nối
+//                 // Subscribe để nhận thông báo
+//                 stompClient.subscribe(
+//                     `/user/queue/notifications`, // Thay đổi ID người dùng ở đây
+//                     (msg) => {
+//                         if (msg.body) {
+//                             const notification = JSON.parse(msg.body);
+//                             setNotifications((prevNotifications) => {
+//                                 console.log(notification);
+//                                 // Kiểm tra nếu thông báo đã tồn tại trong list
+//                                 const isDuplicate = prevNotifications.some(
+//                                     (existingNotification) =>
+//                                         existingNotification.id === notification.id
+//                                 );
+//                                 if (isDuplicate) {
+//                                     return prevNotifications; // Nếu trùng lặp, không thêm vào
+//                                 } else {
+//                                     return [...prevNotifications, notification]; // Nếu không trùng lặp, thêm vào
+//                                 }
+//                             });
+//                         }
+//                     }
+//                 );
+//             },
+//             onDisconnect: () => {
+//                 console.log("Disconnected!");
+//                 setIsConnected(false); // Đánh dấu đã ngắt kết nối
+//             },
+//         });
+
+//         // Kích hoạt client WebSocket
+//         stompClient.activate();
+
+//         // Lưu lại client để sử dụng sau này
+//         setClient(stompClient);
+
+//         // Dọn dẹp khi component unmount
+//         return () => {
+//             if (stompClient.connected) {
+//                 stompClient.deactivate();
+//             }
+//         };
+//     }, []); // Chỉ chạy 1 lần khi component mount
+
+//     return (
+//         <div>
+//             <h1>Notification Center</h1>
+//             <div>
+//                 {isConnected ? "Connected to WebSocket!" : "Connecting to WebSocket..."}
+//             </div>
+//             <div>
+//                 {notifications.length > 0 ? (
+//                     notifications.map((notification, index) => (
+//                         <div key={index}>
+//                             <strong>{notification.message}</strong>
+//                             <p>{notification.type}</p>
+//                             <p>{new Date(notification.createdAt).toLocaleString()}</p>
+//                         </div>
+//                     ))
+//                 ) : (
+//                     <p>No notifications yet</p>
+//                 )}
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default NotificationComponent;

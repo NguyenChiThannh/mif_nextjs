@@ -59,39 +59,41 @@ export const groupPostApi = {
         }
     },
     mutation: {
-        useUpVotePost() {
+        useUpVotePost(groupId) {
             const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: upvotePost,
                 onSuccess: () => {
-                    queryClient.invalidateQueries('group_posts')
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
                 },
             })
         },
-        useDownVotePost() {
+        useDownVotePost(groupId) {
             const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: downvotePost,
                 onSuccess: () => {
-                    queryClient.invalidateQueries('group_posts')
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
                 },
             })
         },
-        useRemoveVotePost() {
+        useRemoveVotePost(groupId) {
             const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: removevotePost,
                 onSuccess: () => {
-                    queryClient.invalidateQueries('group_posts')
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
                 },
             })
         },
-        useCreatePost() {
+        useCreatePost(groupId) {
             const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: createPost,
                 onSuccess: () => {
                     toast.success(t('create_post_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
                 },
             })
         }

@@ -29,7 +29,8 @@ const findByOwnerId = async ({ queryKey }) => {
     const res = await privateApi.get('/my-groups', {
         params: {
             page,
-            size
+            size,
+            sort: 'asc',
         },
     })
     return res.data
@@ -40,7 +41,8 @@ const getUserGroups = async ({ queryKey }) => {
     const res = await privateApi.get(`/user/${id}/groups`, {
         params: {
             page,
-            size
+            size,
+            sort: 'asc',
         },
     })
     return res.data
@@ -56,8 +58,8 @@ const findGroupUserNotJoin = async ({ queryKey }) => {
     return res.data
 }
 
-const addPendingInvitation = async ({ groupId, userId }) => {
-    const res = await privateApi.post(`/groups/${groupId}/pending-invitations/${userId}`)
+const addPendingInvitation = async (data) => {
+    const res = await privateApi.post(`/groups/${data.groupId}/pending-invitations`)
     return res.data
 }
 
@@ -72,15 +74,19 @@ const getGroupByGroupId = async (groupId) => {
 }
 
 const getAllMembers = async (groupId) => {
-    const res = await privateApi.get(`/groups/${groupId}/members`)
+    const res = await privateApi.get(`/groups/${groupId}/members`, {
+        params: {
+            size: 100
+        }
+    })
     return res.data
 }
 
 const getPendingInvitations = async ({ queryKey }) => {
-    const [_key, { groupId, page }] = queryKey
+    const [_key, groupId] = queryKey
     const res = await privateApi.get(`/groups/${groupId}/pending-invitations`, {
         params: {
-            page
+            size: 100
         }
     })
     return res.data
@@ -141,9 +147,9 @@ export const groupsApi = {
 
             })
         },
-        useGetPendingInvitations(groupId, size) {
+        useGetPendingInvitations(groupId) {
             return useQuery({
-                queryKey: QUERY_KEY.pendingInvitations(groupId, size),
+                queryKey: QUERY_KEY.pendingInvitations(groupId),
                 queryFn: getPendingInvitations,
             })
         },
@@ -155,61 +161,57 @@ export const groupsApi = {
         }
     },
     mutation: {
-        useCreateGroup(reset, setIsOpen) {
+        useCreateGroup() {
             const t = useTranslations('Toast');
-            const queryClinet = useQueryClient()
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: createGroup,
                 onSuccess: () => {
                     toast.success(t('create_group_successful'))
-                    reset();
-                    setIsOpen(false);
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupsByOwnerId(0, 24) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.userGroups(0, 24) })
                 },
-                onError: () => {
-                    toast.error(t('create_group_failed'))
-                }
             })
         },
         useAddPendingInvitation() {
             const t = useTranslations('Toast');
-            const queryClinet = useQueryClient()
             return useMutation({
                 mutationFn: addPendingInvitation,
                 onSuccess: () => {
                     toast.success(t('add_pending_invitation_successful'))
-                    // queryClinet.invalidateQueries({ queryKey: })
                 },
             })
         },
-        useAcceptInvitation() {
+        useAcceptInvitation(groupId) {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: acceptInvitation,
                 onSuccess: () => {
                     toast.success(t('accept_invitation_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.pendingInvitations(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.memberGroup(groupId) })
                 },
-                onError: () => {
-                    toast.error(t('accept_invitation_failed'))
-                }
             })
         },
-        useRejectInvation() {
+        useRejectInvation(groupId) {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: removePendingInvitation,
                 onSuccess: () => {
                     toast.success(t('reject_invitation_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.pendingInvitations(groupId) })
                 },
-                onError: () => {
-                    toast.error(t('reject_invitation_failed'))
-                }
             })
         },
-        useRemoveMemberFromGroup() {
+        useRemoveMemberFromGroup(groupId) {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: removeMemberFromGroup,
                 onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.memberGroup(groupId) })
                     toast.success(t('remove_member_group_successful'))
                 },
             })
@@ -221,9 +223,6 @@ export const groupsApi = {
                 onSuccess: () => {
                     toast.success(t('add_member_group_successful'))
                 },
-                onError: () => {
-                    toast.error(t('add_member_group_failed'))
-                }
             })
         },
         useGetUserStatusInGroups() {

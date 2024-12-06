@@ -34,10 +34,15 @@ export function DialogCreateGroup({ movieCategories }) {
         }
     });
 
-    const mutation = groupsApi.mutation.useCreateGroup(reset, setIsOpen)
+    const mutation = groupsApi.mutation.useCreateGroup()
 
     const onSubmit = (data) => {
-        mutation.mutate(data);
+        mutation.mutate(data, {
+            onSuccess: () => {
+                reset();
+                setIsOpen(false);
+            }
+        });
     };
 
     return (

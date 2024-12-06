@@ -2,8 +2,6 @@
 import { SectionActorMovie } from "@/app/[locale]/(root)/movies/[id]/(section)/actor-movie-section"
 import MovieDetailsSection from "@/app/[locale]/(root)/movies/[id]/(section)/movie-details-section"
 import { SectionReviewMovie } from "@/app/[locale]/(root)/movies/[id]/(section)/review-movie-section"
-import CardActorHorizontal from "@/components/card-actor-horizontal"
-import CardReview, { CardReviewSkeleton } from "@/components/card-review"
 import DialogRating from "@/components/dialog-rating"
 import DynamicImageGallery from "@/components/dynamic-image-gallery"
 import Loading from "@/components/loading"
@@ -11,15 +9,13 @@ import Rating from "@/components/rating"
 import { SectionExploreMovies } from "@/components/section-explore-movies"
 import Title from "@/components/title"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { movieApi } from "@/services/movieApi"
-import { movieRatingsApi } from "@/services/movieRatingsApi"
 import { savedMovieApi } from "@/services/savedMovie"
-import { Check, Copy, Heart, Triangle } from "lucide-react"
+import { Check, Heart } from "lucide-react"
 import Image from "next/image"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
+import { toast } from "react-toastify"
 import { useTranslations } from "use-intl"
 
 
@@ -119,7 +115,7 @@ export default function DetailMovie() {
                     <div className="col-span-7 ">
                         <div className="grid gap-4">
 
-                            <Title title="Ảnh" isMore={false} />
+                            <Title title={t("image")} isMore={false} />
                             <DynamicImageGallery />
                         </div>
 
@@ -143,3 +139,50 @@ export default function DetailMovie() {
         </div>
     )
 }
+
+
+// const handleSaveStatusChange = (action, id) => {
+//     let mutation
+//     if (action === "save") {
+//         mutation = useMutation({
+//             mutationFn: async (movieId) => {
+//                 try {
+//                     const res = await privateApi.post(`saved-movies/${movieId}`)
+//                     return res.data
+//                 } catch (error) {
+//                     throw error
+//                 }
+//             },
+//         })
+//         setIsSavedMovie(true)
+//     }
+//     else if (action === "saved") {
+//         mutation = useMutation({
+//             mutationFn: async (movieId) => {
+//                 try {
+//                     const res = await privateApi.delete(`saved-movies/${movieId}`)
+//                     return res.data
+//                 } catch (error) {
+//                     throw error
+//                 }
+//             },
+//         })
+//         setIsSavedMovie(false)
+//     }
+//     else{
+//         toast.error('Hành động không hợp lệ')
+//     }
+//     mutation.mutate(id, {
+//         onSuccess: ()=> {
+//             checkSavedStatus(),
+//         },
+//         onError: () => {
+//             if (action === "save"){
+//                 setIsSavedMovie(false)
+//             }
+//             else{
+//                 setIsSavedMovie(true)
+//             }
+//         }
+//     });
+// };

@@ -39,6 +39,7 @@ export default function FormLogin({ t }) {
     }, [reset]);
 
     const handleLogin = (data) => {
+        console.log('🚀 ~ handleLogin ~ data:', data)
         mutation.mutate(data, {
             onSuccess: (data) => {
                 const id = getUserIdFromToken(data.access_token);

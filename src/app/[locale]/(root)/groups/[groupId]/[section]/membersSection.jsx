@@ -42,10 +42,11 @@ export default function MembersSection({ members, group, pendingInvitations, isO
                         {/* <CardMemberSkeleton /> */}
                         {
                             members && members?.content?.map((member) => {
-                                return (
-
-                                    <CardMember key={member.id} member={member} groupId={group?.id} isOwner={isOwner} />
-                                )
+                                if (member.id !== group?.owner.id) {
+                                    return (
+                                        <CardMember key={member.id} member={member} groupId={group?.id} isOwner={isOwner} />
+                                    )
+                                }
                             })}
                     </div>
                 </CardContent>

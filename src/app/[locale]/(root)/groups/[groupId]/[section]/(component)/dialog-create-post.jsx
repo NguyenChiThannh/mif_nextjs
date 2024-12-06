@@ -13,7 +13,6 @@ import { Loader2, Upload, X } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { schemaPost } from "@/lib/schemas/post-group.schema";
-import { useMutation } from "@tanstack/react-query";
 import { groupPostApi } from "@/services/groupPostApi";
 import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
@@ -33,7 +32,8 @@ export default function CreatePostDialog({ groupId }) {
         resolver: zodResolver(schemaPost),
     });
 
-    const createPostMutation = groupPostApi.mutation.useCreatePost();
+    const createPostMutation = groupPostApi.mutation.useCreatePost(groupId)
+
     useEffect(() => {
         if (groupId) setValue("groupId", groupId);
     }, [groupId, setValue]);
@@ -54,7 +54,6 @@ export default function CreatePostDialog({ groupId }) {
             },
         });
     };
-
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>

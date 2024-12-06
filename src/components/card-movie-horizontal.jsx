@@ -14,7 +14,7 @@ export default function CardMovieSmall({ movie }) {
     };
 
     const yearRelease = movie?.releaseDate?.split('-')[0] || 'N/A';
-    const duration = movie?.duration || 'Unknown';
+    const duration = movie?.duration;
 
     return (
         <div className="flex items-center w-full gap-4">

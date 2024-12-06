@@ -3,13 +3,23 @@ import CardMovieSmall, { CardMovieSmallSkeleton } from '@/components/card-movie-
 import { ComboboxMovieCategory } from '@/components/combobox-category-movie'
 import Loading from '@/components/loading'
 import { SectionExploreMovies } from '@/components/section-explore-movies'
+import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import { movieApi } from '@/services/movieApi'
 import React from 'react'
 import { useTranslations } from 'use-intl'
 
 export default function MoviePage() {
     const t = useTranslations('Movie')
-    const { isLoading, data } = movieApi.query.useGetAllMovies()
+
+    const {
+        data,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+    } = movieApi.query.useGetAllMovies()
+
+    const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
 
     if (isLoading) return (<Loading />)
 
@@ -28,9 +38,22 @@ export default function MoviePage() {
                     </div>
                 </div>
                 <div className='grid mt-4 gap-2'>
-                    {data.content.map((movie, index) => (
-                        <CardMovieSmall movie={movie} key={index} />
-                    ))}
+                    {isLoading && (
+                        <>
+                            {Array.from({ length: 10 }).map((_, index) => (
+                                <CardMovieSmallSkeleton key={index} />
+                            ))}
+                        </>
+                    )}
+                    {data?.pages?.map((page) =>
+                        page.content.map((movie) => (
+                            <CardMovieSmall key={movie.id} movie={movie} />
+                        ))
+                    )}
+                    {isFetchingNextPage && (
+                        <CardMovieSmallSkeleton />
+                    )}
+                    <div ref={observerElem}></div>
                 </div>
             </div>
             <SectionExploreMovies />

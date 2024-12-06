@@ -38,7 +38,6 @@ export default function CardGroups({ initialStatus, group, categories }) {
   const handleJoinGroup = () => {
     setJoinStatus("PENDING");
     addPendingInvitationMutation.mutate({
-      userId,
       groupId: group.id
     })
   };

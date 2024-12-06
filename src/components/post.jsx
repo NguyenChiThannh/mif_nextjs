@@ -13,13 +13,14 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 export default function Post({ className, post }) {
+    console.log('🚀 ~ Post ~ post:', post)
     const [vote, setVote] = useState(post?.userVotes || null);
     const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
     const [saved, setSaved] = useState(false);
 
-    const upvoteMutation = groupPostApi.mutation.useUpVotePost()
-    const downvoteMutation = groupPostApi.mutation.useDownVotePost()
-    const removevoteMutation = groupPostApi.mutation.useRemoveVotePost()
+    const upvoteMutation = groupPostApi.mutation.useUpVotePost(post.groupId)
+    const downvoteMutation = groupPostApi.mutation.useDownVotePost(post.groupId)
+    const removevoteMutation = groupPostApi.mutation.useRemoveVotePost(post.groupId)
 
     const savePostMutation = savedPostApi.mutation.useSavePost()
     const unSavePostMutation = savedPostApi.mutation.useUnsavePost()

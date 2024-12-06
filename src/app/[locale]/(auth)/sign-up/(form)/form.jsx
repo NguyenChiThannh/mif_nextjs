@@ -70,7 +70,7 @@ export default function SignUpForm({ t }) {
                 <Label htmlFor="email">{t("email")}</Label>
                 <Input
                     id="email"
-                    type="email"
+                    type="text"
                     placeholder={t("email_placeholder")}
                     {...register("email")}
                     className="bg-input text-foreground border border-border"

@@ -21,7 +21,8 @@ export default function Page() {
 
     const { isLoading: isLoadingGroup, data: group } = groupsApi.query.useGetGroupByGroupId(groupId)
     const { isLoading: isLoadingMember, data: members } = groupsApi.query.useGetAllMember(groupId)
-    const { isLoading: isLoadingPendingInvitations, data: pendingInvitations } = groupsApi.query.useGetPendingInvitations(groupId, 100)
+    const { isLoading: isLoadingPendingInvitations, data: pendingInvitations } = groupsApi.query.useGetPendingInvitations(groupId)
+
 
     const isOwner = useIsGroupOwner(group)
 

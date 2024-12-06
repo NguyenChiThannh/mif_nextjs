@@ -18,6 +18,7 @@ export function MainCarousel() {
     const router = useRouter();
 
     const { isLoading, data } = movieApi.query.useGetNewestMovie(0, 6);
+    console.log('🚀 ~ MainCarousel ~ data:', data)
 
     const handleDetailMovie = (id) => {
         router.push(`/movies/${id}`);
@@ -28,6 +29,7 @@ export function MainCarousel() {
             <Skeleton className="lg:h-[550px] md:h-[450px] h-[300px] w-full drop-shadow-2xl rounded-lg" />
         );
     }
+
 
     return (
         <div className="relative rounded-lg overflow-hidden">
@@ -59,13 +61,13 @@ export function MainCarousel() {
                                             <h1 className="text-xl md:text-3xl lg:text-5xl font-bold text-white">{movie?.title}</h1>
                                             <div className="md:space-x-4 space-x-2 flex items-center">
                                                 <Rating
-                                                    value={movie.ratings?.averageRating / 2}
+                                                    value={movie.ratings?.averageRating}
                                                     iconSize="l"
                                                     showOutOf
                                                     enableUserInteraction={false}
                                                 />
                                                 <span className="text-white text-sm md:text-lg font-medium">
-                                                    {movie.ratings?.averageRating}/10
+                                                    {(Number(movie.ratings?.averageRating) * 2) || '0.0'} /10
                                                 </span>
                                                 <div onClick={() => setSaved(!saved)} className="cursor-pointer">
                                                     <Bookmark
