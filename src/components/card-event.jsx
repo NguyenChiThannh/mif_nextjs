@@ -40,7 +40,7 @@ export default function CardEvent({ event }) {
         <Card className="drop-shadow-lg animate-fade-in hover:scale-105 transition-transform duration-300 ease-in-out">
             <CardContent className="flex flex-col gap-2 p-0">
                 <Image
-                    src="/group_default.jpg"
+                    src={event.eventPicture || "/group_default.jpg"}
                     alt="Group"
                     width={1200}
                     height={2500}

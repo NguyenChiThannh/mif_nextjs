@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, CalendarDays } from "lucide-react";
@@ -60,7 +61,7 @@ export default function CardGroups({ initialStatus, group, categories }) {
     <Card className="drop-shadow-lg animate-fade-in hover:scale-105 transition-transform duration-300 ease-in-out">
       <CardContent className="flex flex-col gap-2 p-0">
         <Image
-          src="/group_default.jpg"
+          src={group.avatarUrl || "/group_default.jpg"}
           alt="Group"
           width={1200}
           height={2500}

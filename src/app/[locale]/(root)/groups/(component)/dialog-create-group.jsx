@@ -80,7 +80,7 @@ export function DialogCreateGroup({ movieCategories }) {
                                         onValueChange={(value) => field.onChange(value)}
                                     >
                                         <SelectTrigger className="col-span-3">
-                                            <SelectValue placeholder="Chọn thể loại" />
+                                            <SelectValue placeholder={t('DialogCreateGroup.category')} />
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectGroup>
@@ -96,10 +96,48 @@ export function DialogCreateGroup({ movieCategories }) {
                                 )}
                             />
                         </div>
-                        {errors.categoryId && <div className="grid grid-cols-4 items-center gap-4">
-                            <p></p>
-                            <p className="text-red-500 col-span-3 text-xs font-bold">{errors.categoryId.message}</p>
-                        </div>}
+                        {errors.categoryId && (
+                            <div className="grid grid-cols-4 items-center gap-4">
+                                <p></p>
+                                <p className="text-red-500 col-span-3 text-xs font-bold">{errors.categoryId.message}</p>
+                            </div>
+                        )}
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="isPublic" className="text-right">
+                                {t('DialogCreateGroup.group_status')}
+                            </Label>
+                            <Controller
+                                name="isPublic"
+                                control={control}
+                                render={({ field }) => (
+                                    <Select
+                                        value={field.value !== undefined ? String(field.value) : undefined}
+                                        onValueChange={(value) => field.onChange(value === 'true')}
+                                    >
+                                        <SelectTrigger className="col-span-3">
+                                            <SelectValue placeholder={t('DialogCreateGroup.group_status')}>
+                                                {field.value !== undefined
+                                                    ? field.value
+                                                        ? t('DialogCreateGroup.public')
+                                                        : t('DialogCreateGroup.private')
+                                                    : t('DialogCreateGroup.group_status')}
+                                            </SelectValue>
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
+                                                <SelectLabel>{t('DialogCreateGroup.group_status')}</SelectLabel>
+                                                <SelectItem value="true">
+                                                    {t('DialogCreateGroup.public')}
+                                                </SelectItem>
+                                                <SelectItem value="false">
+                                                    {t('DialogCreateGroup.private')}
+                                                </SelectItem>
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
+                                )}
+                            />
+                        </div>
                         <Controller
                             name="groupType"
                             control={control}
@@ -122,8 +160,7 @@ export function DialogCreateGroup({ movieCategories }) {
                         />
                     </div>
                     <DialogFooter>
-                        <Button type="submit"
-                            disabled={mutation.isPending}>
+                        <Button type="submit" disabled={mutation.isPending}>
                             {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {t('DialogCreateGroup.create_group')}
                         </Button>

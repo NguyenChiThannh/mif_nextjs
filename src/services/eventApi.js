@@ -80,13 +80,21 @@ export const eventApi = {
             })
         },
         useSubscribeToEvent() {
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: subscribeToEvent,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.getSubscribedEvents() })
+                }
             })
         },
         useUnsubscribeFromEvent() {
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: unsubscribeFromEvent,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.getSubscribedEvents() })
+                }
             })
         },
         useDeleteEvent() {

@@ -41,13 +41,21 @@ export const favoriteActorsApi = {
     },
     mutation: {
         useAddFavoriteActor() {
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: addFavoriteActor,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.favoriteActors() })
+                }
             })
         },
         useRemoveFavoriteActor() {
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: removeFavoriteActor,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.favoriteActors() })
+                }
             })
         },
         useIsActorFavorite() {

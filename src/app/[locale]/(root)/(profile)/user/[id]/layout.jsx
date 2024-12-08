@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     const pathname = usePathname();
     const { id } = useParams();
     const { data: infoUser, isLoading } = userApi.query.useGetUserInfoById(id);
-    const { images, handleImageChange, removeImage, uploadImage } = useUploadImage();
+    const { uploadImage } = useUploadImage();
 
     const [avatar, setAvatar] = useState('');
 
@@ -34,13 +34,11 @@ export default function RootLayout({ children }) {
         const file = e.target.files[0];
         if (file) {
             const uploadedImageUrl = await uploadImage(file);
-            setAvatar(uploadedImageUrl);
             updateProfileMutation.mutate({
                 profilePictureUrl: uploadedImageUrl
             }, {
                 onSuccess: () => {
-                    reset()
-                    setOpenDialogEdit(false)
+                    setAvatar(uploadedImageUrl);
                 },
             })
         }

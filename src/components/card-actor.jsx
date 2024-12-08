@@ -8,10 +8,10 @@ export default function CardActor({ actor }) {
     const { name, rank } = actor;
 
     return (
-        <div className="grid rounded-lg gap-4 w-40">
+        <div className="grid rounded-lg gap-4 w-40 hover:underline">
             {/* Actor Image */}
             <Image
-                src="https://i1-dulich.vnecdn.net/2021/07/16/1-1626437591.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=BWzFqMmUWVFC1OfpPSUqMA"
+                src={actor.profilePictureUrl}
                 alt={`${name} image`}
                 width={200}
                 height={200}
@@ -23,7 +23,7 @@ export default function CardActor({ actor }) {
                 <Link
                     href={`/actor/${actor.id}`}
                 >
-                    <p className="flex justify-center text-base font-bold">{name}</p>
+                    <p className="flex justify-center text-base font-bold ">{name}</p>
                 </Link>
 
                 {/* Rank actor */}

@@ -30,9 +30,9 @@ export default function SignUp() {
                     <Button variant="outline" className="w-full" type="button">
                         {t('login_with_google')}
                     </Button>
-                    <Button variant="outline" className="w-full" type="button">
+                    {/* <Button variant="outline" className="w-full" type="button">
                         {t('login_with_facebook')}
-                    </Button>
+                    </Button> */}
                 </div>
 
                 {/* Login Redirect */}

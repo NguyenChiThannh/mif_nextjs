@@ -1,19 +1,68 @@
 import DialogAddMemberToGroup from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-add-member-to-group'
+import EditGroupDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-edit-group'
+import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
 import GroupAvatar from '@/components/group-avatar'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@radix-ui/react-dropdown-menu'
-import { ChevronDown, LogOut, Search } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { groupsApi } from '@/services/groupsApi'
+import { ChevronDown, LogOut, PencilLine, Trash } from 'lucide-react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 export default function HeaderGroup({ group, members, t, isOwner }) {
+    const router = useRouter();
+    const deleteGroupMutation = groupsApi.mutation.useDeleteGroup()
+
+    const handleDeleteGroup = () => {
+        confirmDelete('', (result) => {
+            if (result) {
+                deleteGroupMutation.mutate({
+                    groupId: group.id,
+                }, {
+                    onSuccess: () => {
+                        router.push('/groups')
+                    }
+                })
+            }
+        });
+
+    }
+
     return (
         <>
             <div className="mb-4 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <h2 className="text-xl font-bold">{group.groupName} </h2>
+                    {isOwner &&
+                        <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:underline transition-all"
+                                    variant="ghost"
+                                >
+                                    <PencilLine className="h-4 w-4" />
+                                    <span className="font-medium">Chỉnh sửa</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                align="start"
+                                className=" border rounded-lg shadow-lg p-2 w-48"
+                            >
+                                <DropdownMenuLabel className="text-sm font-bold text-muted-foreground mb-2">
+                                    Thao tác
+                                </DropdownMenuLabel>
+                                <DropdownMenuItem className="flex items-center gap-2 p-2 rounded-md cursor-pointer " onSelect={(e) => e.preventDefault()}>
+                                    <EditGroupDialog group={group} />
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem className="flex items-center gap-2 p-2 rounded-md cursor-pointer font-medium" onClick={handleDeleteGroup}>
+                                    <Trash className="h-4 w-4" />
+                                    Xóa nhóm
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    }
                 </div>
             </div>
             <div className="mb-4 flex items-center justify-between">
@@ -53,6 +102,7 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                     </DropdownMenu>
                 </div>
             </div>
+            <DialogConfirmDelete />
         </>
     )
 }

@@ -45,7 +45,8 @@
     },
     "Home": {
         "title_section_actor": "Diễn viên nổi bật",
-        "title_section_news": "Tin tức",
+        "title_section_public_post": "Bài viết nổi bật",
+        "title_section_group": "Nhóm bạn có thể quan tâm",
         "title_section_hot_moives": "Phim hot gần đây",
         "title_section_random_moives": "Phim ngẫu nhiên",
         "more": "Xem thêm",
@@ -142,7 +143,10 @@
         "DialogCreateGroup": {
             "create_group": "Tạo nhóm",
             "group_name": "Tên nhóm",
-            "category": "Thể loại"
+            "group_status": "Trạng thái nhóm",
+            "category": "Thể loại",
+            "public": "Công khai",
+            "private": "Riêng tư"
         },
         "DialogCreatePost": {
             "create_post": "Tạo bài viết",
@@ -153,6 +157,20 @@
             "content_placeholder": "Nhập nội dung của bài viết",
             "content_error": "Nội dung là bắt buộc",
             "add_picture": "Thêm ảnh",
+            "button_submit": "Đăng"
+        },
+        "DialogEditInfoGroup": {
+            "edit_info_group": "Chỉnh sửa thông tin",
+            "group_name": "Tên nhóm",
+            "group_name_placeholder": "Nhập tên nhóm",
+            "group_name_error": "Tên nhóm là bắt buộc",
+            "group_description": "Mô tả",
+            "group_description_placeholder": "Nhập mô tả",
+            "group_description_error": "Mô tả nhóm là bắt buộc",
+            "group_status": "Trạng thái nhóm",
+            "category": "Thể loại",
+            "public": "Công khai",
+            "private": "Riêng tư",
             "button_submit": "Đăng"
         }
     },
@@ -211,6 +229,7 @@
         "verify_otp_successful": "Xác thực tài khoản thành công",
         "create_movie_successful": "Tạo phim thành công",
         "create_group_successful": "Tạo nhóm thành công",
+        "update_group_successful": "Cập nhật thông tin nhóm thành công",
         "add_pending_invitation_successful": "Gửi lời mời thành công",
         "create_event_successful": "Tạo sự kiện thành công",
         "accept_invitation_successful": "Chấp nhận lời mời thành công",
@@ -232,7 +251,8 @@
         "update_rule_successful": "Cập nhật quy tắc thành công",
         "delete_rule_successful": "Xóa quy tắc thành công",
         "create_rating_movie_successful": "Rating phim  thành công",
-        "delete_rating_movie_successful": "Xóa rating thành công"
+        "delete_rating_movie_successful": "Xóa rating thành công",
+        "delete_group_successful": "Xóa nhóm thành công"
     },
     "duration": "Thời lượng",
     "minutes": "phút",

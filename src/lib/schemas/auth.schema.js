@@ -22,7 +22,11 @@ export const schemaRegister = (t) => z.object({
         .email(t('emailInvalid')),
     password: z
         .string()
-        .min(6, t('passwordMin')),
+        .min(6, t('passwordMin'))
+        .regex(
+            /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+            t('passwordComplexity')
+        ),
     repeatPassword: z
         .string()
         .min(6, t('passwordMin')),

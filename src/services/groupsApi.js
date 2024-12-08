@@ -14,6 +14,11 @@ const updateGroup = async (data) => {
     return res.data
 }
 
+const deleteGroup = async (data) => {
+    const res = await privateApi.delete(`/groups/${data.groupId}`)
+    return res.data
+}
+
 const addMemberToGroup = async (data) => {
     const res = await privateApi.post(`/groups/${data.groupId}/members/${data.userId}`)
     return res.data
@@ -173,6 +178,17 @@ export const groupsApi = {
                 },
             })
         },
+        useUpdateGroup(groupId) {
+            const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: updateGroup,
+                onSuccess: () => {
+                    toast.success(t('update_group_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.detailGroup(groupId) })
+                },
+            })
+        },
         useAddPendingInvitation() {
             const t = useTranslations('Toast');
             return useMutation({
@@ -228,6 +244,18 @@ export const groupsApi = {
         useGetUserStatusInGroups() {
             return useMutation({
                 mutationFn: getUserStatusInGroups,
+            })
+        },
+        useDeleteGroup() {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: deleteGroup,
+                onSuccess: () => {
+                    toast.success(t("delete_group_successful"))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupsByOwnerId(0, 24) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.userGroups(0, 24) })
+                }
             })
         }
 

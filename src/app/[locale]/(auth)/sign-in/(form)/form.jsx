@@ -39,7 +39,6 @@ export default function FormLogin({ t }) {
     }, [reset]);
 
     const handleLogin = (data) => {
-        console.log('🚀 ~ handleLogin ~ data:', data)
         mutation.mutate(data, {
             onSuccess: (data) => {
                 const id = getUserIdFromToken(data.access_token);
@@ -113,9 +112,9 @@ export default function FormLogin({ t }) {
                     <Button variant="outline" className="w-full" type="button">
                         {t('login_with_google')}
                     </Button>
-                    <Button variant="outline" className="w-full" type="button">
+                    {/* <Button variant="outline" className="w-full" type="button">
                         {t('login_with_facebook')}
-                    </Button>
+                    </Button> */}
                 </div>
             </form>
         </>

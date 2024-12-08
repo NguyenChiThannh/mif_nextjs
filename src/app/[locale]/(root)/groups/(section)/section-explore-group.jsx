@@ -12,7 +12,7 @@ export default function SectionExploreGroup({ movieCategories }) {
             </div>
 
             <div className="flex-1 mt-4 mb-8">
-                <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+                <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-4">
                     {isLoading ? (
                         <>
                             {Array.from({ length: 4 }).map((_, index) => (

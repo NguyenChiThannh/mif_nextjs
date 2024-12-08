@@ -1,6 +1,6 @@
 import { privateApi } from "@/services/config";
 import { QUERY_KEY } from "@/services/key";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getSavedPosts = async ({ queryKey, pageParam = 0 }) => {
     const res = await privateApi.get('/saved-posts', {
@@ -41,14 +41,22 @@ export const savedPostApi = {
         },
     },
     mutation: {
-        useSavePost() {
+        useSavePost(userId) {
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: savePost,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.savedPosts(userId) })
+                }
             })
         },
-        useUnsavePost() {
+        useUnsavePost(userId) {
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: unsavePost,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.savedPosts(userId) })
+                }
             })
         },
         useBatchCheckSavedStatus() {

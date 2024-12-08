@@ -27,6 +27,7 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
     const updateProfileMutation = userApi.mutation.useUpdateUserProfile(infoUser.id)
 
     const onSubmit = (data) => {
+        console.log('🚀 ~ onSubmit ~ data:', data)
         updateProfileMutation.mutate(data, {
             onSuccess: () => {
                 reset()
@@ -49,7 +50,7 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                     </div>
 
                     {/* Date of Birth */}
-                    {/* <div className="grid gap-2">
+                    <div className="grid gap-2">
                         <label className="text-sm font-semibold">{t('dob')}</label>
                         <Controller
                             control={control}
@@ -61,12 +62,11 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                                 />
                             )}
                         />
-                    </div> */}
-                    <div className="grid gap-2">
-                        <label className="text-sm font-semibold">{t('dob')}</label>
+                    </div>
+                    {/* <div className="grid gap-2">
                         <Input />
                     </div>
-
+                    <span className="text-red-500 text-sm font-bold">Ngày sinh bị không đúng định dạng</span> */}
                     {/* Bio */}
                     <div className="grid gap-2">
                         <label className="text-sm font-semibold">{t('bio')}</label>

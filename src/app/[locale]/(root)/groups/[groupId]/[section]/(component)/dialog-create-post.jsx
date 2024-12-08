@@ -62,7 +62,7 @@ export default function CreatePostDialog({ groupId }) {
                     {t("create_post")}
                 </Button>
             </DialogTrigger>
-            <DialogContent className="w-full max-w-2xl bg-background text-foreground">
+            <DialogContent className="w-full max-w-2xl max-h-screen overflow-y-auto bg-background text-foreground">
                 <DialogHeader>
                     <DialogTitle className="text-lg font-bold">{t("create_post")}</DialogTitle>
                 </DialogHeader>

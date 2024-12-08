@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
+import useUserId from '@/hooks/useUserId'
 import { formatDateTime } from '@/lib/formatter'
 import { groupPostApi } from '@/services/groupPostApi'
 import { savedPostApi } from '@/services/savedPostApi'
@@ -13,7 +14,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 export default function Post({ className, post }) {
-    console.log('🚀 ~ Post ~ post:', post)
+    const userId = useUserId()
     const [vote, setVote] = useState(post?.userVotes || null);
     const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
     const [saved, setSaved] = useState(false);
@@ -22,8 +23,8 @@ export default function Post({ className, post }) {
     const downvoteMutation = groupPostApi.mutation.useDownVotePost(post.groupId)
     const removevoteMutation = groupPostApi.mutation.useRemoveVotePost(post.groupId)
 
-    const savePostMutation = savedPostApi.mutation.useSavePost()
-    const unSavePostMutation = savedPostApi.mutation.useUnsavePost()
+    const savePostMutation = savedPostApi.mutation.useSavePost(userId)
+    const unSavePostMutation = savedPostApi.mutation.useUnsavePost(userId)
     const batchCheckSavedStatusMutation = savedPostApi.mutation.useBatchCheckSavedStatus()
 
     const checkSavedStatus = () => {
@@ -82,7 +83,7 @@ export default function Post({ className, post }) {
                 <div className='flex justify-between w-full'>
                     <div className='flex items-center gap-2'>
                         <Avatar className="w-8 h-8 flex items-center justify-center object-contain">
-                            <AvatarImage src="https://plus.unsplash.com/premium_photo-1664536392779-049ba8fde933?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="@shadcn" />
+                            <AvatarImage src={post.owner.profilePictureUrl} alt="@shadcn" />
                             <AvatarFallback className="flex items-center justify-center">T</AvatarFallback>
                         </Avatar>
                         <p className='font-bold'>{post.owner.displayName} &middot;</p>
@@ -133,7 +134,7 @@ export default function Post({ className, post }) {
                             className={`-rotate-90 font-bold h-5 w-5 ${vote === 'UPVOTE' ? 'text-green-500 fill-green-500' : ''}`}
                         />
                     </Button>
-                    <span>{voteNumber || ''}</span>
+                    <span>{voteNumber || 0}</span>
                     <Button variant="ghost rounded-full" onClick={() => handleDownvote(post.id)}>
                         <Play
                             className={`rotate-90 font-bold h-5 w-5 ${vote === 'DOWNVOTE' ? 'text-blue-500 fill-blue-500' : ''}`}

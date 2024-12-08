@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { formatDateTime } from '@/lib/formatter'
-import { CalendarDays, Clock5, Eye, Lock, SquareLibrary, Users } from 'lucide-react'
+import { CalendarDays, Clock5, Eye, Lock, MoreHorizontal, PencilLine, SquareLibrary, Users } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
@@ -15,7 +15,9 @@ export default function AboutSection({ group, members }) {
             <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
                 <CardContent>
                     <div className="grid gap-4 mt-6">
-                        <p className="font-bold flex items-center">Giới thiệu về nhóm</p>
+                        <div className='flex justify-between'>
+                            <p className="font-bold flex items-center">Giới thiệu về nhóm</p>
+                        </div>
                         <Separator />
                         <p className='text-sm'>{group.description}</p>
                         {

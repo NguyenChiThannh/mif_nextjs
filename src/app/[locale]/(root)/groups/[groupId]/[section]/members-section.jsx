@@ -35,11 +35,10 @@ export default function MembersSection({ members, group, pendingInvitations, isO
                     </div>
                     <div className='grid gap-4 mt-4'>
                         <p className='font-bold'>Người thành lập</p>
-                        <CardMember member={group?.owner} isOwner={true} />
+                        <CardMember member={group?.owner} cardOwner={true} />
                     </div>
                     <div className="grid grid-cols-1 gap-4 mt-4">
                         <p className='font-bold'>Tham gia gần đây</p>
-                        {/* <CardMemberSkeleton /> */}
                         {
                             members && members?.content?.map((member) => {
                                 if (member.id !== group?.owner.id) {

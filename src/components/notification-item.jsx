@@ -8,6 +8,7 @@ import React from 'react'
 export default function NotificationItem({ notification, onClick }) {
   const router = useRouter();
   const markAsReadMutation = notificationApi.mutation.useMarkAsRead();
+  console.log('🚀 ~ NotificationItem ~ notification.message:', notification.message)
 
   const handleReadNotification = () => {
     // Gọi callback onClick để đóng popover
@@ -23,8 +24,6 @@ export default function NotificationItem({ notification, onClick }) {
       router.push(`/groups/${notification.groupId}`);
     }
     markAsReadMutation.mutate(notification.notifyId);
-
-
   };
 
   return (

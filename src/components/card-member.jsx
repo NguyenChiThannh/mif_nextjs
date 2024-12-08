@@ -11,7 +11,7 @@ import Link from 'next/link'
 import React from 'react'
 import { toast } from 'react-toastify'
 
-export default function CardMember({ member, groupId, type, isOwner }) {
+export default function CardMember({ member, groupId, type, isOwner, cardOwner }) {
     const date = new Date(member?.joinedAt)
 
     const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation(groupId)
@@ -39,7 +39,6 @@ export default function CardMember({ member, groupId, type, isOwner }) {
         })
     }
 
-
     return (
         <div className="bg-background rounded-lg shadow-md p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -49,7 +48,7 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                 </Avatar>
                 <div>
                     <h3 className="font-bold">{member?.displayName}</h3>
-                    {type === 'invitation' || isOwner || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
+                    {type === 'invitation' || cardOwner || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
                 </div>
             </div>
             {type === 'invitation'
@@ -74,14 +73,6 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {
-                            isOwner ?
-                                <DropdownMenuItem onClick={() => handleRemoveMemberFromGroup()}>
-                                    <LogOut className="h-4 w-4 mr-2" />
-                                    Rời nhóm
-                                </DropdownMenuItem>
-                                : ''
-                        }
                         <DropdownMenuItem>
                             <Link className='flex'
                                 href={`/user/${member?.id}`}>
@@ -89,6 +80,14 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                                 Xem trang cá nhân
                             </Link>
                         </DropdownMenuItem>
+                        {
+                            (!cardOwner && isOwner) ?
+                                <DropdownMenuItem onClick={() => handleRemoveMemberFromGroup()}>
+                                    <LogOut className="h-4 w-4 mr-2" />
+                                    Rời nhóm
+                                </DropdownMenuItem>
+                                : ''
+                        }
                     </DropdownMenuContent>
                 </DropdownMenu>
             }

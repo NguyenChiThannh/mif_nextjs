@@ -13,6 +13,18 @@ const nextConfig = {
                 pathname: '/**',
             },
             {
+                protocol: 'http',
+                hostname: 'example.com',
+                port: '',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'picsum.photos',
+                port: '',
+                pathname: '/**',
+            },
+            {
                 protocol: 'https',
                 hostname: 'mif-bucket-1.s3.ap-southeast-1.amazonaws.com',
                 port: '',

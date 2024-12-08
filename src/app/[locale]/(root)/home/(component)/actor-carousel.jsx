@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
 import CardActor, { CardActorSkeleton } from '@/components/card-actor';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { actorApi } from '@/services/actorApi';
