@@ -233,6 +233,7 @@
         "create_group_successful": "Tạo nhóm thành công",
         "update_group_successful": "Cập nhật thông tin nhóm thành công",
         "add_pending_invitation_successful": "Gửi lời mời thành công",
+        "leave_group_successful": "Rời nhóm thành công",
         "create_event_successful": "Tạo sự kiện thành công",
         "accept_invitation_successful": "Chấp nhận lời mời thành công",
         "reject_invitation_successful": "Xóa lời mời thành công",

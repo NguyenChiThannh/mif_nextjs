@@ -12,7 +12,7 @@ export const useGroupStatus = (groupId, userId) => {
     const statusMutation = groupsApi.mutation.useGetUserStatusInGroups();
     const joinGroupMutation = groupsApi.mutation.useAddPendingInvitation()
     const removePendingGroupMutation = groupsApi.mutation.useRejectInvitation();
-    const removeGroupMutation = groupsApi.mutation.useRemoveMemberFromGroup(groupId)
+    const leaveGroupMutation = groupsApi.mutation.useLeaveGroup()
 
     useEffect(() => {
         if (groupId) {
@@ -53,8 +53,8 @@ export const useGroupStatus = (groupId, userId) => {
         );
     };
 
-    const handleRemoveGroup = () => {
-        removeGroupMutation.mutate(
+    const handleLeaveGroup = () => {
+        leaveGroupMutation.mutate(
             { groupId, userId },
             {
                 onSuccess: () => {
@@ -71,6 +71,6 @@ export const useGroupStatus = (groupId, userId) => {
         isLoading: statusMutation.isLoading,
         handleJoinGroup,
         handleRemovePendingGroup,
-        handleRemoveGroup,
+        handleLeaveGroup,
     };
 }; 

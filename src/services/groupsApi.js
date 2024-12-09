@@ -68,6 +68,11 @@ const addPendingInvitation = async (data) => {
     return res.data
 }
 
+const leaveGroup = async (data) => {
+    const res = await privateApi.delete(`/groups/${data.groupId}/members`)
+    return res.data
+}
+
 const acceptInvitation = async (data) => {
     const res = await privateApi.post(`/groups/${data.groupId}/accept-invitations/${data.userId}`)
     return res.data
@@ -195,6 +200,15 @@ export const groupsApi = {
                 mutationFn: addPendingInvitation,
                 onSuccess: () => {
                     toast.success(t('add_pending_invitation_successful'))
+                },
+            })
+        },
+        useLeaveGroup() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: leaveGroup,
+                onSuccess: () => {
+                    toast.success(t('leave_group_successful'))
                 },
             })
         },

@@ -15,7 +15,7 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
     const router = useRouter();
     const deleteGroupMutation = groupsApi.mutation.useDeleteGroup();
     const userId = useUserId()
-    const { status, handleJoinGroup, handleRemovePendingGroup, handleRemoveGroup } = useGroupStatus(group.id, userId);
+    const { status, handleJoinGroup, handleRemovePendingGroup, handleLeaveGroup } = useGroupStatus(group.id, userId);
 
     const handleDeleteGroup = () => {
         confirmDelete('', (result) => {
@@ -78,7 +78,7 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
 
         if (status === GROUP_STATUS.JOINED && !isOwner) {
             return (
-                <Button variant="outline" size="sm" onClick={handleRemoveGroup} className="h-8 gap-1">
+                <Button variant="outline" size="sm" onClick={handleLeaveGroup} className="h-8 gap-1">
                     <LogOut className="h-4 w-4 mr-1" />
                     Rời nhóm
                 </Button>
