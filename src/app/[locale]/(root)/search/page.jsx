@@ -12,7 +12,7 @@ import { MovieResults } from '@/app/[locale]/(root)/search/(component)/movie-res
 import { GroupResults } from '@/app/[locale]/(root)/search/(component)/group-results';
 import { ActorDirectorResults } from '@/app/[locale]/(root)/search/(component)/actor-director-results';
 
-export default function Page() {
+export default function SearchPage() {
     const [activeTab, setActiveTab] = useState('all');
     const t = useTranslations('Search');
     const searchParams = useSearchParams();
@@ -34,17 +34,34 @@ export default function Page() {
 
     return (
         <div className="max-w-4xl mx-auto">
-            <div className="text-2xl font-bold">{t("search_keywords")}: {search}</div>
+            <div className="text-2xl font-bold">
+                {t("search_keywords")}: {search}
+            </div>
 
-            <Tabs activeTab={activeTab} setActiveTab={setActiveTab} t={t} />
+            <Tabs
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                t={t}
+            />
 
             {noResults ? (
-                <div className="text-lg font-bold mt-8 flex justify-center">{t("no_matching_results_found")}</div>
+                <div className="text-lg font-bold mt-8 flex justify-center">{
+                    t("no_matching_results_found")}
+                </div>
             ) : (
                 <div>
-                    <MovieResults activeTab={activeTab} movies={movies} />
-                    <GroupResults activeTab={activeTab} groups={groups} movieCategories={movieCategories} />
-                    <ActorDirectorResults activeTab={activeTab} />
+                    <MovieResults
+                        activeTab={activeTab}
+                        movies={movies}
+                    />
+                    <GroupResults
+                        activeTab={activeTab}
+                        groups={groups}
+                        movieCategories={movieCategories}
+                    />
+                    <ActorDirectorResults
+                        activeTab={activeTab}
+                    />
                 </div>
             )}
         </div>
