@@ -5,9 +5,9 @@ import { formatDateTime } from '@/lib/formatter';
 import { MessageCircle, Play } from 'lucide-react'
 import React from 'react'
 
-export default function Comment({ comment, setReplyTo, replyTo, onVote, userVotes = {} }) {
+export default function Comment({ comment, setReplyTo, replyTo, onVote, userId }) {
     const voteCount = (comment.upvotes?.length || 0) - (comment.downvotes?.length || 0);
-    const currentVote = userVotes[comment.id];
+    const currentVote = comment.upvotes.some((id) => id === userId) ? 'upvote' : comment.downvotes.some((id) => id === userId) ? 'downvote' : null
 
     return (
         <div className="grid gap-3">
@@ -27,7 +27,7 @@ export default function Comment({ comment, setReplyTo, replyTo, onVote, userVote
                         ? 'text-green-500'
                         : ''
                         }`}
-                    onClick={() => onVote(comment.id, 'upvote')}
+                    onClick={() => onVote(comment, 'upvote')}
                 >
                     <Play
                         className="-rotate-90"
@@ -45,7 +45,7 @@ export default function Comment({ comment, setReplyTo, replyTo, onVote, userVote
                         ? 'text-red-500'
                         : ''
                         }`}
-                    onClick={() => onVote(comment.id, 'downvote')}
+                    onClick={() => onVote(comment, 'downvote')}
                 >
                     <Play
                         className="rotate-90"

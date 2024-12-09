@@ -3,7 +3,6 @@ import { QUERY_KEY } from "@/services/key";
 import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const getCommentsByPostId = async ({ pageParam = 0, queryKey }) => {
-    console.log('Here 1')
     const [_key, postId] = queryKey;
     const res = await privateApi.get(`/api/post/${postId}/comments`, {
         params: {

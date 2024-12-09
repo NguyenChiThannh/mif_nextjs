@@ -10,8 +10,6 @@ import { notificationApi } from "@/services/notificationApi";
 import { Bell } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const SOCKET_URL = "http://localhost:8080/ws";
-
 export function NotificationPopover() {
     const authState = useAppSelector((state) => state.auth.authState);
     const [liveNotifications, setLiveNotifications] = useState([]);
@@ -33,7 +31,6 @@ export function NotificationPopover() {
         notificationApi.query.useGetUnreadNotificationCount();
 
     const { isConnected } = useWebSocket(
-        SOCKET_URL,
         authState.accessToken,
         "/user/queue/notifications",
         (notification) => {
