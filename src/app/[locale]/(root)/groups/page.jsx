@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react'
 import { categoryApi } from '@/services/movieCategoriesApi'
 import useUserId from '@/hooks/useUserId'
-import { SectionGroup } from '@/app/[locale]/(root)/groups/(section)/section-group'
-import SectionExploreGroup from '@/app/[locale]/(root)/groups/(section)/section-explore-group'
+import { SectionGroup } from '@/app/[locale]/(root)/groups/(sections)/section-group'
+import SectionExploreGroup from '@/app/[locale]/(root)/groups/(sections)/section-explore-group'
 
 export default function Groups() {
     const userId = useUserId()

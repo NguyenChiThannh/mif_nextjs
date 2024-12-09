@@ -20,9 +20,18 @@ export default function Page() {
     const { groupId, section } = useParams()
     const t = useTranslations('Groups.NavbarGroup')
 
-    const { isLoading: isLoadingGroup, data: group } = groupsApi.query.useGetGroupByGroupId(groupId)
-    const { isLoading: isLoadingMember, data: members } = groupsApi.query.useGetAllMember(groupId)
-    const { isLoading: isLoadingPendingInvitations, data: pendingInvitations } = groupsApi.query.useGetPendingInvitations(groupId)
+    const {
+        isLoading: isLoadingGroup,
+        data: group
+    } = groupsApi.query.useGetGroupByGroupId(groupId)
+    const {
+        isLoading: isLoadingMember,
+        data: members
+    } = groupsApi.query.useGetAllMember(groupId)
+    const {
+        isLoading: isLoadingPendingInvitations,
+        data: pendingInvitations
+    } = groupsApi.query.useGetPendingInvitations(groupId)
 
     const isOwner = useIsGroupOwner(group)
 
@@ -58,7 +67,8 @@ export default function Page() {
                     <Separator />
 
                     {/* Dynamic Sections */}
-                    {(!section || section === 'feed') && <FeedSection group={group} isOwner={isOwner} />}
+                    {(!section || section === 'feed') &&
+                        <FeedSection group={group} isOwner={isOwner} />}
                     {section === 'members' && (
                         <MembersSection
                             members={members}
@@ -75,5 +85,3 @@ export default function Page() {
         </div>
     )
 }
-
-// onChange={handleAvatarChange}

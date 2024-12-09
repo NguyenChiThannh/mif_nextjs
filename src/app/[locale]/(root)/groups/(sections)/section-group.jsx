@@ -1,6 +1,6 @@
 'use client'
 import CardGroups, { CardGroupsSkeleton } from '@/components/card-groups'
-import { DialogCreateGroup } from '@/app/[locale]/(root)/groups/(component)/dialog-create-group'
+import { DialogCreateGroup } from '@/app/[locale]/(root)/groups/(components)/dialog-create-group'
 import Title from '@/components/title'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
