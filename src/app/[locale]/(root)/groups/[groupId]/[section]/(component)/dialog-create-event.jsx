@@ -21,7 +21,7 @@ import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
 import { schemaEvent } from "@/lib/schemas/event.chema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useUploadImage from "@/hooks/useUploadImage";
+import useUploadImages from "@/hooks/useUploadImages";
 import { eventApi } from "@/services/eventApi";
 import { Loader2 } from "lucide-react";
 
@@ -35,7 +35,7 @@ export function DialogCreateEvent({ groupId }) {
         handleImageChange,
         removeImage,
         uploadImage,
-    } = useUploadImage();
+    } = useUploadImages();
 
     const { register, handleSubmit, formState: { errors }, reset, control } = useForm({
         resolver: zodResolver(schemaEvent),

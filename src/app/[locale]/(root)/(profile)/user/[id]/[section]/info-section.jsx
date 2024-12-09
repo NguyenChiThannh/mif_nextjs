@@ -3,8 +3,8 @@
 import Loading from '@/components/loading'
 import React, { useState } from 'react'
 import { useTranslations } from 'use-intl'
-import { CardInfoUser } from '@/app/[locale]/(root)/(profile)/user/[id]/(component)/card-info-user'
-import { DialogEditProfile } from '@/app/[locale]/(root)/(profile)/user/[id]/(component)/dialog-edit-profile'
+import { CardInfoUser } from '@/app/[locale]/(root)/(profile)/user/[id]/(components)/card-info-user'
+import { DialogEditProfile } from '@/app/[locale]/(root)/(profile)/user/[id]/(components)/dialog-edit-profile'
 import { userApi } from '@/services/userApi'
 
 export default function InfoSection({ id }) {

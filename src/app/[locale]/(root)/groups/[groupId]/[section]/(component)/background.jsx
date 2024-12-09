@@ -1,7 +1,7 @@
 'use client'
 import Loading from '@/components/loading';
 import { Button } from '@/components/ui/button'
-import useUploadImage from '@/hooks/useUploadImage';
+import useUploadImages from '@/hooks/useUploadImages';
 import { groupsApi } from '@/services/groupsApi';
 import { Camera } from 'lucide-react'
 import Image from 'next/image'
@@ -10,7 +10,7 @@ import React, { useState } from 'react'
 export default function Background({ group, isOwner }) {
     const [background, setBackground] = useState(group?.avatarUrl)
     const updateGroupMutation = groupsApi.mutation.useUpdateGroup(group.id)
-    const { uploadImage } = useUploadImage();
+    const { uploadImage } = useUploadImages();
     const handleBackgroundChange = async (e) => {
         const file = e.target.files[0];
         if (file) {

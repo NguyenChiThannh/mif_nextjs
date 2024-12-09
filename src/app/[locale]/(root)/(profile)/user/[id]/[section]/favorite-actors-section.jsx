@@ -3,7 +3,7 @@ import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { favoriteActorsApi } from '@/services/favoriteActorsApi';
 import React from 'react'
 
-export default function FavorateActorsSection() {
+export default function FavoriteActorsSection() {
     const {
         data,
         fetchNextPage,

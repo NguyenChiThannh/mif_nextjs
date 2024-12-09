@@ -1,6 +1,6 @@
 'use client'
 
-import FavorateActorsSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/favorate-actors-section'
+import FavoriteActorsSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/favorite-actors-section'
 import InfoSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/info-section'
 import MoviesSavedSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/movies-saved-section'
 import PostsSavedSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/posts-saved-section'
@@ -18,7 +18,7 @@ export default function UserSection() {
             {(section === 'info') && <InfoSection id={id} />}
             {section === 'posts_saved' && <PostsSavedSection id={id} />}
             {section === 'movies_saved' && <MoviesSavedSection id={id} />}
-            {section === 'favorate_actors' && <FavorateActorsSection />}
+            {section === 'favorite_actors' && <FavoriteActorsSection />}
             {(section === 'event') && <SubscribedEventsSection />}
         </div>
     )

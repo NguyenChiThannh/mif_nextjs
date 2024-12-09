@@ -17,7 +17,7 @@ import { groupPostApi } from "@/services/groupPostApi";
 import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
 import { useTranslations } from "next-intl";
-import useUploadImage from "@/hooks/useUploadImage";
+import useUploadImages from "@/hooks/useUploadImages";
 import { set } from "mongoose";
 
 
@@ -25,7 +25,7 @@ export default function CreatePostDialog({ groupId }) {
     const [open, setOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
-    const { images, setImages, handleImageChange, removeImage, uploadImage } = useUploadImage();
+    const { images, setImages, handleImageChange, removeImage, uploadImage } = useUploadImages();
 
     const userId = useUserId();
     const { data: userInfo } = userApi.query.useGetUserInfoById(userId);

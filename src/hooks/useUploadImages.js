@@ -2,7 +2,7 @@ import { uploadFileApi } from '@/services/uploadFileApi';
 import { useState } from 'react';
 
 
-const useUploadImage = () => {
+const useUploadImages = () => {
     const [images, setImages] = useState([]);
     const getUploadedFileUrlMutation = uploadFileApi.mutation.useGetUploadedFileUrl();
     const generatePresignedUrlForUploadMutation = uploadFileApi.mutation.useGeneratePresignedUrlForUpload();
@@ -51,4 +51,4 @@ const useUploadImage = () => {
     };
 };
 
-export default useUploadImage;
+export default useUploadImages;

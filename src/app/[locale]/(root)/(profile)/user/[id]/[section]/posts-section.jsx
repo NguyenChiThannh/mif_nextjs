@@ -15,8 +15,6 @@ export default function PostsSection({ id }) {
 
     const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
 
-
-
     return (
         <div>
             <div className="grid gap-8 mt-4 col-span-2">
