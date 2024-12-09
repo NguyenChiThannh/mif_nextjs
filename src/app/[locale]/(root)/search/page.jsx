@@ -18,8 +18,14 @@ export default function Page() {
     const searchParams = useSearchParams();
     const search = searchParams.get('q');
 
-    const { isLoading: isLoadingMovies, data: movies } = movieApi.query.useSearchMoviesByTitle(0, 10, search);
-    const { isLoading: isLoadingGroup, data: groups } = groupsApi.query.useSearchGroupByGroupName(search);
+    const {
+        isLoading: isLoadingMovies,
+        data: movies
+    } = movieApi.query.useSearchMoviesByTitle(0, 10, search);
+    const {
+        isLoading: isLoadingGroup,
+        data: groups
+    } = groupsApi.query.useSearchGroupByGroupName(search);
     const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories();
 
     const noResults = groups?.content?.length === 0 && movies?.content?.length === 0;

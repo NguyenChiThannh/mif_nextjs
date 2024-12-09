@@ -42,7 +42,6 @@ export function GroupCarousel() {
                             className="lg:basis-1/3 md:basis-1/2 flex justify-center my-8 cursor-pointer"
                         >
                             <CardGroups key={group.id} group={group} initialStatus="join" categories={movieCategories} />
-
                         </CarouselItem>
                     ))}
                 </CarouselContent>

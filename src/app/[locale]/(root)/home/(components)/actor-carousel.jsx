@@ -27,12 +27,10 @@ export default function ActorCarousel() {
         );
     }
 
-    const actors = data?.content || [];
-
     return (
         <Carousel className="w-full h-auto">
             <CarouselContent>
-                {actors.map((actor) => (
+                {data?.content?.map((actor) => (
                     <CarouselItem
                         key={actor.id}
                         className="lg:basis-1/5 md:basis-1/2 flex justify-center my-8 cursor-pointer"

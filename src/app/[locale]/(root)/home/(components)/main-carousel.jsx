@@ -29,7 +29,6 @@ export function MainCarousel() {
         );
     }
 
-
     return (
         <div className="relative rounded-lg overflow-hidden">
             <Carousel
