@@ -1,19 +1,16 @@
 'use client'
-import ActorCarousel from "@/app/[locale]/(root)/home/(component)/actor-carousel"
-import { MainCarousel } from "@/app/[locale]/(root)/home/(component)/main-carousel"
+import ActorCarousel from "@/app/[locale]/(root)/home/(components)/actor-carousel"
+import { MainCarousel } from "@/app/[locale]/(root)/home/(components)/main-carousel"
 import Title from "@/components/title"
 import { useTranslations } from "next-intl"
-import MovieHotSection from "@/app/[locale]/(root)/home/(section)/hot-movie-section"
-import PostPublicSection from "@/app/[locale]/(root)/home/(section)/post-public-section"
-import RandomMovieSection from "@/app/[locale]/(root)/home/(section)/random-movie-section"
-import { categoryApi } from "@/services/movieCategoriesApi"
-import { GroupCarousel } from "@/app/[locale]/(root)/home/(component)/group-carousel"
+import MovieHotSection from "@/app/[locale]/(root)/home/(sections)/hot-movie-section"
+import PostPublicSection from "@/app/[locale]/(root)/home/(sections)/post-public-section"
+import RandomMovieSection from "@/app/[locale]/(root)/home/(sections)/random-movie-section"
+import { GroupCarousel } from "@/app/[locale]/(root)/home/(components)/group-carousel"
 
 
 export default function Home() {
   const t = useTranslations('Home');
-
-  const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
 
   return (
     <>
@@ -40,11 +37,11 @@ export default function Home() {
 
           <div className="grid mb-8 gap-6 md:gap-8 lg:gap-8 h-fit">
 
-            <Title title={t('title_section_hot_moives')} isMore='true' redirect='/movies' />
+            <Title title={t('title_section_hot_movies')} isMore='true' redirect='/movies' />
             <div className="grid gap-5">
               <MovieHotSection />
             </div>
-            <Title title={t('title_section_random_moives')} isMore='true' redirect='/movies' />
+            <Title title={t('title_section_random_movies')} isMore='true' redirect='/movies' />
             <div className="grid gap-5">
               <RandomMovieSection />
             </div>
