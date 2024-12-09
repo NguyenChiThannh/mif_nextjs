@@ -1,33 +1,35 @@
 'use client'
+
 import Background from "@/app/[locale]/(auth)/bg-movie/background";
 import { useAppSelector } from "@/redux/store";
 import { Film } from "lucide-react";
 import Link from "next/link";
-
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
+const LOGO_TEXT = "MIF";
+
 export default function AuthLayout({ children }) {
   const router = useRouter();
-  const authState = useAppSelector((state) => state.auth.authState);
+  const { isLogin } = useAppSelector((state) => state.auth.authState);
 
+  // Redirect if already logged in
   useEffect(() => {
-    if (authState.isLogin)
-      router.push('/home')
-  }, [router, authState.isLogin])
+    if (isLogin) router.push('/home')
+  }, [router, isLogin])
 
   return (
-    <main className="relative w-full lg:min-h-screen xl:min-h-screen bg-black h-screen">
-
-      <div className="absolute flex top-2 left-20 z-50 h-fit">
+    <main className="relative w-full min-h-screen bg-black">
+      {/* Logo */}
+      <div className="absolute flex top-2 left-20 z-50">
         <Link href="/home" className="flex items-center gap-2">
           <Film className="h-6 w-6" />
-          <span className="text-xl font-bold tracking-[.25em]">MIF</span>
+          <span className="text-xl font-bold tracking-[.25em]">{LOGO_TEXT}</span>
         </Link>
       </div>
 
-      {/* Background MovieStrip */}
-      <div className="absolute inset-0 z-0 ">
+      {/* Background */}
+      <div className="absolute inset-0 z-0">
         <Background />
       </div>
 

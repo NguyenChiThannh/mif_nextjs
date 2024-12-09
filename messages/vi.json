@@ -202,6 +202,8 @@
         "Actor": {
             "like_level": "Mức độ yêu thích",
             "rank": "Rank",
+            "awards": "Giải thưởng",
+            "images": "Hình ảnh",
             "like": "Yêu thích",
             "unlike": "Hủy yêu thích",
             "liked": "Đã yêu thích",

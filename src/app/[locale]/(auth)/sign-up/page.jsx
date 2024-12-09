@@ -2,7 +2,6 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import SignUpForm from "@/app/[locale]/(auth)/sign-up/(form)/form";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ButtonLoginWithGoogle from "@/app/[locale]/(auth)/sign-in/(component)/button-login-google";
 
