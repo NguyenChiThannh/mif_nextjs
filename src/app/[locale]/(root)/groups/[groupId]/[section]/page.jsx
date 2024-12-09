@@ -90,11 +90,19 @@ export default function GroupPage() {
                     groupId={groupId}
                     isOwner={isOwner}
                     pendingInvitations={pendingInvitations}
-                    section={section} status={status}
+                    section={section}
+                    status={status}
                     group={group}
-                    t={t} />
+                    t={t}
+                />
                 <div className="flex-1 p-4 md:p-6">
-                    <HeaderGroup group={group} members={members} isOwner={isOwner} section={section} t={t} />
+                    <HeaderGroup
+                        group={group}
+                        members={members}
+                        isOwner={isOwner}
+                        section={section}
+                        t={t}
+                    />
                     <Separator />
                     {renderSection()}
                 </div>

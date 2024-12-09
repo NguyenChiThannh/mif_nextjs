@@ -20,12 +20,12 @@ export default function RulesSection({ isOwner, group }) {
     const { data: rules, isLoading } = groupRulesApi.query.useGetRulesByGroupId(group.id)
     const deleteRuleMutation = groupRulesApi.mutation.useDeleteRuleFromGroup(group.id)
 
-    const hanleEditRule = (rule) => {
+    const handleEditRule = (rule) => {
         setIsOpenAdd(true)
         setRule(rule)
     }
 
-    const hanleDeleteRule = (rule) => {
+    const handleDeleteRule = (rule) => {
         confirmDelete('', (result) => {
             if (result) {
                 deleteRuleMutation.mutate({
@@ -86,8 +86,8 @@ export default function RulesSection({ isOwner, group }) {
                                                             </DropdownMenuTrigger>
                                                             <DropdownMenuContent align="end">
                                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                                <DropdownMenuItem onClick={() => hanleEditRule(rule)}>Edit</DropdownMenuItem>
-                                                                <DropdownMenuItem onClick={() => hanleDeleteRule(rule)}>Delete</DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleEditRule(rule)}>Edit</DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleDeleteRule(rule)}>Delete</DropdownMenuItem>
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </div>
