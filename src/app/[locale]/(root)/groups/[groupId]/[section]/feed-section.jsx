@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import React from 'react'
 
-export default function FeedSection({ group }) {
+export default function FeedSection({ group, canCreate }) {
 
     const t = useTranslations('Groups')
 
@@ -27,10 +27,14 @@ export default function FeedSection({ group }) {
 
     return (
         <div className="grid md:grid-cols-3 gap-4 grid-cols-2">
-
-            <div className="grid gap-8 col-span-2">
+            <div className="grid gap-4 col-span-2">
                 <div className="flex justify-between items-center mt-4">
-                    <CreatePostDialog groupId={group?.id} />
+                    {canCreate && (
+                        <div >
+                            <CreatePostDialog groupId={group?.id} />
+                        </div>
+
+                    )}
                     {/* <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline" size="sm" className="h-8 gap-1">
@@ -56,81 +60,91 @@ export default function FeedSection({ group }) {
                         </DropdownMenuContent>
                     </DropdownMenu> */}
                 </div>
-                {isLoading && (
-                    <>
+
+                <div>
+                    {isLoading && (
+                        <>
+                            <PostSkeleton />
+                            <PostSkeleton />
+                            <PostSkeleton />
+                        </>
+                    )}
+                    {data?.pages?.map((page, index) =>
+                        page.content.map((post) => (
+                            <Post key={post.id} post={post} />
+                        ))
+                    )}
+                    {isFetchingNextPage && (
                         <PostSkeleton />
-                        <PostSkeleton />
-                        <PostSkeleton />
-                    </>
-                )}
-                {data?.pages?.map((page, index) =>
-                    page.content.map((post) => (
-                        <Post key={post.id} post={post} />
-                    ))
-                )}
-                {isFetchingNextPage && (
-                    <PostSkeleton />
-                )}
-                <div ref={observerElem}></div>
-                {!hasNextPage && (
-                    <div className="text-center my-4 text-sm text-muted-foreground">{t('no_more_posts')}</div>
-                )}
+                    )}
+                    <div ref={observerElem}></div>
+                    {!hasNextPage && (
+                        <div className="text-center my-4 text-sm text-muted-foreground">{t('no_more_posts')}</div>
+                    )}
+                </div>
             </div>
 
             {/* Left content */}
-            <div className="mt-6 hidden md:block">
-                <Card className="w-full drop-shadow-lg">
-                    <CardHeader className='font-bold'>
-                        {t('introduce')}
-                    </CardHeader>
-                    <CardContent className='grid text-sm gap-2'>
-                        {group.description &&
-                            <p>
-                                {group.description}
-                            </p>
-                        }
-                        {
-                            group.isPublic
-                                ?
-                                <div>
-                                    <p className="flex gap-2 font-bold">
-                                        <Users className="h-4 w-4" />
-                                        {t('public_mode')}
-                                    </p>
-                                    <p> &middot; {t('public_mode_description')} </p>
-                                </div>
-                                :
-                                <div>
-                                    <p className="flex gap-2 font-bold">
-                                        <Lock className="h-4 w-4" />
-                                        {t('private_mode')}
-                                    </p>
-                                    <p> &middot; {t('private_mode_description')} </p>
-                                </div>
-                        }
-                        <p className="flex gap-2 font-bold">
-                            <Eye className="h-4 w-4" />
-                            {t('display_mode')}
+            <LeftContent group={group} t={t} />
+
+        </div>
+    )
+}
+
+function LeftContent({ group, t }) {
+    return (
+        <div className="mt-6 hidden md:block">
+            <Card className="w-full drop-shadow-lg">
+                <CardHeader className='font-bold'>
+                    {t('introduce')}
+                </CardHeader>
+                <CardContent className='grid text-sm gap-2'>
+                    {group.description &&
+                        <p>
+                            {group.description}
                         </p>
-                        <p>&middot; {t('display_mode_description')} </p>
-                        <p className="flex gap-2 font-bold">
-                            <SquareLibrary className="h-4 w-4" />
-                            {t('category')}
-                        </p>
-                        <p>&middot; Phim hành động</p>
-                    </CardContent>
-                    <CardFooter>
-                        <Button className='w-full' variant="secondary" >
-                            <Link
-                                href={`/groups/${group?.id}/about`}
-                                className='w-full'
-                            >
-                                {t('more')}
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
-            </div>
+                    }
+                    {
+                        group.isPublic
+                            ?
+                            <div>
+                                <p className="flex gap-2 font-bold">
+                                    <Users className="h-4 w-4" />
+                                    {t('public_mode')}
+                                </p>
+                                <p> &middot; {t('public_mode_description')} </p>
+                            </div>
+                            :
+                            <div>
+                                <p className="flex gap-2 font-bold">
+                                    <Lock className="h-4 w-4" />
+                                    {t('private_mode')}
+                                </p>
+                                <p> &middot; {t('private_mode_description')} </p>
+                            </div>
+                    }
+                    <p className="flex gap-2 font-bold">
+                        <Eye className="h-4 w-4" />
+                        {t('display_mode')}
+                    </p>
+                    <p>&middot; {t('display_mode_description')} </p>
+                    <p className="flex gap-2 font-bold">
+                        <SquareLibrary className="h-4 w-4" />
+                        {t('category')}
+                    </p>
+                    <p>&middot; Phim hành động</p>
+                </CardContent>
+                <CardFooter>
+                    <Button className='w-full' variant="secondary" >
+                        <Link
+                            href={`/groups/${group?.id}/about`}
+                            className='w-full'
+                        >
+                            {t('more')}
+                        </Link>
+                    </Button>
+                </CardFooter>
+            </Card>
         </div>
     )
 }

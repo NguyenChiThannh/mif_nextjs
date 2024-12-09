@@ -1,85 +1,102 @@
 'use client'
 
-import Image from "next/image"
 import { useParams } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
 import { useTranslations } from "next-intl"
 import { groupsApi } from "@/services/groupsApi"
+import Loading from "@/components/loading"
+import SideBar from "./(component)/sidebar"
+import HeaderGroup from "./(component)/header-group"
+import { useIsGroupOwner } from "@/hooks/useIsGroupOwner"
+import AboutSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/about-section"
 import FeedSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/feed-section"
 import MembersSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/members-section"
-import RulesSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/rules-section"
-import AboutSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/about-section"
-import Loading from "@/components/loading"
-import SideBar from "@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/sidebar"
-import HeaderGroup from "@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/header"
-import { useIsGroupOwner } from "@/hooks/useIsGroupOwner"
 import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/events-section"
+import RulesSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/rules-section"
 import Background from "@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/background"
+import { useGroupStatus } from "@/hooks/useGroupStatus"
+import { canCreatePost, checkSectionAccess } from "@/middleware/groupAccess"
 
-export default function Page() {
+export default function GroupPage() {
     const { groupId, section } = useParams()
     const t = useTranslations('Groups.NavbarGroup')
 
     const {
-        isLoading: isLoadingGroup,
-        data: group
+        data: group,
+        isLoading: isLoadingGroup
     } = groupsApi.query.useGetGroupByGroupId(groupId)
     const {
-        isLoading: isLoadingMember,
-        data: members
+        data: members,
+        isLoading: isLoadingMember
     } = groupsApi.query.useGetAllMember(groupId)
     const {
-        isLoading: isLoadingPendingInvitations,
-        data: pendingInvitations
+        data: pendingInvitations,
+        isLoading: isLoadingPendingInvitations
     } = groupsApi.query.useGetPendingInvitations(groupId)
 
+    const { status } = useGroupStatus(group?.id)
     const isOwner = useIsGroupOwner(group)
 
     if (isLoadingGroup || isLoadingMember || isLoadingPendingInvitations) {
         return <Loading />
     }
 
+    const renderSection = () => {
+        const hasAccess = checkSectionAccess(section, status, isOwner, group.isPublic)
+        if (!hasAccess) {
+            return null
+        }
+
+        switch (section) {
+            case undefined:
+                return <FeedSection
+                    group={group}
+                    isOwner={isOwner}
+                    canCreate={canCreatePost(status, isOwner)}
+                />
+            case 'about':
+                return <AboutSection group={group} members={members} />
+            case 'feed':
+                return <FeedSection
+                    group={group}
+                    isOwner={isOwner}
+                    canCreate={canCreatePost(status, isOwner)}
+                />
+            case 'members':
+                return <MembersSection
+                    members={members}
+                    group={group}
+                    pendingInvitations={pendingInvitations}
+                    isOwner={isOwner}
+                />
+            case 'events':
+                return <EventsSection />
+            case 'rules':
+                return <RulesSection isOwner={isOwner} group={group} />
+            default:
+                return <FeedSection
+                    group={group}
+                    isOwner={isOwner}
+                    canCreate={canCreatePost(status, isOwner)}
+                />
+        }
+    }
+
     return (
         <div className="flex flex-col min-h-screen bg-background">
-            {/* Background */}
             <Background group={group} isOwner={isOwner} />
-
             <div className="flex flex-1">
-                {/* Sidebar */}
                 <SideBar
                     groupId={groupId}
                     isOwner={isOwner}
                     pendingInvitations={pendingInvitations}
-                    section={section}
-                    t={t}
-                />
-
-                {/* Main Content */}
+                    section={section} status={status}
+                    group={group}
+                    t={t} />
                 <div className="flex-1 p-4 md:p-6">
-                    <HeaderGroup
-                        group={group}
-                        members={members}
-                        isOwner={isOwner}
-                        section={section}
-                        t={t}
-                    />
-
+                    <HeaderGroup group={group} members={members} isOwner={isOwner} section={section} t={t} />
                     <Separator />
-
-                    {/* Dynamic Sections */}
-                    {(!section || section === 'feed') &&
-                        <FeedSection group={group} isOwner={isOwner} />}
-                    {section === 'members' && (
-                        <MembersSection
-                            members={members}
-                            group={group}
-                            pendingInvitations={pendingInvitations}
-                            isOwner={isOwner}
-                        />
-                    )}
-                    {section === 'rules' && <RulesSection isOwner={isOwner} group={group} />}
-                    {section === 'about' && <AboutSection group={group} members={members} />}
-                    {section === 'events' && <EventsSection />}
+                    {renderSection()}
                 </div>
             </div>
         </div>

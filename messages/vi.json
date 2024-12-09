@@ -130,7 +130,7 @@
             "rules": "Quy tắc",
             "about": "Giới thiệu",
             "members": "Thành viên",
-            "event": "Sự kiện",
+            "events": "Sự kiện",
             "statistical": "Thống kê"
         },
         "DialogAddOrEditRule": {

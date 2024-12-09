@@ -1,6 +1,5 @@
 import { DialogCreateEvent } from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-create-event'
 import CardEvent, { CardEventSkeleton } from '@/components/card-event'
-import { CardGroupsSkeleton } from '@/components/card-groups'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import { eventApi } from '@/services/eventApi'
 import { useParams } from 'next/navigation'
@@ -26,8 +25,6 @@ export default function EventsSection() {
                     <DialogCreateEvent groupId={groupId} />
                 </div>
                 <div className="grid gap-8 mt-4 w-full md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
-
-
                     {isLoading && (
                         <>
                             {

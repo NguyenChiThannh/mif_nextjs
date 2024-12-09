@@ -210,7 +210,7 @@ export const groupsApi = {
                 },
             })
         },
-        useRejectInvation(groupId) {
+        useRejectInvitation(groupId) {
             const t = useTranslations('Toast');
             const queryClient = useQueryClient()
             return useMutation({

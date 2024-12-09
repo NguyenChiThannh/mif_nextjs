@@ -1,7 +1,6 @@
 import { CardActorHorizontalSkeleton } from "@/components/card-actor-horizontal";
 import Title from "@/components/title";
 
-
 export const ActorDirectorResults = ({ activeTab }) => (
     (activeTab === 'all' || activeTab === 'director_actor') && (
         <div className="mt-4 mb-8">

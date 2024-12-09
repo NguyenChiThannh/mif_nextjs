@@ -121,48 +121,90 @@ export const navProfileUserConfig = (t) => [
     },
 ]
 
-export const navGroupConfig = (t) => [
-    {
-        title: t('feed'),
-        href: (groupId) => `/groups/${groupId}/`,
-        icon: FilePenIcon,
-        active: function (section) {
-            return (!section || section === 'feed')
-        }
+export const navGroupConfig = {
+    always_visible(t) {
+        return [
+            {
+                title: t('about'),
+                href: (id) => `/groups/${id}/about`,
+                icon: InfoIcon,
+                active: (section) => section === 'about'
+            }
+        ]
     },
-    {
-        title: t('message'),
-        href: (groupId) => '/chat',
-        icon: MessageCircleIcon,
-        active: function (section) {
-            return null
-        }
+    public_group(t) {
+        return [
+            {
+                title: t('feed'),
+                href: (groupId) => `/groups/${groupId}/`,
+                icon: FilePenIcon,
+                active: function (section) {
+                    return (!section || section === 'feed')
+                }
+            },
+            {
+                title: t('rules'),
+                href: (groupId) => `/groups/${groupId}/rules`,
+                icon: BookIcon,
+                active: function (section) {
+                    return (section === 'rules')
+                }
+            },
+            {
+                title: t('about'),
+                href: (groupId) => `/groups/${groupId}/about`,
+                icon: InfoIcon,
+                active: function (section) {
+                    return (section === 'about')
+                }
+            },
+        ]
     },
-    {
-        title: t('rules'),
-        href: (groupId) => `/groups/${groupId}/rules`,
-        icon: BookIcon,
-        active: function (section) {
-            return (section === 'rules')
-        }
-    },
-    {
-        title: t('about'),
-        href: (groupId) => `/groups/${groupId}/about`,
-        icon: InfoIcon,
-        active: function (section) {
-            return (section === 'about')
-        }
-    },
-    {
-        title: t('event'),
-        href: (groupId) => `/groups/${groupId}/events`,
-        icon: CalendarCheckIcon,
-        active: function (section) {
-            return (section === 'events')
-        }
-    },
-]
+    member(t) {
+        return [
+            {
+                title: t('feed'),
+                href: (groupId) => `/groups/${groupId}/`,
+                icon: FilePenIcon,
+                active: function (section) {
+                    return (!section || section === 'feed')
+                }
+            },
+            {
+                title: t('message'),
+                href: (groupId) => '/chat',
+                icon: MessageCircleIcon,
+                active: function (section) {
+                    return null
+                }
+            },
+            {
+                title: t('rules'),
+                href: (groupId) => `/groups/${groupId}/rules`,
+                icon: BookIcon,
+                active: function (section) {
+                    return (section === 'rules')
+                }
+            },
+            {
+                title: t('about'),
+                href: (groupId) => `/groups/${groupId}/about`,
+                icon: InfoIcon,
+                active: function (section) {
+                    return (section === 'about')
+                }
+            },
+            {
+                title: t('events'),
+                href: (groupId) => `/groups/${groupId}/events`,
+                icon: CalendarCheckIcon,
+                active: function (section) {
+                    return (section === 'events')
+                }
+            },
+        ]
+    }
+}
 
 export const tabSearchConfig = (t) => [
     { title: t('all'), tab: 'all' },

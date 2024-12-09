@@ -19,6 +19,7 @@ export default function RulesSection({ isOwner, group }) {
 
     const { data: rules, isLoading } = groupRulesApi.query.useGetRulesByGroupId(group.id)
     const deleteRuleMutation = groupRulesApi.mutation.useDeleteRuleFromGroup(group.id)
+
     const hanleEditRule = (rule) => {
         setIsOpenAdd(true)
         setRule(rule)
@@ -37,9 +38,11 @@ export default function RulesSection({ isOwner, group }) {
     }
 
     if (isLoading) return (<Loading />)
+
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>
+                {/* Title */}
                 <div className="my-6 grid gap-2">
                     <div className='flex justify-between'>
                         <p className="font-bold flex items-center">{t('rules')}</p>
@@ -47,48 +50,51 @@ export default function RulesSection({ isOwner, group }) {
                     </div>
                     <p className="text-xs text-muted-foreground">{t('rules_description')}</p>
                 </div>
+
                 <Separator />
+
+                {/* Rules */}
                 <div>
                     <Accordion type="multiple" collapsible className="w-full">
                         {
                             rules && rules.map((rule, index) => {
                                 const number = Number(index) + 1
-
-                                return (<AccordionItem
-                                    value={`item-${number}`}
-                                    key={number}
-                                >
-                                    <AccordionTrigger className="rounded-lg h-fit p-2 hover:bg-muted my-4">
-                                        <div>
-                                            {number} . {t('rules')} {number}
-                                        </div>
-                                    </AccordionTrigger>
-                                    <AccordionContent>
-                                        <div className='flex justify-between'>
-                                            <p className='text-justify p-2'>
-                                                {rule.ruleDescription}
-                                            </p>
-                                            {
-                                                isOwner &&
-                                                <div>
-                                                    <DropdownMenu modal={false}>
-                                                        <DropdownMenuTrigger asChild>
-                                                            <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                                <MoreHorizontal className="h-4 w-4" />
-                                                                <span className="sr-only">Menu</span>
-                                                            </Button>
-                                                        </DropdownMenuTrigger>
-                                                        <DropdownMenuContent align="end">
-                                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                            <DropdownMenuItem onClick={() => hanleEditRule(rule)}>Edit</DropdownMenuItem>
-                                                            <DropdownMenuItem onClick={() => hanleDeleteRule(rule)}>Delete</DropdownMenuItem>
-                                                        </DropdownMenuContent>
-                                                    </DropdownMenu>
-                                                </div>
-                                            }
-                                        </div>
-                                    </AccordionContent>
-                                </AccordionItem>)
+                                return (
+                                    <AccordionItem
+                                        value={`item-${number}`}
+                                        key={number}
+                                    >
+                                        <AccordionTrigger className="rounded-lg h-fit p-2 hover:bg-muted my-4">
+                                            <div>
+                                                {number} . {t('rules')} {number}
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <div className='flex justify-between'>
+                                                <p className='text-justify p-2'>
+                                                    {rule.ruleDescription}
+                                                </p>
+                                                {
+                                                    isOwner &&
+                                                    <div>
+                                                        <DropdownMenu modal={false}>
+                                                            <DropdownMenuTrigger asChild>
+                                                                <Button aria-haspopup="true" size="icon" variant="ghost">
+                                                                    <MoreHorizontal className="h-4 w-4" />
+                                                                    <span className="sr-only">Menu</span>
+                                                                </Button>
+                                                            </DropdownMenuTrigger>
+                                                            <DropdownMenuContent align="end">
+                                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                                <DropdownMenuItem onClick={() => hanleEditRule(rule)}>Edit</DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => hanleDeleteRule(rule)}>Delete</DropdownMenuItem>
+                                                            </DropdownMenuContent>
+                                                        </DropdownMenu>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>)
                             })
                         }
                     </Accordion>

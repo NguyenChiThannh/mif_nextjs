@@ -13,7 +13,7 @@ import React from 'react'
 export default function CardMember({ member, groupId, type, isOwner, cardOwner }) {
     const date = new Date(member?.joinedAt)
     const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation(groupId)
-    const rejectInvationMutation = groupsApi.mutation.useRejectInvation(groupId)
+    const rejectInvationMutation = groupsApi.mutation.useRejectInvitation(groupId)
     const removeMemberFromGroupMutation = groupsApi.mutation.useRemoveMemberFromGroup(groupId)
 
     const handleAcceptInvitation = () => {
@@ -49,7 +49,9 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
                         href={`/user/${member?.id}`}>
                         <h3 className="font-bold hover:underline">{member?.displayName}</h3>
                     </Link>
-                    {type === 'invitation' || cardOwner || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
+                    {type === 'invitation' ||
+                        cardOwner ||
+                        <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
                 </div>
             </div>
             {type === 'invitation'

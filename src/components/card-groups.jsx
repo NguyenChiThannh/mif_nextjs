@@ -1,67 +1,21 @@
-'use client';
-import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
-import { groupsApi } from "@/services/groupsApi";
 import useUserId from "@/hooks/useUserId";
+import { useGroupStatus } from "@/hooks/useGroupStatus";
 
 export default function CardGroups({ group, categories }) {
   const userId = useUserId();
-  const [joinStatus, setJoinStatus] = useState(null);
-  const [loadingStatus, setLoadingStatus] = useState(true);
-  const statusGroupMutation = groupsApi.mutation.useGetUserStatusInGroups();
-  const addPendingInvitationMutation = groupsApi.mutation.useAddPendingInvitation();
-  const rejectInvationMutation = groupsApi.mutation.useRejectInvation();
+  const { status, handleJoinGroup, handleRemovePendingGroup } = useGroupStatus(group.id, userId);
   const router = useRouter();
-
-  const fetchGroupStatus = () => {
-    statusGroupMutation.mutate(
-      { groupIds: [group.id] },
-      {
-        onSuccess: (data) => {
-          const status = data[group.id];
-          if (status) {
-            setJoinStatus(status);
-            setLoadingStatus(false);
-          }
-        },
-        onError: () => {
-          setLoadingStatus(false);
-        }
-      }
-    );
-  };
-
-  useEffect(() => {
-    fetchGroupStatus();
-  }, [group]);
-
-  const handleJoinGroup = () => {
-    setJoinStatus("PENDING");
-    addPendingInvitationMutation.mutate({
-      groupId: group.id,
-    });
-  };
-
-  const handleUnjoinGroup = () => {
-    setJoinStatus("NOT_JOIN");
-    rejectInvationMutation.mutate({
-      userId,
-      groupId: group.id,
-    });
-  };
 
   const handleDetailGroup = () => {
     router.push(`/groups/${group.id}`);
   };
 
-  if (loadingStatus) {
-    return <CardGroupsSkeleton />;
-  }
 
   return (
     <Card className="drop-shadow-lg animate-fade-in hover:scale-105 transition-transform duration-300 ease-in-out">
@@ -75,8 +29,8 @@ export default function CardGroups({ group, categories }) {
         />
         <div className="p-2">
           <div className="mb-2">
-            <h3 className="text-xl font-bold">{group?.groupName}</h3>
-            <p className="text-sm text-secondary-foreground bg-secondary inline-block px-2 rounded-full">
+            <h3 className="text-xl font-bold hover:underline hover:cursor-pointer" onClick={handleDetailGroup}>{group?.groupName}</h3>
+            <p className="text-sm text-secondary-foreground bg-secondary inline-block px-2 rounded-full ">
               {categories?.find((category) => group.categoryId === category.id)?.categoryName}
             </p>
             <div className="flex items-center gap-2">
@@ -93,7 +47,7 @@ export default function CardGroups({ group, categories }) {
             </div>
           </div>
 
-          {joinStatus === "NOT_JOIN" && (
+          {status === "NOT_JOIN" && (
             <Button
               onClick={handleJoinGroup}
               variant="outline"
@@ -102,16 +56,16 @@ export default function CardGroups({ group, categories }) {
               Tham gia nhóm
             </Button>
           )}
-          {joinStatus === "PENDING" && (
+          {status === "PENDING" && (
             <Button
-              onClick={handleUnjoinGroup}
+              onClick={handleRemovePendingGroup}
               variant="outline"
               className="w-full"
             >
               Đang chờ duyệt
             </Button>
           )}
-          {joinStatus === "JOINED" && (
+          {status === "JOINED" && (
             <Button
               onClick={handleDetailGroup}
               className="w-full hover:bg-primary hover:text-primary-foreground transition-all duration-200"

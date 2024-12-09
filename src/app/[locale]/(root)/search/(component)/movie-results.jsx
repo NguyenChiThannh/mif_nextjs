@@ -1,7 +1,6 @@
 import CardMovieSmall from "@/components/card-movie-horizontal";
 import Title from "@/components/title";
 
-
 export const MovieResults = ({ activeTab, movies }) => (
     (activeTab === 'all' || activeTab === 'movie') && (
         <div className="mt-4">

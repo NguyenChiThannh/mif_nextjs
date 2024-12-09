@@ -1,7 +1,6 @@
 import CardGroups from "@/components/card-groups";
 import Title from "@/components/title";
 
-
 export const GroupResults = ({ activeTab, groups, movieCategories }) => (
     (activeTab === 'all' || activeTab === 'group') && (
         <div className="mt-4">
