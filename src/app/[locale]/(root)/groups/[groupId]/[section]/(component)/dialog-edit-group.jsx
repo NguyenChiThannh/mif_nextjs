@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -7,23 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
-import { Loader2, PencilLine, Upload, X } from "lucide-react";
+import { Loader2, PencilLine } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { useTranslations } from "next-intl";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { schemaGroup } from "@/lib/schemas/group.schema";
 import { categoryApi } from "@/services/movieCategoriesApi";
 import { groupsApi } from "@/services/groupsApi";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
-
 
 export default function EditGroupDialog({ group }) {
 
     const [open, setOpen] = useState(false);
     const t = useTranslations("Groups.DialogEditInfoGroup");
 
-    const { control, register, handleSubmit, setValue, reset, formState: { errors } } = useForm({
+    const { control, register, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schemaGroup),
         defaultValues: {
             groupName: group.groupName,
@@ -34,12 +32,11 @@ export default function EditGroupDialog({ group }) {
         }
     });
 
-    const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
+    const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories();
 
-    const updateGroupMutation = groupsApi.mutation.useUpdateGroup(group.id)
+    const updateGroupMutation = groupsApi.mutation.useUpdateGroup(group.id);
 
     const onSubmit = async (data) => {
-        console.log('🚀 ~ onSubmit ~ data:', data)
         updateGroupMutation.mutate({
             ...data,
             groupId: group.id
@@ -71,9 +68,8 @@ export default function EditGroupDialog({ group }) {
                         <Input
                             id="groupName"
                             placeholder={t("group_name_placeholder")}
-                            {...register("groupName", { required: true })}
+                            {...register("groupName")}
                             className="mt-2"
-                            required
                         />
                         {errors.groupName && <p className="text-red-500 text-xs">{t("group_name_error")}</p>}
                     </div>
@@ -83,7 +79,7 @@ export default function EditGroupDialog({ group }) {
                         <Textarea
                             id="description"
                             placeholder={t("group_description_placeholder")}
-                            {...register("description", { required: true })}
+                            {...register("description")}
                             className="mt-2"
                             rows={5}
                         />

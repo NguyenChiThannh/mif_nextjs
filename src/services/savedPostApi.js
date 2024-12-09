@@ -1,6 +1,6 @@
 import { privateApi } from "@/services/config";
 import { QUERY_KEY } from "@/services/key";
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 const getSavedPosts = async ({ queryKey, pageParam = 0 }) => {
     const res = await privateApi.get('/saved-posts', {

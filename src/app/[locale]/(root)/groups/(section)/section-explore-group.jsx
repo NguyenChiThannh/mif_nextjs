@@ -5,6 +5,7 @@ import React from 'react'
 
 export default function SectionExploreGroup({ movieCategories }) {
     const { isLoading, data: groupNotJoin } = groupsApi.query.useFindGroupUserNotJoin(4)
+
     return (
         <>
             <div className="mt-4">
@@ -25,7 +26,6 @@ export default function SectionExploreGroup({ movieCategories }) {
                             <CardGroups key={group.id} group={group} initialStatus="join" categories={movieCategories} />
                         )))
                     }
-
                 </div>
             </div>
         </>

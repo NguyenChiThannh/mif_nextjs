@@ -6,6 +6,7 @@ import MoviesSavedSection from '@/app/[locale]/(root)/(profile)/user/[id]/[secti
 import PostsSavedSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/posts-saved-section'
 import PostsSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/posts-section'
 import SubscribedEventsSection from '@/app/[locale]/(root)/(profile)/user/[id]/[section]/subscribed-events-section'
+import useUserId from '@/hooks/useUserId'
 import { useParams } from 'next/navigation'
 import React from 'react'
 

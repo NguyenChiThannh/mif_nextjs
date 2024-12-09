@@ -18,7 +18,6 @@ export function MainCarousel() {
     const router = useRouter();
 
     const { isLoading, data } = movieApi.query.useGetNewestMovie(0, 6);
-    console.log('🚀 ~ MainCarousel ~ data:', data)
 
     const handleDetailMovie = (id) => {
         router.push(`/movies/${id}`);

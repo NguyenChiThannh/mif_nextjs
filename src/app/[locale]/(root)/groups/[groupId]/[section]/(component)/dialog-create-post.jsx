@@ -18,10 +18,13 @@ import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
 import { useTranslations } from "next-intl";
 import useUploadImage from "@/hooks/useUploadImage";
+import { set } from "mongoose";
 
 
 export default function CreatePostDialog({ groupId }) {
     const [open, setOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const { images, setImages, handleImageChange, removeImage, uploadImage } = useUploadImage();
 
     const userId = useUserId();
@@ -39,6 +42,7 @@ export default function CreatePostDialog({ groupId }) {
     }, [groupId, setValue]);
 
     const onSubmit = async (data) => {
+        setIsLoading(true)
         const mediaUrls = await Promise.all(images.map((image) => uploadImage(image)));
 
         const updatedData = {
@@ -52,6 +56,9 @@ export default function CreatePostDialog({ groupId }) {
                 setImages([]);
                 setOpen(false);
             },
+            onSettled: () => {
+                setIsLoading(false)
+            }
         });
     };
 
@@ -138,8 +145,8 @@ export default function CreatePostDialog({ groupId }) {
                     </div>
 
                     <div className="flex justify-end">
-                        <Button type="submit" disabled={createPostMutation.isLoading}>
-                            {createPostMutation.isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        <Button type="submit" disabled={isLoading}>
+                            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             {t("button_submit")}
                         </Button>
                     </div>

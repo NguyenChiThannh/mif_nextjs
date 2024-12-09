@@ -1,4 +1,5 @@
 import DialogAddMemberToGroup from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-add-member-to-group'
+import CreatePostDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-create-post'
 import EditGroupDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-edit-group'
 import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
 import GroupAvatar from '@/components/group-avatar'
@@ -55,7 +56,6 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                                 <DropdownMenuItem className="flex items-center gap-2 p-2 rounded-md cursor-pointer " onSelect={(e) => e.preventDefault()}>
                                     <EditGroupDialog group={group} />
                                 </DropdownMenuItem>
-
                                 <DropdownMenuItem className="flex items-center gap-2 p-2 rounded-md cursor-pointer font-medium" onClick={handleDeleteGroup}>
                                     <Trash className="h-4 w-4" />
                                     Xóa nhóm

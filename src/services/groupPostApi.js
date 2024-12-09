@@ -34,6 +34,16 @@ const createPost = async (data) => {
     return res.data
 }
 
+const getAllPosts = async ({ pageParam = 0, queryKey }) => {
+    const res = await privateApi.get(`/group-posts`, {
+        params: {
+            page: pageParam,
+        }
+    })
+    return res.data
+}
+
+
 const getPostById = async (postId) => {
     const res = await privateApi.get(`/group-posts/${postId}`)
     return res.data
@@ -55,6 +65,16 @@ export const groupPostApi = {
             return useQuery({
                 queryKey: QUERY_KEY.postById(postId),
                 queryFn: ({ queryKey }) => getPostById(queryKey[1]),
+            })
+        },
+        useGetAllPosts() {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.allPosts(),
+                queryFn: getAllPosts,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
             })
         }
     },

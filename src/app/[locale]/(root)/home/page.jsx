@@ -7,6 +7,7 @@ import MovieHotSection from "@/app/[locale]/(root)/home/(section)/hot-movie-sect
 import PostPublicSection from "@/app/[locale]/(root)/home/(section)/post-public-section"
 import RandomMovieSection from "@/app/[locale]/(root)/home/(section)/random-movie-section"
 import { categoryApi } from "@/services/movieCategoriesApi"
+import { GroupCarousel } from "@/app/[locale]/(root)/home/(component)/group-carousel"
 
 
 export default function Home() {
@@ -28,8 +29,8 @@ export default function Home() {
 
           <div className="col-span-2">
             <Title title={t('title_section_group')} />
-            <div className="my-4 lg:mb-24">
-              <PostPublicSection />
+            <div className="my-4">
+              <GroupCarousel />
             </div>
             <Title title={t('title_section_public_post')} />
             <div className="my-4 lg:mb-24">

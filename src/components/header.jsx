@@ -40,7 +40,7 @@ const Header = memo(() => {
 
     return (
         <div className="fixed w-full z-[15] drop-shadow-xl">
-            <div className="xl:px-36 lg:px-2 md:px-2 px-1 flex items-center justify-between py-3 bg-background border-b">
+            <div className="xl:px-40 lg:px-2 md:px-2 px-1 flex items-center justify-between py-3 bg-background border-b">
                 {/* Navbar for screen telephone */}
                 <div className="md:hidden flex items-center z-50">
                     <Sheet open={open} onOpenChange={setOpen}>

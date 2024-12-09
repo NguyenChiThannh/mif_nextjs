@@ -9,11 +9,9 @@ import { useMutation } from '@tanstack/react-query'
 import { Check, EllipsisVertical, LogOut, Plus, User, X } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-import { toast } from 'react-toastify'
 
 export default function CardMember({ member, groupId, type, isOwner, cardOwner }) {
     const date = new Date(member?.joinedAt)
-
     const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation(groupId)
     const rejectInvationMutation = groupsApi.mutation.useRejectInvation(groupId)
     const removeMemberFromGroupMutation = groupsApi.mutation.useRemoveMemberFromGroup(groupId)
@@ -47,7 +45,10 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
                     <AvatarFallback className='uppercase'>{member?.displayName && member?.displayName[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h3 className="font-bold">{member?.displayName}</h3>
+                    <Link className='flex'
+                        href={`/user/${member?.id}`}>
+                        <h3 className="font-bold hover:underline">{member?.displayName}</h3>
+                    </Link>
                     {type === 'invitation' || cardOwner || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
                 </div>
             </div>

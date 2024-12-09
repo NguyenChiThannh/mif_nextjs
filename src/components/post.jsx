@@ -8,12 +8,12 @@ import useUserId from '@/hooks/useUserId'
 import { formatDateTime } from '@/lib/formatter'
 import { groupPostApi } from '@/services/groupPostApi'
 import { savedPostApi } from '@/services/savedPostApi'
-import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, Play, Trash2 } from 'lucide-react'
+import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, PencilLine, Play, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
-export default function Post({ className, post }) {
+export default function Post({ className, post, isGroup }) {
     const userId = useUserId()
     const [vote, setVote] = useState(post?.userVotes || null);
     const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
@@ -81,15 +81,54 @@ export default function Post({ className, post }) {
         <div className={`grid w-full bg-card rounded-lg drop-shadow-2xl ${className}`}>
             <div className='grid gap-3 p-2 pt-4'>
                 <div className='flex justify-between w-full'>
-                    <div className='flex items-center gap-2'>
-                        <Avatar className="w-8 h-8 flex items-center justify-center object-contain">
-                            <AvatarImage src={post.owner.profilePictureUrl} alt="@shadcn" />
-                            <AvatarFallback className="flex items-center justify-center">T</AvatarFallback>
+                    <div className="flex items-center gap-4">
+                        {/* Avatar */}
+                        <Avatar className="w-10 h-10 flex items-center justify-center object-cover rounded-full border border-border">
+                            <AvatarImage src={post.owner.profilePictureUrl} alt={post.owner.displayName} />
+                            <AvatarFallback className="text-sm font-medium text-primary">T</AvatarFallback>
                         </Avatar>
-                        <p className='font-bold'>{post.owner.displayName} &middot;</p>
-                        <p className='text-xs text-muted-foreground'>{formatDateTime(post.createdAt)}</p>
+
+                        {/* User Info */}
+                        <div className="flex flex-col">
+                            <Link
+                                className="text-base font-semibold hover:underline"
+                                href={`/user/${post.owner.id}`}
+                            >
+                                {post.owner.displayName}
+                            </Link>
+                            <div className="flex items-center text-sm">
+                                {
+                                    isGroup &&
+                                    <Link href={`/groups/${post.groupId}`} className="font-bold hover:underline">
+                                        G/{post.groupName}
+                                    </Link>
+                                }
+                                <span className="mx-1">&middot;</span>
+                                <span>{formatDateTime(post.createdAt)}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
+
+                    {/* Right Section */}
+                    <div className="flex items-center gap-2">
+                        {/* Join Button */}
+                        {/* {joinStatus === "NOT_JOIN" && (
+                            <div
+                                className="px-2 py-1 text-sm font-medium cursor-pointer text-center transition-all bg-primary text-primary-foreground rounded-2xl shadow-md active:scale-95"
+                            >
+                                Tham gia
+                            </div>
+                        )}
+
+                        {joinStatus === "PENDING" && (
+                            <div
+                                className="px-2 py-1 text-sm font-medium cursor-pointer border text-center transition-all rounded-2xl active:scale-95"
+                            >
+                                Hủy tham gia
+                            </div>
+                        )} */}
+
+                        {/* Dropdown Menu */}
                         <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon">
@@ -98,14 +137,22 @@ export default function Post({ className, post }) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => { }}>
-                                    <Trash2 className="h-4 w-4 mr-2" />
-                                    Xóa bài viết
-                                </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <MessageSquareWarning className="h-4 w-4 mr-2" />
                                     Báo cáo bài viết
                                 </DropdownMenuItem>
+                                {(post.owner.id === userId) &&
+                                    <>
+                                        <DropdownMenuItem onClick={() => { }}>
+                                            <PencilLine className="h-4 w-4 mr-2" />
+                                            Chỉnh sửa bài viết
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => { }}>
+                                            <Trash2 className="h-4 w-4 mr-2" />
+                                            Xóa bài viết
+                                        </DropdownMenuItem>
+                                    </>
+                                }
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -119,10 +166,11 @@ export default function Post({ className, post }) {
                 <div className="w-full">
                     <Image
                         src={post.mediaUrls[0]}
-                        width={1000}
-                        height={1000}
+                        width={400}
+                        height={400}
                         alt="Image"
-                        className="w-full object-cover"
+                        className="w-full h-[400px] object-contain"
+                        quality={75}
                     />
                 </div>
             }

@@ -27,7 +27,6 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
     const updateProfileMutation = userApi.mutation.useUpdateUserProfile(infoUser.id)
 
     const onSubmit = (data) => {
-        console.log('🚀 ~ onSubmit ~ data:', data)
         updateProfileMutation.mutate(data, {
             onSuccess: () => {
                 reset()

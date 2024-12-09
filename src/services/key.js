@@ -29,6 +29,7 @@ export const QUERY_KEY = {
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
     postById: (postId) => ['detail_post', postId],
+    allPosts: () => ['all_posts'],
     // group_rules
     groupRules: (groupId) => ['group_rules', groupId],
     // movie Rating
@@ -43,5 +44,7 @@ export const QUERY_KEY = {
     // event
     getSubscribedEvents: () => ['subscribed_events'],
     getEventsByGroupId: (groupId) => ['events_by_groupId', groupId],
+    // comment
+    commentByPostId: (postId) => ['comments', postId]
 
 }

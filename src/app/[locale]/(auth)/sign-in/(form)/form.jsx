@@ -16,6 +16,7 @@ import { PasswordInput } from '@/components/password-input';
 import { getUserIdFromToken } from '@/lib/helper';
 import Loading from '@/components/loading';
 import { useTranslations } from 'next-intl';
+import ButtonLoginWithGoogle from '@/app/[locale]/(auth)/sign-in/(component)/button-login-google';
 
 export default function FormLogin({ t }) {
     const tSchema = useTranslations('Schema.auth');
@@ -106,12 +107,9 @@ export default function FormLogin({ t }) {
 
                 {/* Submit Button */}
                 <Button type="submit" className="w-full">{t('login_action')}</Button>
-
+                <ButtonLoginWithGoogle t={t} />
                 {/* Social Login Buttons */}
                 <div className="grid gap-2">
-                    <Button variant="outline" className="w-full" type="button">
-                        {t('login_with_google')}
-                    </Button>
                     {/* <Button variant="outline" className="w-full" type="button">
                         {t('login_with_facebook')}
                     </Button> */}

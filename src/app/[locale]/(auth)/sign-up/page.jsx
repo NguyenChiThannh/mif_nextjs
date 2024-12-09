@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import SignUpForm from "@/app/[locale]/(auth)/sign-up/(form)/form";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ButtonLoginWithGoogle from "@/app/[locale]/(auth)/sign-in/(component)/button-login-google";
 
 export default function SignUp() {
     const t = useTranslations("Login_register");
@@ -27,9 +28,7 @@ export default function SignUp() {
 
                 {/* Social Login */}
                 <div className="grid gap-2">
-                    <Button variant="outline" className="w-full" type="button">
-                        {t('login_with_google')}
-                    </Button>
+                    <ButtonLoginWithGoogle t={t} />
                     {/* <Button variant="outline" className="w-full" type="button">
                         {t('login_with_facebook')}
                     </Button> */}

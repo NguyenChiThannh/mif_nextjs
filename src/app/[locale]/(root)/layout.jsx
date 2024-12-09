@@ -7,7 +7,7 @@ export default function RootLayout({
 
         <main>
             <Header />
-            <main className="xl:px-36 lg:px-2 md:px-2 px-1 pt-24">
+            <main className="xl:px-40 lg:px-2 md:px-2 px-1 pt-24">
                 {children}
             </main>
         </main>

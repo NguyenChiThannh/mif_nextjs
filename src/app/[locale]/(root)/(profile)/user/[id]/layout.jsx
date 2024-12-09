@@ -12,11 +12,14 @@ import useUploadImage from '@/hooks/useUploadImage'
 import { Separator } from '@/components/ui/separator'
 import Link from 'next/link'
 import { navProfileUserConfig } from '@/lib/navigationConfig'
+import useUserId from '@/hooks/useUserId'
 
 export default function RootLayout({ children }) {
     const t = useTranslations('Profile.User.Navbar');
     const pathname = usePathname();
+    const userId = useUserId();
     const { id } = useParams();
+    const isOwnProfile = userId === id
     const { data: infoUser, isLoading } = userApi.query.useGetUserInfoById(id);
     const { uploadImage } = useUploadImage();
 
@@ -49,12 +52,12 @@ export default function RootLayout({ children }) {
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 max-w-7xl mx-auto gap-8 p-4">
             {/* User Info Section */}
-            <UserInfoSection avatar={avatar} infoUser={infoUser} handleAvatarChange={handleAvatarChange} />
+            <UserInfoSection avatar={avatar} infoUser={infoUser} handleAvatarChange={handleAvatarChange} isOwnProfile={isOwnProfile} />
 
             {/* Navbar Section */}
             <div className="col-span-2">
-                <Navbar pathname={pathname} id={id} t={t} />
-                <Separator className="mt-4" />
+                {isOwnProfile && <Navbar pathname={pathname} id={id} t={t} />}
+                {isOwnProfile && <Separator className="mt-4" />}
                 <div className="mt-4">{children}</div>
             </div>
         </div>
@@ -62,7 +65,7 @@ export default function RootLayout({ children }) {
 }
 
 
-const UserInfoSection = ({ infoUser, handleAvatarChange, avatar }) => {
+const UserInfoSection = ({ infoUser, handleAvatarChange, avatar, isOwnProfile }) => {
     return (
         <div className="flex flex-col items-center gap-4">
             <div className="relative">
@@ -72,18 +75,21 @@ const UserInfoSection = ({ infoUser, handleAvatarChange, avatar }) => {
                         {infoUser.displayName[0]}
                     </AvatarFallback>
                 </Avatar>
-                <Button
-                    variant="ghost"
-                    className="absolute -right-2 -bottom-2 rounded-full bg-muted p-3 shadow-md hover:scale-105 transition"
-                >
-                    <Camera className="text-primary" />
-                </Button>
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                />
+                {isOwnProfile &&
+                    <>
+                        <Button
+                            variant="ghost"
+                            className="absolute -right-2 -bottom-2 rounded-full bg-muted p-3 shadow-md hover:scale-105 transition"
+                        >
+                            <Camera className="text-primary" />
+                        </Button>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleAvatarChange}
+                            className="absolute inset-0 opacity-0 cursor-pointer"
+                        />
+                    </>}
             </div>
             <div className="text-lg font-bold text-center">{infoUser.displayName}</div>
             {/* <div className="flex items-center gap-2 text-sm font-semibold text-primary">

@@ -11,11 +11,11 @@ export default function PostPublicSection() {
         hasNextPage,
         isFetchingNextPage,
         isLoading,
-    } = groupPostApi.query.useGetPostsByGroupIdInfinite("67502356fe4f3d4f70a03bad")
+    } = groupPostApi.query.useGetAllPosts()
 
     const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
     return (
-        <div>
+        <div className='grid gap-8'>
             {isLoading && (
                 <>
                     <PostSkeleton />
@@ -25,7 +25,7 @@ export default function PostPublicSection() {
             )}
             {data?.pages?.map((page, index) =>
                 page.content.map((post) => (
-                    <Post key={post.id} post={post} />
+                    <Post key={post.id} post={post} isGroup={true} />
                 ))
             )}
             {isFetchingNextPage && (

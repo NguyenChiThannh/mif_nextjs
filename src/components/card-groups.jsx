@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import React, { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, CalendarDays } from "lucide-react";
@@ -9,12 +9,13 @@ import { useRouter } from "next/navigation";
 import { groupsApi } from "@/services/groupsApi";
 import useUserId from "@/hooks/useUserId";
 
-export default function CardGroups({ initialStatus, group, categories }) {
-  const userId = useUserId()
-  const [joinStatus, setJoinStatus] = useState(initialStatus || null);
+export default function CardGroups({ group, categories }) {
+  const userId = useUserId();
+  const [joinStatus, setJoinStatus] = useState(null);
+  const [loadingStatus, setLoadingStatus] = useState(true);
   const statusGroupMutation = groupsApi.mutation.useGetUserStatusInGroups();
-  const addPendingInvitationMutation = groupsApi.mutation.useAddPendingInvitation()
-  const rejectInvationMutation = groupsApi.mutation.useRejectInvation()
+  const addPendingInvitationMutation = groupsApi.mutation.useAddPendingInvitation();
+  const rejectInvationMutation = groupsApi.mutation.useRejectInvation();
   const router = useRouter();
 
   const fetchGroupStatus = () => {
@@ -25,8 +26,12 @@ export default function CardGroups({ initialStatus, group, categories }) {
           const status = data[group.id];
           if (status) {
             setJoinStatus(status);
+            setLoadingStatus(false);
           }
         },
+        onError: () => {
+          setLoadingStatus(false);
+        }
       }
     );
   };
@@ -35,27 +40,28 @@ export default function CardGroups({ initialStatus, group, categories }) {
     fetchGroupStatus();
   }, [group]);
 
-
   const handleJoinGroup = () => {
     setJoinStatus("PENDING");
     addPendingInvitationMutation.mutate({
-      groupId: group.id
-    })
+      groupId: group.id,
+    });
   };
-
 
   const handleUnjoinGroup = () => {
     setJoinStatus("NOT_JOIN");
     rejectInvationMutation.mutate({
       userId,
-      groupId: group.id
-    })
-
+      groupId: group.id,
+    });
   };
 
   const handleDetailGroup = () => {
     router.push(`/groups/${group.id}`);
   };
+
+  if (loadingStatus) {
+    return <CardGroupsSkeleton />;
+  }
 
   return (
     <Card className="drop-shadow-lg animate-fade-in hover:scale-105 transition-transform duration-300 ease-in-out">
