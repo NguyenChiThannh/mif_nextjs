@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatDateTime, timeAgo } from '@/lib/formatter'
+import { calculateTimeAgo } from '@/lib/formatter'
 import { groupsApi } from '@/services/groupsApi'
 import { useMutation } from '@tanstack/react-query'
 import { Check, EllipsisVertical, LogOut, Plus, User, X } from 'lucide-react'
@@ -51,7 +51,7 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
                     </Link>
                     {type === 'invitation' ||
                         cardOwner ||
-                        <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
+                        <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {calculateTimeAgo(date)}</p>}
                 </div>
             </div>
             {type === 'invitation'

@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton';
-import { timeAgo } from '@/lib/formatter';
+import { calculateTimeAgo } from '@/lib/formatter';
 import { notificationApi } from '@/services/notificationApi';
 import { useRouter } from 'next/navigation';
 import React from 'react'
@@ -39,7 +39,7 @@ export default function NotificationItem({ notification, onClick }) {
         <span className="text-sm gap-2 line-clamp-2">
           {notification.message}
         </span>
-        <span className="text-xs text-muted-foreground">{timeAgo(new Date(notification.createdAt))} trước</span>
+        <span className="text-xs text-muted-foreground">{calculateTimeAgo(new Date(notification.createdAt))}</span>
       </div>
     </div>
   );

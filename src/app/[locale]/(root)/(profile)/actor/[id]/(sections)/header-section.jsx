@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ChevronDown, Heart, HeartOff } from 'lucide-react'
 
-export default function HeaderSection({ actor, liked, onLike, onUnlike, t }) {
+export default function HeaderSection({ actor, liked, onLike, onUnlike, t, favoriteCount }) {
     return (
         <div className="flex flex-col items-center gap-4">
             {/* Avatar */}
@@ -19,7 +19,7 @@ export default function HeaderSection({ actor, liked, onLike, onUnlike, t }) {
 
             {/* Like Level */}
             <div className="text-sm font-medium">
-                {t("like_level")}: {actor.likeLevel || 0}
+                {t("like_level")}: {favoriteCount || 0}
             </div>
 
             {/* Favorite Actions */}

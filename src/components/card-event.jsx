@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { groupsApi } from "@/services/groupsApi";
 import useUserId from "@/hooks/useUserId";
-import { formatDateTime } from "@/lib/formatter";
+import { formatToVietnameseDateTime } from "@/lib/formatter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { eventApi } from "@/services/eventApi";
 
@@ -58,7 +58,7 @@ export default function CardEvent({ event }) {
                         <div className="flex items-center gap-2">
                             <CalendarDays className="w-4 h-4" />
                             <span className="text-sm text-muted-foreground">
-                                {formatDateTime(event.startDate)}
+                                {formatToVietnameseDateTime(event.startDate)}
                             </span>
                         </div>
                         {event.eventType === "ONLINE" ? (

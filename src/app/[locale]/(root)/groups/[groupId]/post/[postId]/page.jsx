@@ -94,8 +94,6 @@ export default function DetailPost() {
     };
 
     const handleVote = async (comment, voteType) => {
-        console.log('🚀 ~ handleVote ~ voteType:', voteType)
-        console.log('🚀 ~ handleVote ~ comment:', comment)
         const currentVote = comment.upvotes.some(id => id === userId) ? 'upvote'
             : comment.downvotes.some(id => id === userId) ? 'downvote'
                 : null;
@@ -198,7 +196,7 @@ export default function DetailPost() {
 
     return (
         <div>
-            <div className="w-full max-w-3xl mx-auto shadow-xl rounded-lg bg-card h-full">
+            <div className="w-full max-w-3xl mx-auto shadow-xl py-2 rounded-lg bg-card h-full">
                 {isLoadingPost ? <PostSkeleton /> : <Post post={post} className={'drop-shadow-sm'} />}
 
                 <div className="flex items-center gap-2 px-2 mt-4">

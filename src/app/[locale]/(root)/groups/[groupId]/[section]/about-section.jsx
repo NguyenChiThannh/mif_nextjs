@@ -3,7 +3,7 @@ import GroupAvatar from '@/components/group-avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { formatDateTime } from '@/lib/formatter'
+import { formatDate } from '@/lib/formatter'
 import { CalendarDays, Clock5, Eye, Lock, SquareLibrary, Users } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
@@ -102,7 +102,7 @@ function CardActivityGroup({ group }) {
                     <p className="flex gap-2 font-bold items-center">
                         <Clock5 className="h-4 w-4" />
                         Ngày thành lập </p>
-                    <p>&middot; Thành lập ngày: {formatDateTime(group?.createdAt)} </p>
+                    <p>&middot; Thành lập ngày: {formatDate(group?.createdAt)} </p>
 
                     <p className="flex gap-2 font-bold items-center">
                         <CalendarDays className="h-4 w-4" />

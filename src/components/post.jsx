@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
 import useUserId from '@/hooks/useUserId'
-import { formatDateTime } from '@/lib/formatter'
+import { formatDateOrTimeAgo } from '@/lib/formatter'
 import { groupPostApi } from '@/services/groupPostApi'
 import { savedPostApi } from '@/services/savedPostApi'
 import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, PencilLine, Play, Trash2 } from 'lucide-react'
@@ -104,7 +104,7 @@ export default function Post({ className, post, isGroup }) {
                                     </Link>
                                 }
                                 <span className="mx-1">&middot;</span>
-                                <span>{formatDateTime(post.createdAt)}</span>
+                                <span>{formatDateOrTimeAgo(post.createdAt)}</span>
                             </div>
                         </div>
                     </div>

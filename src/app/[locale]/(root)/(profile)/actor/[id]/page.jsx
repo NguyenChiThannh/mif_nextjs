@@ -18,11 +18,19 @@ export default function Actor() {
   const { id } = useParams()
   const [liked, setLiked] = useState(false)
   const [isInitialLoading, setIsInitialLoading] = useState(true)
+  const [favoriteCount, setFavoriteCount] = useState(0)
 
   const { data: actor, isLoading: isActorLoading } = actorApi.query.useGetActorById(id)
   const addFavoriteActorMutation = favoriteActorsApi.mutation.useAddFavoriteActor()
   const removeFavoriteActorMutation = favoriteActorsApi.mutation.useRemoveFavoriteActor()
   const isActorFavoriteMutation = favoriteActorsApi.mutation.useIsActorFavorite()
+
+  // Set initial favorite count
+  useEffect(() => {
+    if (actor?.favoriteCount) {
+      setFavoriteCount(actor.favoriteCount)
+    }
+  }, [actor?.favoriteCount])
 
   // Check if actor is favorite
   useEffect(() => {
@@ -39,15 +47,23 @@ export default function Actor() {
 
   const handleLike = () => {
     setLiked(true)
+    setFavoriteCount(prev => prev + 1)
     addFavoriteActorMutation.mutate(id, {
-      onError: () => setLiked(false),
+      onError: () => {
+        setLiked(false)
+        setFavoriteCount(prev => prev - 1)
+      }
     })
   }
 
   const handleUnlike = () => {
     setLiked(false)
+    setFavoriteCount(prev => prev - 1)
     removeFavoriteActorMutation.mutate(id, {
-      onError: () => setLiked(true),
+      onError: () => {
+        setLiked(true)
+        setFavoriteCount(prev => prev + 1)
+      }
     })
   }
 
@@ -58,6 +74,7 @@ export default function Actor() {
         liked={liked}
         onLike={handleLike}
         onUnlike={handleUnlike}
+        favoriteCount={favoriteCount}
         t={t}
       />
 

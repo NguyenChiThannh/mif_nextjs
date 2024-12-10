@@ -21,14 +21,14 @@ const Chat = () => {
     const toggleNotifications = () => setShowNotifications(prev => !prev);
 
     const chatList = [
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
-        { name: "Alex Johnson", lastMessage: "Just finished a great book!", timeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
+        { name: "Alex Johnson", lastMessage: "Just finished a great book!", calculateTimeAgo: "45m", avatar: "/placeholder-user.jpg" },
     ];
 
     return (
@@ -47,7 +47,7 @@ const Chat = () => {
                             key={index}
                             name={chat.name}
                             lastMessage={chat.lastMessage}
-                            timeAgo={chat.timeAgo}
+                            calculateTimeAgo={chat.calculateTimeAgo}
                             avatarSrc={chat.avatar}
                             avatarFallback={chat.name.charAt(0)}
                             onClick={() => console.log(`Clicked on ${chat.name}`)}
