@@ -46,6 +46,16 @@ const deleteActor = async (id) => {
 }
 
 
+const searchActorsByTitle = async ({ queryKey }) => {
+    const [_key, name] = queryKey
+    const res = await privateApi.get('/actors/search', {
+        params: {
+            title: name
+        }
+    })
+    return res.data
+}
+
 export const actorApi = {
     query: {
         useGetActorFilmography(actorId) {
@@ -77,6 +87,13 @@ export const actorApi = {
                 },
             });
         },
+        useSearchActorsByTitle(name) {
+            return useQuery({
+                queryKey: QUERY_KEY.searchActorsByTitle(name),
+                queryFn: searchActorsByTitle,
+                enabled: !!name,
+            })
+        }
     },
     mutation: {
         useCreateActor() {
