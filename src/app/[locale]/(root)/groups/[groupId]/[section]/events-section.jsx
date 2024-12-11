@@ -1,3 +1,4 @@
+'use client'
 import { DialogCreateEvent } from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-create-event'
 import CardEvent, { CardEventSkeleton } from '@/components/card-event'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll'
