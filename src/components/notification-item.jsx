@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function NotificationItem({ notification, onClick }) {
+  console.log('🚀 ~ NotificationItem ~ notification:', notification)
   const router = useRouter();
   const markAsReadMutation = notificationApi.mutation.useMarkAsRead();
 
