@@ -93,32 +93,23 @@ export default function DetailPost() {
         setReplyTo(null);
     };
 
-    const handleVote = async (comment, voteType) => {
+    const handleVote = (comment, voteType) => {
         const currentVote = comment.upvotes.some(id => id === userId) ? 'upvote'
             : comment.downvotes.some(id => id === userId) ? 'downvote'
                 : null;
-        console.log('🚀 ~ handleVote ~ currentVote:', currentVote)
 
         if (currentVote === voteType) {
-            client.publish({
-                destination: "/app/comment.removeVote",
-                body: JSON.stringify(comment.id),
-            });
-            return;
-        }
-
-        if (currentVote) {
-            client.publish({
-                destination: "/app/comment.removeVote",
-                body: JSON.stringify(comment.id),
-            });
-
             client.publish({
                 destination: `/app/comment.${voteType}`,
                 body: JSON.stringify(comment.id),
             });
-        }
-        else {
+        } else {
+            if (currentVote) {
+                client.publish({
+                    destination: `/app/comment.${currentVote === 'upvote' ? 'downvote' : 'upvote'}`,
+                    body: JSON.stringify(comment.id),
+                });
+            }
             client.publish({
                 destination: `/app/comment.${voteType}`,
                 body: JSON.stringify(comment.id),

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { store } from '@/redux/store.js'
 import { toast } from "react-toastify"
 
-const BASE_URL = 'http://localhost:8080/'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL
 export const dynamic = 'force-dynamic'
 
 const publicApi = axios.create({

@@ -3,8 +3,7 @@ import SockJS from "sockjs-client";
 import { Client } from "@stomp/stompjs";
 
 export const useWebSocket = (token, subscriptionPath, callback) => {
-    // const socketUrl = String(process.env.NEXT_PUBLIC_SOCKET_URL)
-    const socketUrl = "http://localhost:8080/ws"
+    const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL
     const [isConnected, setIsConnected] = useState(false);
     const [client, setClient] = useState(null);
     useEffect(() => {
