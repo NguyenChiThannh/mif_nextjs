@@ -9,10 +9,13 @@ import Script from 'next/script'
 export default function LiveStreamPage() {
     const searchParams = useSearchParams()
     const roomId = searchParams.get('roomID')
+    const role = searchParams.get('role')
+    console.log('🚀 ~ LiveStreamPage ~ role:', role)
     const userId = useUserId()
     const { data: user, isLoading } = userApi.query.useGetUserInfoById(userId)
     const zegoRef = useRef(null)
 
+    // Xử lý khởi tạo Zego khi script load xong
     const handleScriptLoad = () => {
         if (!user || !roomId || !window.ZegoUIKitPrebuilt) return;
 
@@ -27,22 +30,19 @@ export default function LiveStreamPage() {
             user.displayName || `User_${userId}`
         );
 
-        // Get role from URL params
-        let role = searchParams.get('role') || 'Host';
-        role = role === 'Host' ? window.ZegoUIKitPrebuilt.Host : window.ZegoUIKitPrebuilt.Audience;
+        // Get role from URL
+        const role = searchParams.get('role') === 'Audience'
+            ? window.ZegoUIKitPrebuilt.Audience
+            : window.ZegoUIKitPrebuilt.Host;
 
-        // Config based on role
-        let config = {}
-        if (role === window.ZegoUIKitPrebuilt.Host) {
-            config = {
-                turnOnCameraWhenJoining: false,
-                showMyCameraToggleButton: true,
-                showAudioVideoSettingsButton: true,
-                showScreenSharingButton: true,
-                showTextChat: true,
-                showUserList: true,
-            }
-        }
+        const config = {
+            turnOnCameraWhenJoining: false,
+            showMyCameraToggleButton: true,
+            showAudioVideoSettingsButton: true,
+            showScreenSharingButton: true,
+            showTextChat: true,
+            showUserList: true,
+        };
 
         // Cleanup previous instance if exists
         if (zegoRef.current) {
@@ -57,18 +57,11 @@ export default function LiveStreamPage() {
             container: document.querySelector("#zego-root"),
             scenario: {
                 mode: window.ZegoUIKitPrebuilt.LiveStreaming,
-                config: {
-                    role,
-                },
+                config: { role },
             },
             sharedLinks: [{
                 name: 'Join as an audience',
-                url: window.location.protocol + '//' +
-                    window.location.host +
-                    window.location.pathname +
-                    '?roomID=' +
-                    roomId +
-                    '&role=Audience',
+                url: `${window.location.origin}/live?roomID=${roomId}&role=Audience`,
             }],
             ...config
         });

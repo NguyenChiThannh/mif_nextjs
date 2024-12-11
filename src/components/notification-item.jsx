@@ -19,7 +19,7 @@ export default function NotificationItem({ notification, onClick }) {
     }
     else if (notification.type === 'EVENT') {
       if (notification.url) {
-        router.push(`${url}`);
+        router.push(`${notification.url}`);
       }
       else {
         router.push(`/groups/${notification.groupId}/events`);
