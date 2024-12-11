@@ -5,8 +5,7 @@ import { format } from "date-fns";
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import "react-day-picker/dist/style.css";
-import { CalendarComponent } from '@/components/ui/calendar';
+import { CalendarComponent } from "@/components/ui/calendar";
 
 
 export function DatePickerPopover({ selected, onSelect }) {

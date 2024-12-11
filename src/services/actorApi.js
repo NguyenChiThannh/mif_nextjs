@@ -1,3 +1,8 @@
+import { QUERY_KEY } from "@/services/key";
+import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
+
 const { privateApi } = require("@/services/config");
 
 export const getTopActors = async ({ queryKey }) => {
@@ -6,28 +11,94 @@ export const getTopActors = async ({ queryKey }) => {
         params: {
             page,
             size,
-        },
+        }
     })
     return res.data
 }
-export const getActorById = async (actorId) => {
+
+export const getTopActorsInfinite = async ({ queryKey, pageParam = 0 }) => {
+    const res = await privateApi.get('/actors', {
+        params: {
+            page: pageParam,
+        }
+    })
+    return res.data
+}
+
+const getActorById = async (actorId) => {
     const res = await privateApi.get(`/actors/${actorId}`)
     return res.data
 }
 
-export const getActorFilmography = async (actorId) => {
+const getActorFilmography = async (actorId) => {
     const res = await privateApi.get(`/actors/${actorId}/filmography`)
     return res.data
 }
 
-export const createActor = async (data) => {
+const createActor = async (data) => {
     const res = await privateApi.post('/actors', data)
     return res.data
 }
 
-export const deleteActor = async (id) => {
+const deleteActor = async (id) => {
     const res = await privateApi.delete(`/actors/${id}`)
     return res.data
 }
 
 
+export const actorApi = {
+    query: {
+        useGetActorFilmography(actorId) {
+            return useQuery({
+                queryKey: QUERY_KEY.actorMovieography(actorId),
+                queryFn: ({ queryKey }) => getActorFilmography(queryKey[1]),
+            })
+        },
+        useGetActorById(actorId, enabled = true) {
+            return useQuery({
+                queryKey: QUERY_KEY.actorById(actorId),
+                queryFn: ({ queryKey }) => getActorById(queryKey[1]),
+                enabled,
+            })
+        },
+        useGetTopActors(page, size) {
+            return useQuery({
+                queryKey: QUERY_KEY.topActors(page, size),
+                queryFn: getTopActors,
+            })
+        },
+        useGetTopActorsInfinite() {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.topActorsInfinite(),
+                queryFn: getTopActorsInfinite,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            });
+        },
+    },
+    mutation: {
+        useCreateActor() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: createActor,
+                onSuccess: () => {
+                    toast.success(t('create_actor_successful'))
+                },
+            })
+        },
+        useDeleteActor() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: deleteActor,
+                onSuccess: () => {
+                    toast.success(t('delete_actor_successful'))
+                },
+                onError: () => {
+                    toast.error(t('delete_actor_failed'))
+                }
+            })
+        },
+    }
+}

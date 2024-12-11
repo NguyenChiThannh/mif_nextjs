@@ -3,46 +3,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatDateTime, timeAgo } from '@/lib/formatter'
-import { acceptInvitation, removeMemberFromGroup, removePendingInvitation } from '@/services/groupsApi'
+import { calculateTimeAgo } from '@/lib/formatter'
+import { groupsApi } from '@/services/groupsApi'
 import { useMutation } from '@tanstack/react-query'
 import { Check, EllipsisVertical, LogOut, Plus, User, X } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-import { toast } from 'react-toastify'
 
-export default function CardMember({ member, groupId, type, isOwner }) {
+export default function CardMember({ member, groupId, type, isOwner, cardOwner }) {
     const date = new Date(member?.joinedAt)
-
-    const acceptInvitationMutation = useMutation({
-        mutationFn: (data) => acceptInvitation(data),
-        onSuccess: (data) => {
-            toast.success("Chấp nhận lời mời thành công")
-        },
-        onError: (error) => {
-            toast.error("Chấp nhận lời mời thất bại")
-        }
-    })
-
-    const rejectInvationMutation = useMutation({
-        mutationFn: (data) => removePendingInvitation(data),
-        onSuccess: (data) => {
-            toast.success("Xóa lời mời thành công")
-        },
-        onError: (error) => {
-            toast.error("Xóa lời mời thất bại")
-        }
-    })
-
-    const removeMemberFromGroupMutation = useMutation({
-        mutationFn: (data) => removeMemberFromGroup(data),
-        onSuccess: (data) => {
-            toast.success("Xóa thành viên thành công")
-        },
-        onError: (error) => {
-            toast.error("Xóa thành viên thất bại")
-        }
-    })
+    const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation(groupId)
+    const rejectInvationMutation = groupsApi.mutation.useRejectInvitation(groupId)
+    const removeMemberFromGroupMutation = groupsApi.mutation.useRemoveMemberFromGroup(groupId)
 
     const handleAcceptInvitation = () => {
         acceptInvitationMutation.mutate({
@@ -73,8 +45,13 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                     <AvatarFallback className='uppercase'>{member?.displayName && member?.displayName[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                    <h3 className="font-bold">{member?.displayName}</h3>
-                    {type === 'invitation' || <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {timeAgo(date)} trước</p>}
+                    <Link className='flex'
+                        href={`/user/${member?.id}`}>
+                        <h3 className="font-bold hover:underline">{member?.displayName}</h3>
+                    </Link>
+                    {type === 'invitation' ||
+                        cardOwner ||
+                        <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {calculateTimeAgo(date)}</p>}
                 </div>
             </div>
             {type === 'invitation'
@@ -99,14 +76,6 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {
-                            isOwner ?
-                                <DropdownMenuItem onClick={() => handleRemoveMemberFromGroup()}>
-                                    <LogOut className="h-4 w-4 mr-2" />
-                                    Rời nhóm
-                                </DropdownMenuItem>
-                                : ''
-                        }
                         <DropdownMenuItem>
                             <Link className='flex'
                                 href={`/user/${member?.id}`}>
@@ -114,6 +83,14 @@ export default function CardMember({ member, groupId, type, isOwner }) {
                                 Xem trang cá nhân
                             </Link>
                         </DropdownMenuItem>
+                        {
+                            (!cardOwner && isOwner) ?
+                                <DropdownMenuItem onClick={() => handleRemoveMemberFromGroup()}>
+                                    <LogOut className="h-4 w-4 mr-2" />
+                                    Rời nhóm
+                                </DropdownMenuItem>
+                                : ''
+                        }
                     </DropdownMenuContent>
                 </DropdownMenu>
             }

@@ -1,6 +1,10 @@
 import { privateApi } from '@/services/config'
+import { QUERY_KEY } from '@/services/key';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
+import { toast } from 'react-toastify';
 
-export const getPostsByGroupId = async ({ pageParam = 0, queryKey }) => {
+const getPostsByGroupId = async ({ pageParam = 0, queryKey }) => {
     const [_key, { groupId }] = queryKey;
     const res = await privateApi.get(`/groups/${groupId}/posts`, {
         params: {
@@ -10,19 +14,108 @@ export const getPostsByGroupId = async ({ pageParam = 0, queryKey }) => {
     return res.data;
 }
 
-export const upvotePost = async (postId) => {
+const upvotePost = async (postId) => {
     const res = await privateApi.post(`/group-posts/${postId}/upvote`)
     return res.data
 }
 
-export const downvotePost = async (postId) => {
+const downvotePost = async (postId) => {
     const res = await privateApi.post(`/group-posts/${postId}/downvote`)
     return res.data
 }
 
-export const removevotePost = async (postId) => {
+const removevotePost = async (postId) => {
     const res = await privateApi.delete(`/group-posts/${postId}/vote`)
     return res.data
 }
 
-// export const deletePost = async()
+const createPost = async (data) => {
+    const res = await privateApi.post(`/group-posts`, data)
+    return res.data
+}
+
+const getAllPosts = async ({ pageParam = 0, queryKey }) => {
+    const res = await privateApi.get(`/group-posts`, {
+        params: {
+            page: pageParam,
+        }
+    })
+    return res.data
+}
+
+
+const getPostById = async (postId) => {
+    const res = await privateApi.get(`/group-posts/${postId}`)
+    return res.data
+}
+
+export const groupPostApi = {
+    query: {
+        useGetPostsByGroupIdInfinite(groupId) {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.groupPosts(groupId),
+                queryFn: getPostsByGroupId,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            });
+        },
+        useGetPostByPostId(postId) {
+            return useQuery({
+                queryKey: QUERY_KEY.postById(postId),
+                queryFn: ({ queryKey }) => getPostById(queryKey[1]),
+            })
+        },
+        useGetAllPosts() {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.allPosts(),
+                queryFn: getAllPosts,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            })
+        }
+    },
+    mutation: {
+        useUpVotePost(groupId) {
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: upvotePost,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
+                },
+            })
+        },
+        useDownVotePost(groupId) {
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: downvotePost,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
+                },
+            })
+        },
+        useRemoveVotePost(groupId) {
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: removevotePost,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
+                },
+            })
+        },
+        useCreatePost(groupId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: createPost,
+                onSuccess: () => {
+                    toast.success(t('create_post_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
+                },
+            })
+        }
+    },
+}

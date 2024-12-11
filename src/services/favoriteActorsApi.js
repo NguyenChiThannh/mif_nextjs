@@ -1,46 +1,67 @@
 import { privateApi } from "@/services/config"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { QUERY_KEY } from "@/services/key"
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 
-export const addFavoriteActor = (actorId) => {
-    const res = privateApi.post(`/favoriteActors/${actorId}`)
+export const addFavoriteActor = async (actorId) => {
+    const res = await privateApi.post(`/favoriteActors/${actorId}`)
     return res.data
 }
 
-export const isActorFavorite = (actorId) => {
-    const res = privateApi.get(`/favoriteActors/${actorId}`)
+export const removeFavoriteActor = async (actorId) => {
+    const res = await privateApi.delete(`/favoriteActors/${actorId}`)
     return res.data
 }
 
-export const removeFavoriteActor = (actorId) => {
-    const res = privateApi.delete(`/favoriteActors/${actorId}`)
+const isActorFavorite = async (actorId) => {
+    const res = await privateApi.get(`/favoriteActors/${actorId}`)
     return res.data
 }
 
-export const getFavoriteActors = ({ queryKey }) => {
-    const res = privateApi.get('/favoriteActors')
+const getFavoriteActors = async ({ queryKey, pageParam = 0 }) => {
+    const res = await privateApi.get('/favoriteActors', {
+        params: {
+            page: pageParam,
+        }
+    })
     return res.data
 }
 
-
-
-
-// const keys = {
-//     favouriteActors: ['favouriteActors']
-
-// }
-// const favoriteApi = {
-//     query: {
-//         useGetFavouriteActors() {
-//             const queryClinet = useQueryClient()
-//             return useQuery({
-//                 queryKey: keys.favouriteActors,
-//                 queryFn: () => {
-//                     const res = privateApi.get('/favoriteActors')
-//                     queryClinet.invalidateQueries
-//                     return res.data
-//                 }
-//             })
-//         }
-//     },
-//     mutation: {}
-// }
+export const favoriteActorsApi = {
+    query: {
+        useGetFavoriteActors() {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.favoriteActors(),
+                queryFn: getFavoriteActors,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            });
+        },
+    },
+    mutation: {
+        useAddFavoriteActor() {
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: addFavoriteActor,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.favoriteActors() })
+                }
+            })
+        },
+        useRemoveFavoriteActor() {
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: removeFavoriteActor,
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.favoriteActors() })
+                }
+            })
+        },
+        useIsActorFavorite() {
+            return useMutation({
+                mutationFn: isActorFavorite,
+            })
+        }
+    }
+}

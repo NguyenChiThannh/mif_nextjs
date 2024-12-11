@@ -1,0 +1,264 @@
+{
+    "Header": {
+        "home_link": "Trang Chủ",
+        "movie_link": "Phim nổi bật",
+        "actor_link": "Diễn viên",
+        "groups_link": "Nhóm",
+        "input_placeholder": "Tìm kiếm...",
+        "login": "Đăng nhập"
+    },
+    "Schema": {
+        "auth": {
+            "emailInvalid": "Email không hợp lệ",
+            "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
+            "passwordComplexity": "Mật khẩu phải bao gồm ít nhất một chữ hoa, một chữ thường và một chữ số",
+            "displayNameMin": "Tên đầy đủ phải có ít nhất 2 ký tự",
+            "passwordMismatch": "Mật khẩu phải khớp."
+        }
+    },
+    "Login_register": {
+        "login_title": "Đăng nhập",
+        "login_description": "Nhập email của bạn bên dưới để đăng nhập vào tài khoản của bạn",
+        "register_title": "Đăng ký",
+        "register_description": "Nhập thông tin của bạn bên dưới để đăng ký tài khoản",
+        "email": "Email",
+        "email_placeholder": "Nhập email",
+        "fullName": "Họ và tên",
+        "fullName_placeholder": "Nhập họ và tên",
+        "password": "Mật khẩu",
+        "password_placeholder": "Nhập mật khẩu",
+        "repeat_password": "Nhập lại mật khẩu",
+        "repeat_password_placeholder": "Nhập lại mật khẩu",
+        "remember_me": "Ghi nhớ tôi",
+        "login_action": "Đăng nhập",
+        "register_action": "Đăng ký",
+        "login_with_google": "Đăng nhập với Google",
+        "login_with_facebook": "Đăng nhập với Facebook",
+        "you_dont_have_account_yet": "Bạn chưa có tài khoản?",
+        "you_have_account_yet": "Bạn đã có tài khoản?",
+        "forget_password_title": "Quên mật khẩu",
+        "forget_password_description": "Nhập email để quên mật khẩu",
+        "forget_password_action": "Nhận mã xác nhận",
+        "otp_title": "Xác nhận OTP",
+        "otp_description": "Xác nhận OTP",
+        "otp_action": "Xác nhận"
+    },
+    "Home": {
+        "title_section_actor": "Diễn viên nổi bật",
+        "title_section_public_post": "Bài viết nổi bật",
+        "title_section_group": "Nhóm bạn có thể quan tâm",
+        "title_section_hot_movies": "Phim hot gần đây",
+        "title_section_random_movies": "Phim ngẫu nhiên",
+        "more": "Xem thêm",
+        "button_watch_trailer": "Xem trailer"
+    },
+    "Movie": {
+        "title": "Phim đang hot",
+        "category": "Thể loại",
+        "year_release": "Năm",
+        "duration": "Thời lượng",
+        "minutes": "p",
+        "button_watch_trailer": "Xem trailer",
+        "Detail": {
+            "image": "Ảnh",
+            "review": "Đánh giá",
+            "actor": "Diễn viên",
+            "about_movie": "Về phim",
+            "release_year": "Năm phát hành",
+            "duration": "Thời lượng",
+            "rating_score": "Điểm đánh giá",
+            "director": "Đạo diễn",
+            "ranking": "Xếp hạng",
+            "save_movie": "Lưu phim",
+            "saved_movie": "Đã lưu phim",
+            "share": "Share",
+            "category": "Thể loại"
+        }
+    },
+    "News": {
+        "title": "Tin tức"
+    },
+    "Dashboard": {
+        "Navbar": {
+            "home": "Trang chủ",
+            "news": "Tin tức",
+            "movies": "Phim",
+            "category": "Thể loại",
+            "actor": "Diễn viên",
+            "group": "Nhóm",
+            "analytics": "Phân tích"
+        }
+    },
+    "Category": {
+        "category": "Thể loại",
+        "category_not_found": "Không tìm thấy category"
+    },
+    "Groups": {
+        "title": "Nhóm",
+        "all": "Tất cả",
+        "groups_you_have_created": "Nhóm bạn đã tạo",
+        "groups_you_have_joined": "Nhóm bạn tham gia",
+        "you_might_be_interested": "Có thể bạn quan tâm",
+        "input_placeholder": "Tìm kiếm...",
+        "members": "thành viên",
+        "posts_this_week": "bài viết tuần này",
+        "view_group": "Xem nhóm",
+        "join_group": "Tham gia nhóm",
+        "cancel_join_group": "Hủy tham gia",
+        "create_post_button": "Tạo bài viết",
+        "comment": "Bình luận",
+        "save": "Lưu",
+        "more": "Xem thêm",
+        "invite_button": "Mời",
+        "invite_title": "Mời thành viên",
+        "invite_content": "Link/Id của người dùng",
+        "category": "Thể loại",
+        "display_mode": "Hiển thị",
+        "display_mode_description": "Ai cũng có thể tìm thấy nhóm này.",
+        "introduce": "Giới thiệu",
+        "public_mode": "Công khai",
+        "public_mode_description": "Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "private_mode": "Riêng tư",
+        "private_mode_description": "Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "no_more_posts": "Bạn đã xem hết bài viết",
+        "rules": "Quy tắc",
+        "rules_description": "Những quy định chung của nhóm",
+        "add_rule": "Thêm quy tắc",
+        "NavbarGroup": {
+            "feed": "Bảng tin",
+            "message": "Nhắn tin",
+            "rules": "Quy tắc",
+            "about": "Giới thiệu",
+            "members": "Thành viên",
+            "events": "Sự kiện",
+            "statistical": "Thống kê"
+        },
+        "DialogAddOrEditRule": {
+            "add": "Thêm quy tắc",
+            "edit": "Sửa quy tắc",
+            "content": "Nội dung",
+            "content_placeholder": "Nhập quy tắc...",
+            "button_submit": "Gửi"
+        },
+        "DialogCreateGroup": {
+            "create_group": "Tạo nhóm",
+            "group_name": "Tên nhóm",
+            "group_status": "Trạng thái nhóm",
+            "category": "Thể loại",
+            "public": "Công khai",
+            "private": "Riêng tư"
+        },
+        "DialogCreatePost": {
+            "create_post": "Tạo bài viết",
+            "title": "Tiêu đề",
+            "title_placeholder": "Nhập tiêu đề của bài viết",
+            "title_error": "Tiêu đề là bắt buộc",
+            "content": "Nội dung",
+            "content_placeholder": "Nhập nội dung của bài viết",
+            "content_error": "Nội dung là bắt buộc",
+            "add_picture": "Thêm ảnh",
+            "button_submit": "Đăng"
+        },
+        "DialogEditInfoGroup": {
+            "edit_info_group": "Chỉnh sửa thông tin",
+            "group_name": "Tên nhóm",
+            "group_name_placeholder": "Nhập tên nhóm",
+            "group_name_error": "Tên nhóm là bắt buộc",
+            "group_description": "Mô tả",
+            "group_description_placeholder": "Nhập mô tả",
+            "group_description_error": "Mô tả nhóm là bắt buộc",
+            "group_status": "Trạng thái nhóm",
+            "category": "Thể loại",
+            "public": "Công khai",
+            "private": "Riêng tư",
+            "button_submit": "Đăng"
+        }
+    },
+    "Actor": {
+        "title": "Top 100 diễn viên nổi bật"
+    },
+    "Profile": {
+        "User": {
+            "Navbar": {
+                "my_posts": "Bài viết của tôi",
+                "info": "Thông tin",
+                "posts_saved": "Bài viết đã lưu",
+                "movies_saved": "Phim đã lưu",
+                "favorate_actors": "Diễn viên yêu thích",
+                "event": "Sự kiện"
+            },
+            "info": "Thông tin",
+            "edit_profile": "Chỉnh sửa hồ sơ",
+            "copy_link_profile": "Sao chép liên kết trang cá nhân",
+            "copy_link_profile_successful": "Liên kết đã được sao chép!",
+            "copy_link_profile_failed": "Không thể sao chép liên kết",
+            "display_name": "Tên hiển thị",
+            "dob": "Sinh nhật",
+            "member_type": "Thành viên",
+            "bio": "Về bản thân",
+            "bio_placeholder": "Nhập thông tin về bản thân",
+            "button_submit_edit_profile": "Thay đổi"
+        },
+        "Actor": {
+            "like_level": "Mức độ yêu thích",
+            "rank": "Rank",
+            "awards": "Giải thưởng",
+            "images": "Hình ảnh",
+            "like": "Yêu thích",
+            "unlike": "Hủy yêu thích",
+            "liked": "Đã yêu thích",
+            "joined_movies": "Phim tham gia",
+            "not_participated_in_any_movie": "Chưa tham gia bộ phim nào"
+        }
+    },
+    "DialogConfirmDelete": {
+        "confirm_delete": "Xác nhận xóa",
+        "button_cancel": "Hủy",
+        "button_submit_delete": "Xóa",
+        "message_default": "Bạn có muốn xóa không ?"
+    },
+    "Search": {
+        "search_keywords": "Từ khóa tìm kiếm",
+        "all": "Tất cả",
+        "movie": "Phim",
+        "group": "Nhóm",
+        "director_actor": "Đạo diễn/Diễn viên",
+        "no_matching_results_found": "Không có kế quả tìm kiếm phù hợp"
+    },
+    "Toast": {
+        "register_successful": "Mã OTP được gửi về Email. Vui lòng nhập để xác nhận tài khoản.",
+        "login_successful": "Đăng nhập thành công",
+        "verify_otp_successful": "Xác thực tài khoản thành công",
+        "create_movie_successful": "Tạo phim thành công",
+        "create_group_successful": "Tạo nhóm thành công",
+        "update_group_successful": "Cập nhật thông tin nhóm thành công",
+        "add_pending_invitation_successful": "Gửi lời mời thành công",
+        "leave_group_successful": "Rời nhóm thành công",
+        "create_event_successful": "Tạo sự kiện thành công",
+        "accept_invitation_successful": "Chấp nhận lời mời thành công",
+        "reject_invitation_successful": "Xóa lời mời thành công",
+        "remove_member_group_successful": "Xóa thành viên thành công",
+        "add_member_group_successful": "Thêm thành viên thành công",
+        "delete_actor_successful": "Xóa diễn viên thành công",
+        "delete_actor_failed": "Xóa diễn viên thất bại",
+        "create_actor_successful": "Thêm diễn viên thành công",
+        "create_category_successful": "Thêm category thành công",
+        "delete_category_successful": "Xóa category thành công",
+        "update_category_successful": "Cập nhật category thành công",
+        "update_category_failed": "Cập nhật category thất bại",
+        "update_user_info_successful": "Cập nhật thông tin người dùng thành công",
+        "create_post_successful": "Tạo bài viết thành công",
+        "copy_link_successful": "Liên kết đã được sao chép!",
+        "copy_link_failed": "Liên kết sao chép thất bại",
+        "add_rule_successful": "Thêm quy tắc thành công",
+        "update_rule_successful": "Cập nhật quy tắc thành công",
+        "delete_rule_successful": "Xóa quy tắc thành công",
+        "create_rating_movie_successful": "Rating phim  thành công",
+        "delete_rating_movie_successful": "Xóa rating thành công",
+        "delete_group_successful": "Xóa nhóm thành công"
+    },
+    "duration": "Thời lượng",
+    "minutes": "phút",
+    "release_day": "Ngày phát hành",
+    "is_more": "Xem thêm"
+}

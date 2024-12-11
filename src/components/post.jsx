@@ -4,53 +4,52 @@ import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Separator } from '@/components/ui/separator'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatDateTime } from '@/lib/formatter'
-import { downvotePost, removevotePost, upvotePost } from '@/services/groupPostApi'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Bookmark, Ellipsis, EllipsisVertical, Forward, LogOut, MessageCircle, MessageSquareWarning, Play, Trash2 } from 'lucide-react'
+import useUserId from '@/hooks/useUserId'
+import { formatDateOrTimeAgo } from '@/lib/formatter'
+import { groupPostApi } from '@/services/groupPostApi'
+import { savedPostApi } from '@/services/savedPostApi'
+import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, PencilLine, Play, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useState } from 'react'
-import { toast } from 'react-toastify'
+import React, { useEffect, useState } from 'react'
 
-export default function Post({ className, post }) {
-    const [vote, setVote] = useState(post.userVotes);
-    const [voteNumber, setVoteNumber] = useState(post.voteNumber);
-    const queryClient = useQueryClient();
+export default function Post({ className, post, isGroup }) {
+    const userId = useUserId()
+    const [vote, setVote] = useState(post?.userVotes || null);
+    const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
+    const [saved, setSaved] = useState(false);
 
-    const upvoteMutation = useMutation({
-        mutationFn: (data) => upvotePost(data),
-        onSuccess: (data) => {
-            toast.success('Upvote')
-            queryClient.invalidateQueries('group_posts')
-        },
-        onError: (error) => {
-            toast.error('Upvote', error)
-        }
-    })
+    const upvoteMutation = groupPostApi.mutation.useUpVotePost(post.groupId)
+    const downvoteMutation = groupPostApi.mutation.useDownVotePost(post.groupId)
+    const removevoteMutation = groupPostApi.mutation.useRemoveVotePost(post.groupId)
 
-    const downvoteMutation = useMutation({
-        mutationFn: (data) => downvotePost(data),
-        onSuccess: (data) => {
-            toast.success('DOWNVOTE')
-            queryClient.invalidateQueries('group_posts')
-        },
-        onError: (error) => {
-            toast.error('DOWNVOTE', error)
-        }
-    })
+    const savePostMutation = savedPostApi.mutation.useSavePost(userId)
+    const unSavePostMutation = savedPostApi.mutation.useUnsavePost(userId)
+    const batchCheckSavedStatusMutation = savedPostApi.mutation.useBatchCheckSavedStatus()
 
-    const removevoteMutation = useMutation({
-        mutationFn: (data) => removevotePost(data),
-        onSuccess: (data) => {
-            toast.success('Removevote')
-            queryClient.invalidateQueries('group_posts')
-        },
-        onError: (error) => {
-            toast.error('Removevote', error)
+    const checkSavedStatus = () => {
+        batchCheckSavedStatusMutation.mutate(
+            { postIds: [post.id] },
+            {
+                onSuccess: (data) => {
+                    setSaved(data[post.id]);
+                },
+            }
+        );
+    };
 
-        }
-    })
+    useEffect(() => {
+        checkSavedStatus();
+    }, [post.id]);
+
+
+    const handleSaveStatusChange = (action) => {
+        const mutation = action === "save" ? savePostMutation : unSavePostMutation;
+        action === "save" ? setSaved(true) : setSaved(false)
+        mutation.mutate(post.id, {
+            onSuccess: checkSavedStatus,
+        });
+    };
 
     const handleUpvote = (postId) => {
         if (vote === 'UPVOTE') {
@@ -82,15 +81,54 @@ export default function Post({ className, post }) {
         <div className={`grid w-full bg-card rounded-lg drop-shadow-2xl ${className}`}>
             <div className='grid gap-3 p-2 pt-4'>
                 <div className='flex justify-between w-full'>
-                    <div className='flex items-center gap-2'>
-                        <Avatar className="w-8 h-8 flex items-center justify-center object-contain">
-                            <AvatarImage src="https://plus.unsplash.com/premium_photo-1664536392779-049ba8fde933?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="@shadcn" />
-                            <AvatarFallback className="flex items-center justify-center">T</AvatarFallback>
+                    <div className="flex items-center gap-4">
+                        {/* Avatar */}
+                        <Avatar className="w-10 h-10 flex items-center justify-center object-cover rounded-full border border-border">
+                            <AvatarImage src={post.owner.profilePictureUrl} alt={post.owner.displayName} />
+                            <AvatarFallback className="text-sm font-medium text-primary">T</AvatarFallback>
                         </Avatar>
-                        <p className='font-bold'>{post.owner.displayName} &middot;</p>
-                        <p className='text-xs text-muted-foreground'>{formatDateTime(post.createdAt)}</p>
+
+                        {/* User Info */}
+                        <div className="flex flex-col">
+                            <Link
+                                className="text-base font-semibold hover:underline"
+                                href={`/user/${post.owner.id}`}
+                            >
+                                {post.owner.displayName}
+                            </Link>
+                            <div className="flex items-center text-sm">
+                                {
+                                    isGroup &&
+                                    <Link href={`/groups/${post.groupId}`} className="font-bold hover:underline">
+                                        G/{post.groupName}
+                                    </Link>
+                                }
+                                <span className="mx-1">&middot;</span>
+                                <span>{formatDateOrTimeAgo(post.createdAt)}</span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
+
+                    {/* Right Section */}
+                    <div className="flex items-center gap-2">
+                        {/* Join Button */}
+                        {/* {joinStatus === "NOT_JOIN" && (
+                            <div
+                                className="px-2 py-1 text-sm font-medium cursor-pointer text-center transition-all bg-primary text-primary-foreground rounded-2xl shadow-md active:scale-95"
+                            >
+                                Tham gia
+                            </div>
+                        )}
+
+                        {joinStatus === "PENDING" && (
+                            <div
+                                className="px-2 py-1 text-sm font-medium cursor-pointer border text-center transition-all rounded-2xl active:scale-95"
+                            >
+                                Hủy tham gia
+                            </div>
+                        )} */}
+
+                        {/* Dropdown Menu */}
                         <DropdownMenu modal={false}>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" size="icon">
@@ -99,14 +137,22 @@ export default function Post({ className, post }) {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => { }}>
-                                    <Trash2 className="h-4 w-4 mr-2" />
-                                    Xóa bài viết
-                                </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <MessageSquareWarning className="h-4 w-4 mr-2" />
                                     Báo cáo bài viết
                                 </DropdownMenuItem>
+                                {(post.owner.id === userId) &&
+                                    <>
+                                        <DropdownMenuItem onClick={() => { }}>
+                                            <PencilLine className="h-4 w-4 mr-2" />
+                                            Chỉnh sửa bài viết
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={() => { }}>
+                                            <Trash2 className="h-4 w-4 mr-2" />
+                                            Xóa bài viết
+                                        </DropdownMenuItem>
+                                    </>
+                                }
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -114,15 +160,20 @@ export default function Post({ className, post }) {
                 <p className='text-lg font-bold'>{post?.title}</p>
                 <ContentWithReadMore content={post.content} maxLength={200} />
             </div>
-            <div className="w-full">
-                <Image
-                    src="https://intietkiem.com/wp-content/uploads/2019/07/poster-ngang.jpg"
-                    width={1000}
-                    height={1000}
-                    alt="Image"
-                    className="w-full aspect-[16/6] object-cover"
-                />
-            </div>
+            {
+                post?.mediaUrls.length !== 0
+                &&
+                <div className="w-full">
+                    <Image
+                        src={post.mediaUrls[0]}
+                        width={400}
+                        height={400}
+                        alt="Image"
+                        className="w-full h-[400px] object-contain"
+                        quality={75}
+                    />
+                </div>
+            }
             <Separator />
             <div className='flex justify-around items-center'>
                 <div className='flex items-center'>
@@ -131,7 +182,7 @@ export default function Post({ className, post }) {
                             className={`-rotate-90 font-bold h-5 w-5 ${vote === 'UPVOTE' ? 'text-green-500 fill-green-500' : ''}`}
                         />
                     </Button>
-                    <span>{voteNumber || ''}</span>
+                    <span>{voteNumber || 0}</span>
                     <Button variant="ghost rounded-full" onClick={() => handleDownvote(post.id)}>
                         <Play
                             className={`rotate-90 font-bold h-5 w-5 ${vote === 'DOWNVOTE' ? 'text-blue-500 fill-blue-500' : ''}`}
@@ -146,9 +197,16 @@ export default function Post({ className, post }) {
                         Bình luận
                     </Button>
                 </Link>
-                <Button variant="ghost" className="gap-1 items-center rounded-full">
-                    <Bookmark className='h-5 w-5' />
-                    Lưu
+                <Button
+                    variant="ghost"
+                    className={`flex items-center gap-1 rounded-full ${saved ? 'text-yellow-500 hover:text-yellow-500' : ''
+                        }`}
+                    onClick={() => handleSaveStatusChange(saved ? "unsave" : "save")}
+                >
+                    <Bookmark
+                        className={`h-5 w-5 ${saved ? 'fill-yellow-500' : 'fill-none'}`}
+                    />
+                    {saved ? 'Đã lưu' : 'Lưu'}
                 </Button>
             </div>
         </div>
@@ -213,3 +271,31 @@ export const PostSkeleton = () => {
         </div>
     )
 }
+
+// const handleUpvote = (postId) => {
+//     const upvoteMutation = useMutation({
+//         mutationFn: async (postId) => {
+//             try {
+//                 await privateApi.post(`/group-posts/${postId}/vote`, { type: 'UPVOTE' });
+//             } catch (error) {
+//                 return Promise.reject(error);
+//             }
+//         },
+//         onSuccess: () => {
+//             queryClient.invalidateQueries('group_posts');
+//         },
+//         onError: () => {
+//             toast('Có lỗi, vui lòng thử lại');
+//         },
+//     });
+
+//     setVote('UPVOTE');
+//     if (vote === 'DOWNVOTE') {
+//         setVoteNumber(voteNumber + 2)
+//     }
+//     else {
+//         setVoteNumber(voteNumber + 1)
+//     }
+//     upvoteMutation.mutate(postId);
+// }
+// }

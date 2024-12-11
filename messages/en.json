@@ -1,0 +1,10 @@
+{
+    "Header": {
+        "home_link": "Home",
+        "movie_link": "Movie",
+        "news_link": "News",
+        "groups_link": "Groups",
+        "input_placeholder": "Tìm kiếm...",
+        "login": "Đăng nhập"
+    }
+}

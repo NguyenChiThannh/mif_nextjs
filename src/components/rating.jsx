@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { string, number, func, bool } from "prop-types";
 
 const IconComponent = ({ type, width, height }) => {
@@ -48,7 +48,7 @@ const IconComponent = ({ type, width, height }) => {
 const SIZES = {
     SMALL: {
         key: "s",
-        size: 10
+        size: 12
     },
     MEDIUM: {
         key: "m",
@@ -69,17 +69,13 @@ const OUT_OF_VALUE = 5;
 const Rating = (props) => {
     const {
         iconSize,
-        ratingInPercent,
         showOutOf,
         enableUserInteraction,
-        onClick
+        onClick,
+        value, // Sử dụng value trực tiếp thay vì ratingInPercent
     } = props;
 
-    const [activeStar, setActiveStar] = useState(-1);
-    const decimal = ratingInPercent / 20;
-    const nonFraction = Math.trunc(decimal);
-    const fraction = Number((decimal - nonFraction).toFixed(2));
-    const fractionPercent = fraction * 100;
+    const [activeStar, setActiveStar] = useState(value || 0);  // Khởi tạo activeStar từ value prop
 
     const numberOfStar = OUT_OF_VALUE;
     const size =
@@ -99,23 +95,24 @@ const Rating = (props) => {
 
     const handleClick = (index) => {
         onClick(index + 1);
-        setActiveStar(index);
+        setActiveStar(index + 1);
     };
 
     const showDefaultStar = (index) => {
         return RatingDefault;
     };
 
-    let isShow = true;
+    // Tính toán phần sao chưa hoàn thành (fraction) nếu có
+    const fraction = activeStar % 1; // Phần thập phân của activeStar
+    const fractionPercent = fraction * 100;  // Phần trăm sao còn lại
+
     const getStar = (index) => {
-        if (index <= nonFraction - 1) {
-            isShow = true;
-            return "100%";
-        } else if (fractionPercent > 0 && isShow) {
-            isShow = false;
-            return `${fractionPercent}%`;
+        if (index < Math.floor(activeStar)) {
+            return "100%";  // Sao vàng đầy đủ
+        } else if (index === Math.floor(activeStar) && fraction > 0) {
+            return `${fractionPercent}%`;  // Sao vàng một phần (nếu có)
         } else {
-            return "0%";
+            return "0%";  // Sao chưa được tô
         }
     };
 
@@ -123,9 +120,7 @@ const Rating = (props) => {
         if (showOutOf) {
             return showOutOf;
         }
-
-        const isLoopThrough = (fraction === 0 ? nonFraction : nonFraction + 1) - 1;
-        return index <= isLoopThrough;
+        return index < activeStar;
     };
 
     const withoutUserInteraction = (index) => {
@@ -140,13 +135,7 @@ const Rating = (props) => {
                 >
                     {RatingHighlighted}
                 </div>
-                {showDefaultStar(
-                    showOutOf
-                        ? nonFraction === 0
-                            ? index < nonFraction
-                            : index <= nonFraction
-                        : index <= numberOfStar
-                )}
+                {showDefaultStar()}
             </div>
         ) : null;
     };
@@ -160,7 +149,7 @@ const Rating = (props) => {
             >
                 <div
                     style={{
-                        width: index <= activeStar ? "100%" : "0%",
+                        width: index < activeStar ? "100%" : "0%",
                         overflow: "hidden",
                         position: "absolute"
                     }}
@@ -171,6 +160,11 @@ const Rating = (props) => {
             </div>
         );
     };
+
+    // Cập nhật activeStar khi value thay đổi
+    useEffect(() => {
+        setActiveStar(value || 0);
+    }, [value]);
 
     return (
         <div className="flex items-center gap-2 cursor-pointer text-left">
@@ -184,19 +178,18 @@ const Rating = (props) => {
 };
 
 Rating.propTypes = {
-    ratingInPercent: number.isRequired,
     iconSize: string,
     showOutOf: bool.isRequired,
     enableUserInteraction: bool.isRequired,
-    onClick: func
+    onClick: func,
+    value: number.isRequired,  // Sử dụng value thay vì ratingInPercent
 };
 
 Rating.defaultProps = {
-    ratingInPercent: 50,
     iconSize: SIZES.LARGE.key,
     onClick: () => null,
     showOutOf: false,
-    enableUserInteraction: false
+    enableUserInteraction: false,
 };
 
 export default Rating;
