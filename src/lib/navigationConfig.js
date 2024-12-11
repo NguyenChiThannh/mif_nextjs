@@ -106,8 +106,8 @@ export const navProfileUserConfig = (t) => [
         }
     },
     {
-        title: t('favorate_actors'),
-        href: (id) => `/user/${id}/favorate_actors`,
+        title: t('favorite_actors'),
+        href: (id) => `/user/${id}/favorite_actors`,
         active: function (pathname, id) {
             return pathname.includes(this.href(id))
         }
