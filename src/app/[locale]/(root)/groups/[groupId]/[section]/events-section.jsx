@@ -33,9 +33,11 @@ export default function EventsSection() {
                             ))}
                         </>
                     )}
-                    {sortedEvents?.map((event) => (
-                        <CardEvent key={event.id} event={event} />
-                    ))}
+                    {data?.pages?.map((page) =>
+                        page.content.map((event) => (
+                            <CardEvent key={event.id} event={event} />
+                        ))
+                    )}
                     {isFetchingNextPage && <CardEventSkeleton />}
                     <div ref={observerElem}></div>
                 </div>
