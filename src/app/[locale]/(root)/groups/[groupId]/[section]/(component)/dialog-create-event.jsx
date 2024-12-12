@@ -71,6 +71,7 @@ export function DialogCreateEvent({ groupId }) {
         };
         console.log('🚀 ~ onSubmit ~ formData:', formData)
 
+
         createEventMutation.mutate(formData, {
             onSuccess: () => {
                 setIsDialogOpen(false);
