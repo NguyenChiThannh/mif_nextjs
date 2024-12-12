@@ -5,7 +5,7 @@ import { MainSection } from "@/app/[locale]/(root)/home/(sections)/main-section"
 import { ContentSection } from "@/app/[locale]/(root)/home/(sections)/content-section"
 import { SidebarSection } from "@/app/[locale]/(root)/home/(sections)/sidebar-section"
 
-export default function Home() {
+export default function HomePage() {
   const t = useTranslations('Home')
 
   return (

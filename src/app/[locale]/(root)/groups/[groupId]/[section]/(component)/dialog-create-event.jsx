@@ -230,7 +230,7 @@ export function DialogCreateEvent({ groupId }) {
                                     <Input
                                         id="link"
                                         placeholder="Nhập link sự kiện"
-                                        {...register("link", { required: "Link sự kiện là bắt buộc" })}
+                                        {...register("link", { required: socialType === "OTHER" ? "Link sự kiện là bắt buộc" : false })}
                                     />
                                     {errors.link && <p className="text-red-500 text-xs">{errors.link.message}</p>}
                                 </div>
