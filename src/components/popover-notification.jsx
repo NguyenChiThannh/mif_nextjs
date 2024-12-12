@@ -15,7 +15,6 @@ export function NotificationPopover() {
     const [liveNotifications, setLiveNotifications] = useState([]);
     const [localUnreadCount, setLocalUnreadCount] = useState(0);
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-    const [isRealtime, setIsRealtime] = useState(false);
 
     const {
         data: notifications,
@@ -34,7 +33,6 @@ export function NotificationPopover() {
         authState.accessToken,
         "/user/queue/notifications",
         (notification) => {
-            setIsRealtime(true); // Bật chế độ realtime khi có sự kiện mới từ WebSocket
             setLiveNotifications((prev) => {
                 const isDuplicate = prev.some((existingNotification) => existingNotification.id === notification.id);
                 if (isDuplicate) {

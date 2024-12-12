@@ -110,9 +110,6 @@ export default function FormLogin({ t }) {
                 <ButtonLoginWithGoogle t={t} />
                 {/* Social Login Buttons */}
                 <div className="grid gap-2">
-                    {/* <Button variant="outline" className="w-full" type="button">
-                        {t('login_with_facebook')}
-                    </Button> */}
                 </div>
             </form>
         </>

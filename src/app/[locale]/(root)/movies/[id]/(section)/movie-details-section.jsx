@@ -56,7 +56,7 @@ export default function MovieDetailsSection({ movie, isSavedMovie, handleSaveSta
                 </div>
 
                 <div className="flex items-center gap-4 mt-4">
-                    {/* save movie */}
+                    {/* Save Movie */}
                     {isSavedMovie ? (
                         <Button size="lg" className="w-full" onClick={() => handleSaveStatusChange("unsave")}>
                             <Check className="w-5 h-5 mr-2" />
@@ -69,7 +69,7 @@ export default function MovieDetailsSection({ movie, isSavedMovie, handleSaveSta
                         </Button>
                     )}
 
-                    {/* Chia sẻ */}
+                    {/* Share */}
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button size="lg">{t("share")}</Button>
