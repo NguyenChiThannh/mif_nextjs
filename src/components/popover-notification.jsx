@@ -8,7 +8,7 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { useAppSelector } from "@/redux/store";
 import { notificationApi } from "@/services/notificationApi";
 import { Bell } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 export function NotificationPopover() {
     const authState = useAppSelector((state) => state.auth.authState);
@@ -51,25 +51,32 @@ export function NotificationPopover() {
     const totalUnreadNotificationCount =
         unreadNotificationCount + localUnreadCount;
 
-    // Kết hợp thông báo từ API và WebSocket
-    const combinedNotifications = (() => {
+    // Kết hợp và sắp xếp thông báo theo thời gian
+    const combinedNotifications = useMemo(() => {
         const notificationMap = new Map();
 
         // Thêm các thông báo từ API
         notifications?.pages.forEach((page) => {
             page.content.forEach((notification) => {
-                notificationMap.set(notification.notifyId, notification);
+                notificationMap.set(notification.notifyId, {
+                    ...notification,
+                    createdAt: new Date(notification.createdAt)
+                });
             });
         });
 
         // Thêm các thông báo từ liveNotifications
         liveNotifications.forEach((notification) => {
-            notificationMap.set(notification.notifyId, notification);
+            notificationMap.set(notification.notifyId, {
+                ...notification,
+                createdAt: new Date(notification.createdAt)
+            });
         });
 
-        // Chuyển Map trở lại thành mảng
-        return Array.from(notificationMap.values());
-    })();
+        // Chuyển Map thành mảng và sắp xếp theo thời gian (mới nhất lên đầu)
+        return Array.from(notificationMap.values())
+            .sort((a, b) => b.createdAt - a.createdAt);
+    }, [notifications?.pages, liveNotifications]);
 
     if (isLoadingNotifications || isLoadingUnreadNotificationCount) return <></>;
 

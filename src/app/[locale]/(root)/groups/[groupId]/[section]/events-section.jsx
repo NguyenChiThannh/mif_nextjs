@@ -4,7 +4,7 @@ import CardEvent, { CardEventSkeleton } from '@/components/card-event'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import { eventApi } from '@/services/eventApi'
 import { useParams } from 'next/navigation'
-import React from 'react'
+import React, { useMemo } from 'react'
 
 export default function EventsSection() {
     const { groupId } = useParams()
@@ -28,21 +28,15 @@ export default function EventsSection() {
                 <div className="grid gap-8 mt-4 w-full md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3">
                     {isLoading && (
                         <>
-                            {
-                                Array.from({ length: 8 }).map((_, index) => {
-                                    return <CardEventSkeleton key={index} />
-                                })
-                            }
+                            {Array.from({ length: 8 }).map((_, index) => (
+                                <CardEventSkeleton key={index} />
+                            ))}
                         </>
                     )}
-                    {data?.pages?.map((page) =>
-                        page.content.map((event) => (
-                            <CardEvent key={event.id} event={event} />
-                        ))
-                    )}
-                    {isFetchingNextPage && (
-                        <CardEventSkeleton />
-                    )}
+                    {sortedEvents?.map((event) => (
+                        <CardEvent key={event.id} event={event} />
+                    ))}
+                    {isFetchingNextPage && <CardEventSkeleton />}
                     <div ref={observerElem}></div>
                 </div>
             </div>

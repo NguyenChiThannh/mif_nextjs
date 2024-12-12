@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton';
-import { formateTimestampToIso, formatToVietnameseDateTime } from '@/lib/formatter';
+import { formatDateOrTimeAgo, formateTimestampToIso, formatToVietnameseDateTime } from '@/lib/formatter';
 import { MessageCircle, Play } from 'lucide-react'
 import React from 'react'
 
@@ -17,9 +17,8 @@ export default function Comment({ comment, setReplyTo, replyTo, onVote, userId }
                     <AvatarImage src={comment.userAvatar} alt="@shadcn" />
                     <AvatarFallback className="flex items-center justify-center">T</AvatarFallback>
                 </Avatar>
-                <p className="font-bold">{comment.username} </p>
-                {/* <p className="font-bold">{comment.username} &middot;</p> */}
-                {/* <p className="text-xs text-muted-foreground">{formatToVietnameseDateTime(comment.createdAt)}</p> */}
+                <p className="font-bold">{comment.username} &middot;</p>
+                <p className="text-xs text-muted-foreground">{formatDateOrTimeAgo(comment.createAt)}</p>
             </div>
             <p className="ml-10 text-sm">{comment.content}</p>
             <div className="ml-4 flex items-center text-sm">
