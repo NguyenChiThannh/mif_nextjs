@@ -61,7 +61,7 @@ export default function FeedSection({ group, canCreate }) {
                     </DropdownMenu> */}
                 </div>
 
-                <div>
+                <div className="space-y-2">
                     {isLoading && (
                         <>
                             <PostSkeleton />

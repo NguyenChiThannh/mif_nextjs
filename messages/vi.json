@@ -184,7 +184,7 @@
                 "info": "Thông tin",
                 "posts_saved": "Bài viết đã lưu",
                 "movies_saved": "Phim đã lưu",
-                "favorate_actors": "Diễn viên yêu thích",
+                "favorite_actors": "Diễn viên yêu thích",
                 "event": "Sự kiện"
             },
             "info": "Thông tin",
@@ -222,7 +222,7 @@
         "all": "Tất cả",
         "movie": "Phim",
         "group": "Nhóm",
-        "director_actor": "Đạo diễn/Diễn viên",
+        "director_actor": "Diễn viên",
         "no_matching_results_found": "Không có kế quả tìm kiếm phù hợp"
     },
     "Toast": {

@@ -19,7 +19,7 @@ import { Controller, useForm } from "react-hook-form";
 import InputDemo, { DateTimePicker } from "@/components/date-and-time-picker";
 import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
-import { schemaEvent } from "@/lib/schemas/event.chema";
+import { schemaEvent } from "@/lib/schemas/event.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useUploadImages from "@/hooks/useUploadImages";
 import { eventApi } from "@/services/eventApi";
@@ -27,6 +27,7 @@ import { Loader2 } from "lucide-react";
 
 export function DialogCreateEvent({ groupId }) {
     const [eventType, setEventType] = useState(null);
+    const [socialType, setSocialType] = useState("OTHER");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const createEventMutation = eventApi.mutation.useCreateEvent(groupId)
@@ -68,6 +69,7 @@ export function DialogCreateEvent({ groupId }) {
             startDate: startDateIsoString,
             eventPicture: uploadedImageUrls[0],
         };
+        console.log('🚀 ~ onSubmit ~ formData:', formData)
 
         createEventMutation.mutate(formData, {
             onSuccess: () => {
@@ -170,6 +172,9 @@ export function DialogCreateEvent({ groupId }) {
                                     onValueChange={(value) => {
                                         field.onChange(value);
                                         setEventType(value);
+                                        if (value !== "ONLINE") {
+                                            setSocialType("OTHER");
+                                        }
                                     }}
                                 >
                                     <SelectTrigger className="w-full">
@@ -184,23 +189,53 @@ export function DialogCreateEvent({ groupId }) {
                                 </Select>
                             )}
                         />
-                        {errors.socialType && (
-                            <p className="text-red-500 text-xs">{errors.socialType.message}</p>
+                        {errors.eventType && (
+                            <p className="text-red-500 text-xs">{errors.eventType.message}</p>
                         )}
-
                     </div>
 
                     {/* Conditional Inputs */}
                     {eventType === "ONLINE" && (
-                        <div>
-                            <Label htmlFor="link" className="text-sm font-medium">Link online</Label>
-                            <Input
-                                id="link"
-                                placeholder="Nhập link sự kiện"
-                                {...register("link", { required: "Link sự kiện là bắt buộc" })}
-                            />
-                            {errors.link && <p className="text-red-500 text-xs">{errors.link.message}</p>}
-                        </div>
+                        <>
+                            <div>
+                                <Label htmlFor="socialType" className="text-sm font-medium">Nền tảng</Label>
+                                <Controller
+                                    name="socialType"
+                                    control={control}
+                                    defaultValue="OTHER"
+                                    render={({ field }) => (
+                                        <Select
+                                            onValueChange={(value) => {
+                                                field.onChange(value);
+                                                setSocialType(value);
+                                            }}
+                                        >
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Chọn nền tảng" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectItem value="OTHER">Khác</SelectItem>
+                                                    <SelectItem value="MIF_LIVE">MIF Live</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                            </div>
+
+                            {socialType === "OTHER" && (
+                                <div>
+                                    <Label htmlFor="link" className="text-sm font-medium">Link online</Label>
+                                    <Input
+                                        id="link"
+                                        placeholder="Nhập link sự kiện"
+                                        {...register("link", { required: "Link sự kiện là bắt buộc" })}
+                                    />
+                                    {errors.link && <p className="text-red-500 text-xs">{errors.link.message}</p>}
+                                </div>
+                            )}
+                        </>
                     )}
 
                     {eventType === "OFFLINE" && (
@@ -239,4 +274,3 @@ export function DialogCreateEvent({ groupId }) {
         </Dialog>
     );
 }
-

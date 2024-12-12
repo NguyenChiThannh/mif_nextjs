@@ -11,6 +11,7 @@ import { Tabs } from '@/app/[locale]/(root)/search/(component)/tabs';
 import { MovieResults } from '@/app/[locale]/(root)/search/(component)/movie-results';
 import { GroupResults } from '@/app/[locale]/(root)/search/(component)/group-results';
 import { ActorDirectorResults } from '@/app/[locale]/(root)/search/(component)/actor-director-results';
+import { actorApi } from '@/services/actorApi';
 
 export default function SearchPage() {
     const [activeTab, setActiveTab] = useState('all');
@@ -28,9 +29,14 @@ export default function SearchPage() {
     } = groupsApi.query.useSearchGroupByGroupName(search);
     const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories();
 
-    const noResults = groups?.content?.length === 0 && movies?.content?.length === 0;
+    const {
+        isLoading: isLoadingActor,
+        data: actors,
+    } = actorApi.query.useSearchActorsByTitle(search)
 
-    if (isLoadingMovies || isLoadingGroup) return <Loading />
+    const noResults = groups?.content?.length === 0 && movies?.content?.length === 0 && actors?.content?.length === 0;
+
+    if (isLoadingMovies || isLoadingGroup || isLoadingActor) return <Loading />
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -61,6 +67,7 @@ export default function SearchPage() {
                     />
                     <ActorDirectorResults
                         activeTab={activeTab}
+                        actors={actors}
                     />
                 </div>
             )}

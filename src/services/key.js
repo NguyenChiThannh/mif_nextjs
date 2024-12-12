@@ -18,6 +18,7 @@ export const QUERY_KEY = {
     actorById: (actorId) => ['actor', actorId],
     topActors: (page, size) => ['top_actor', { page, size }],
     topActorsInfinite: () => ['top_actor'],
+    searchActorsByTitle: (name) => ['search_actors_by_title', name],
     // Category
     allmovieCategories: () => 'all_categories',
     categoryById: (id) => ['category', id],
