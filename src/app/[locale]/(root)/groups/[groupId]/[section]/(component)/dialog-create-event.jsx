@@ -59,7 +59,7 @@ export function DialogCreateEvent({ groupId }) {
         const { year, month, day, hour, minute, second, millisecond } = data.startDate;
         const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second, millisecond));
 
-        // Chuyển startDate thành chuỗi ISO
+        // Convert startDate to ISO string
         const startDateIsoString = date.toISOString();
 
         const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));
@@ -230,7 +230,7 @@ export function DialogCreateEvent({ groupId }) {
                                     <Input
                                         id="link"
                                         placeholder="Nhập link sự kiện"
-                                        {...register("link", { required: "Link sự kiện là bắt buộc" })}
+                                        {...register("link", { required: socialType === "OTHER" ? "Link sự kiện là bắt buộc" : false })}
                                     />
                                     {errors.link && <p className="text-red-500 text-xs">{errors.link.message}</p>}
                                 </div>
@@ -274,4 +274,3 @@ export function DialogCreateEvent({ groupId }) {
         </Dialog>
     );
 }
-

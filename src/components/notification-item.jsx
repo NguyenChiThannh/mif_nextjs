@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function NotificationItem({ notification, onClick }) {
+  console.log('🚀 ~ NotificationItem ~ notification:', notification)
   const router = useRouter();
   const markAsReadMutation = notificationApi.mutation.useMarkAsRead();
 
@@ -18,7 +19,7 @@ export default function NotificationItem({ notification, onClick }) {
     }
     else if (notification.type === 'EVENT') {
       if (notification.url) {
-        router.push(`${url}`);
+        router.push(`${notification.url}`);
       }
       else {
         router.push(`/groups/${notification.groupId}/events`);

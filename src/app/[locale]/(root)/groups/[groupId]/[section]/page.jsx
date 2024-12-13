@@ -11,11 +11,11 @@ import { useIsGroupOwner } from "@/hooks/useIsGroupOwner"
 import AboutSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/about-section"
 import FeedSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/feed-section"
 import MembersSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/members-section"
-import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/events-section"
 import RulesSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/rules-section"
 import Background from "@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/background"
 import { useGroupStatus } from "@/hooks/useGroupStatus"
 import { canCreatePost, checkSectionAccess } from "@/middleware/groupAccess"
+import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/events-section"
 
 export default function GroupPage() {
     const { groupId, section } = useParams()

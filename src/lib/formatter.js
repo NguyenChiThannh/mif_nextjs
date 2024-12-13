@@ -57,3 +57,10 @@ export const formatDateOrTimeAgo = (isoString) => {
         return formatToVietnameseDateTime(isoString);
     }
 };
+
+
+export const formateTimestampToIso = (timestamp) => {
+    console.log('🚀 ~ formateTimestampToIso ~ timestamp:', timestamp)
+    let date = new Date(timestamp * 1000);
+    return date.toISOString();
+}

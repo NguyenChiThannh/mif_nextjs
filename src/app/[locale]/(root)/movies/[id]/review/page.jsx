@@ -10,7 +10,6 @@ import { movieRatingsApi } from '@/services/movieRatingsApi';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-
 export default function MovieReviewsPage({ }) {
     const { id: movieId } = useParams();
 
