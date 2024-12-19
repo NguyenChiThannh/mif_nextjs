@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
     const router = useRouter();
     const pathname = usePathname();
 
-    const t = useTranslations('');
+    const t = useTranslations('Dashboard.Navbar');
 
     useEffect(() => {
         if (!authState.isLogin) router.push('/home');

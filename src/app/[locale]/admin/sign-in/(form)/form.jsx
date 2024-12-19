@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { ForgetPassword } from '@/components/forget-password';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { schemaLogin } from '@/lib/schemas/auth.schema';
@@ -16,11 +14,9 @@ import { PasswordInput } from '@/components/password-input';
 import { getUserIdFromToken } from '@/lib/helper';
 import Loading from '@/components/loading';
 import { useTranslations } from 'next-intl';
-import ButtonLoginWithGoogle from '@/app/[locale]/(auth)/sign-in/(component)/button-login-google';
 
-export default function FormLogin({ t }) {
+export default function FormLoginADMIN({ t }) {
     const tSchema = useTranslations('Schema.auth');
-    const [rememberMe, setRememberMe] = useState(false);
     const router = useRouter();
     const dispatch = useAppDispatch();
 
@@ -35,7 +31,6 @@ export default function FormLogin({ t }) {
         if (rememberLogin) {
             const { isRememberMe, ...data } = rememberLogin;
             reset(data);
-            setRememberMe(isRememberMe);
         }
     }, [reset]);
 
@@ -62,19 +57,13 @@ export default function FormLogin({ t }) {
                     .then(response => response.json())
                     .then(responseData => {
                         console.log('Server response:', responseData);
-                        router.push('/home');
+                        router.push('/admin/dashboard');
                     })
                     .catch(error => {
                         console.error('Error sending token to server:', error);
                     });
             },
         });
-
-        if (rememberMe) {
-            localStorage.setItem('rememberLogin', JSON.stringify({ ...data, isRememberMe: true }));
-        } else {
-            localStorage.removeItem('rememberLogin');
-        }
     };
 
     return (
@@ -109,25 +98,10 @@ export default function FormLogin({ t }) {
                         {errors.password && <span className="text-red-500 text-sm font-bold">{errors.password.message}</span>}
                     </div>
 
-                    {/* Remember Me Checkbox */}
-                    <div className="flex items-center gap-2">
-                        <Checkbox
-                            id="rememberMe"
-                            checked={rememberMe}
-                            onCheckedChange={setRememberMe}
-                            className="bg-muted"
-                        />
-                        <Label htmlFor="rememberMe">{t('remember_me')}</Label>
-                        <ForgetPassword t={t} />
-                    </div>
                 </div>
 
                 {/* Submit Button */}
                 <Button type="submit" className="w-full">{t('login_action')}</Button>
-                <ButtonLoginWithGoogle t={t} />
-                {/* Social Login Buttons */}
-                <div className="grid gap-2">
-                </div>
             </form>
         </>
     );
