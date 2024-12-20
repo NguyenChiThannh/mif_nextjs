@@ -1,22 +1,13 @@
 'use client'
 
 import Background from "@/app/[locale]/(auth)/bg-movie/background";
-import { useAppSelector } from "@/redux/store";
 import { Film } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+
 
 const LOGO_TEXT = "MIF";
 
 export default function AuthLayout({ children }) {
-  const router = useRouter();
-  const { isLogin } = useAppSelector((state) => state.auth.authState);
-
-  // Redirect if already logged in
-  useEffect(() => {
-    if (isLogin) router.push('/home')
-  }, [router, isLogin])
 
   return (
     <main className="relative w-full min-h-screen bg-black">
