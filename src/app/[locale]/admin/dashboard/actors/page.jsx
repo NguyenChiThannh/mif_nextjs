@@ -2,7 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Calendar, ChevronLeft, ChevronRight, Clock, Ellipsis, Eye, FilePen, Filter, House, LineChart, ListOrdered, MoreHorizontal, Newspaper, Package, Star, Tag, Trash, TrendingUp, User, Users } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import Link from "next/link"
@@ -11,6 +11,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { actorApi, getTopActors } from '@/services/actorApi'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-toastify'
+import DialogConfirmDelete from '@/components/dialog-confirm-delete'
+import Loading from '@/components/loading'
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
 
 export default function Actors() {
@@ -18,20 +21,12 @@ export default function Actors() {
     const [pageSize] = useState(10)
 
     const router = useRouter();
-    const queryClient = useQueryClient();
 
-    const { isLoading: isLoadingActors, data: actorsData } = useQuery({
-        queryKey: ['top_actors', { page: 0, size: 10 }],
-        queryFn: getTopActors,
-    })
+    const { isLoading: isLoadingActors, data: actorsData } = actorApi.query.useGetTopActors(currentPage, pageSize, true)
+    console.log('🚀 ~ Actors ~ actorsData:', actorsData)
 
     const deleteMutation = actorApi.mutation.useDeleteActor()
 
-    const hanleDeleteActor = async (id) => {
-        if (window.confirm('Are you sure you want to delete this item?')) {
-            deleteMutation.mutate(id);
-        }
-    }
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage)
@@ -41,114 +36,186 @@ export default function Actors() {
         router.push(`/dashboard/actors/edit?id=${id}`)
     }
 
+    const hanleDeleteActor = (actorId) => {
+        confirmDelete('', (result) => {
+            if (result) {
+                deleteMutation.mutate(actorId);
+            }
+        });
+
+    };
+
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'name',
+                header: 'Name',
+            },
+            {
+                accessorKey: 'favoriteCount',
+                header: 'Favorite Count',
+            },
+            {
+                accessorKey: 'awards',
+                header: 'Awards',
+                cell: ({ row }) => row.original.awards.length || 0,
+            },
+            {
+                accessorKey: 'ratings.scoreRank',
+                header: 'Score',
+                cell: ({ row }) => Number(row.original.scoreRank).toFixed(1),
+            },
+            {
+                id: 'actions',
+                header: 'Actions',
+                enableSorting: false,
+                cell: ({ row }) => (
+                    <div className="flex items-center gap-2">
+                        <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                                <Button aria-haspopup="true" size="icon" variant="ghost">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => router.push(`/actors/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit/${row.original.id}`)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                ),
+            },
+        ],
+        [router]
+    );
+
+    const table = useReactTable({
+        data: actorsData?.content || [],
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    if (isLoadingActors) return <Loading />
+
     return (
         <div>
             <div className="bg-background p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
-                        <Input placeholder="Search articles..." className="bg-muted text-muted-foreground" />
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline">
-                                    <Filter className="w-5 h-5 mr-2" />
-                                    Filter
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="w-64">
-                                <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuCheckboxItem>
-                                    <Calendar className="w-4 h-4 mr-2" />
-                                    Published Date
-                                </DropdownMenuCheckboxItem>
-                                <DropdownMenuCheckboxItem>
-                                    <User className="w-4 h-4 mr-2" />
-                                    Author
-                                </DropdownMenuCheckboxItem>
-                                <DropdownMenuCheckboxItem>
-                                    <Tag className="w-4 h-4 mr-2" />
-                                    Category
-                                </DropdownMenuCheckboxItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Input
+                            placeholder="Search articles..."
+                            className="text-muted-foreground" />
                     </div>
                     <div className='flex items-center gap-2'>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline">
-                                    <ListOrdered className="w-5 h-5 mr-2" />
-                                    Sort
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-48">
-                                <DropdownMenuRadioGroup value="published_date">
-                                    <DropdownMenuRadioItem value="published_date">Published Date</DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="author">Author</DropdownMenuRadioItem>
-                                    <DropdownMenuRadioItem value="title">Title</DropdownMenuRadioItem>
-                                </DropdownMenuRadioGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Button onClick={() => { router.push('/dashboard/actors/create') }}>Add Actor</Button>
+                        <Button onClick={() => { router.push('/admin/dashboard/actors/create') }}>Add Actor</Button>
                     </div>
                 </div>
                 <Table>
                     <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Movies</TableHead>
-                            <TableHead>Score Rank</TableHead>
-                            <TableHead>Rating</TableHead>
-                            <TableHead>Award</TableHead>
-                            <TableHead></TableHead>
-                        </TableRow>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableHeader>
                     <TableBody>
-                        {actorsData?.content?.map((actor) => {
-                            return (
-                                <TableRow key={actor.id}>
-                                    <TableCell>{actor.name}</TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell>{actor.awards.length}</TableCell>
-                                    <TableCell className="flex items-center gap-2">
-                                        <DropdownMenu modal={false}>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                    <span className="sr-only">Toggle menu</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem onClick={() => hanleEditActor(actor.id)}>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => hanleDeleteActor(actor.id)}>Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                        {table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
                                     </TableCell>
-                                </TableRow>
-
-                            )
-                        })}
+                                ))}
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0} />
-                        </PaginationItem>
-                        {Array.from({ length: Math.ceil((actorsData?.totalPages || 1)) }).map((_, index) => (
-                            <PaginationItem key={index}>
-                                <PaginationLink href="#" isActive={index === currentPage} onClick={() => handlePageChange(index)}>
-                                    {index + 1}
-                                </PaginationLink>
+                <div className="mt-4">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 0}
+                                    className={currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
                             </PaginationItem>
-                        ))}
-                        <PaginationItem>
-                            <PaginationNext onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= (actorsData?.totalPages || 1) - 1} />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
+
+                            {(() => {
+                                const totalPages = actorsData?.totalPages || 1;
+                                const pageNumbers = [];
+
+                                pageNumbers.push(0);
+
+                                let start = Math.max(1, currentPage - 1);
+                                let end = Math.min(currentPage + 1, totalPages - 2);
+
+                                if (start > 1) {
+                                    pageNumbers.push('...');
+                                }
+
+                                for (let i = start; i <= end; i++) {
+                                    pageNumbers.push(i);
+                                }
+
+                                if (end < totalPages - 2) {
+                                    pageNumbers.push('...');
+                                }
+
+                                if (totalPages > 1) {
+                                    pageNumbers.push(totalPages - 1);
+                                }
+
+                                return pageNumbers.map((pageNumber, index) => {
+                                    if (pageNumber === '...') {
+                                        return (
+                                            <PaginationItem key={`ellipsis-${index}`}>
+                                                <span className="px-4">...</span>
+                                            </PaginationItem>
+                                        );
+                                    }
+
+                                    return (
+                                        <PaginationItem key={pageNumber}>
+                                            <PaginationLink
+                                                href="#"
+                                                isActive={pageNumber === currentPage}
+                                                onClick={() => handlePageChange(pageNumber)}
+                                            >
+                                                {pageNumber + 1}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                });
+                            })()}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage >= (actorsData?.totalPages - 1)}
+                                    className={currentPage >= (actorsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+
+                <DialogConfirmDelete />
             </div>
         </div>
     )

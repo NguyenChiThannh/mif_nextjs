@@ -131,7 +131,7 @@ export default function Movies() {
                 </Button>
             </div>
 
-            <div className="rounded-md border">
+            <div className="rounded-md">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -144,14 +144,6 @@ export default function Movies() {
                                                 header.column.columnDef.header,
                                                 header.getContext()
                                             )}
-                                        {/* {header.column.getCanSort() && (
-                                            <span className="ml-2">
-                                                {{
-                                                    asc: " 🔼",
-                                                    desc: " 🔽",
-                                                }[header.column.getIsSorted()] ?? null}
-                                            </span>
-                                        )} */}
                                     </TableHead>
                                 ))}
                             </TableRow>

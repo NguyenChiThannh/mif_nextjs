@@ -124,6 +124,17 @@ const getUserStatusInGroups = async (data) => {
     return res.data
 }
 
+const findAllGroupsAsPage = async ({ queryKey }) => {
+    const [_key, { page, size }] = queryKey;
+    const res = await privateApi.get('/groups', {
+        params: {
+            page,
+            size,
+        }
+    })
+    return res.data
+}
+
 export const groupsApi = {
     query: {
         useFindByOwnerId(page, size) {
@@ -168,6 +179,13 @@ export const groupsApi = {
                 queryKey: QUERY_KEY.searchGroupByGroupName(name),
                 queryFn: searchGroupByGroupName,
             })
+        },
+        useFindAllGroupsAsPage(page, size) {
+            return useQuery({
+                queryKey: QUERY_KEY.allGroups(page, size),
+                queryFn: findAllGroupsAsPage,
+            })
+
         }
     },
     mutation: {

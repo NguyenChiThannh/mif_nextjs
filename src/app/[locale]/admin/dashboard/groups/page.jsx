@@ -1,107 +1,192 @@
 'use client'
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { DatePickerPopover } from "@/components/date-picker-popover";
-import { MoreHorizontal, X } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Calendar, ChevronLeft, ChevronRight, Clock, Ellipsis, Eye, FilePen, Filter, House, LineChart, ListOrdered, MoreHorizontal, Newspaper, Package, Star, Tag, Trash, TrendingUp, User, Users } from 'lucide-react'
+import React, { useMemo, useState } from 'react'
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import Link from "next/link"
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { actorApi, getTopActors } from '@/services/actorApi'
+import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
+import DialogConfirmDelete from '@/components/dialog-confirm-delete'
+import Loading from '@/components/loading'
+import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { groupsApi } from '@/services/groupsApi'
 
-export default function DynamicInfoDateForm() {
-    const [fields, setFields] = useState([
-        { info: "", date: undefined },
-    ]);
 
-    const handleAddField = () => {
-        setFields([...fields, { info: "", date: undefined }]);
-    };
+export default function Actors() {
+    const [currentPage, setCurrentPage] = useState(0)
+    const [pageSize] = useState(10)
 
-    const handleRemoveField = (index) => {
-        const newFields = fields.filter((_, i) => i !== index);
-        setFields(newFields);
-    };
+    const router = useRouter();
 
-    const handleChangeInfo = (index, value) => {
-        const newFields = fields.map((field, i) =>
-            i === index ? { ...field, info: value } : field
-        );
-        setFields(newFields);
-    };
+    const { isLoading: isLoadingGroups, data: groupsData } = groupsApi.query.useFindAllGroupsAsPage(currentPage, pageSize)
 
-    const handleSelectDate = (index, date) => {
-        const newFields = fields.map((field, i) =>
-            i === index ? { ...field, date } : field
-        );
-        setFields(newFields);
-    };
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage)
+    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Submitted Data:", fields);
-    };
+    const columns = useMemo(
+        () => [
+            {
+                accessorKey: 'groupName',
+                header: 'Group Name',
+            },
+            {
+                accessorKey: 'groupType',
+                header: 'Group Type',
+            },
+            {
+                accessorKey: 'memberCount',
+                header: 'Member',
+            },
+            {
+                accessorKey: 'weeklyPostCount',
+                header: 'Post/week',
+                cell: ({ row }) => row.original?.weeklyPostCount || 0,
+            },
+            {
+                id: 'actions',
+                header: 'Actions',
+                enableSorting: false,
+                cell: ({ row }) => (
+                    <div className="flex items-center gap-2">
+                        <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                                <Button aria-haspopup="true" size="icon" variant="ghost">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>View</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                ),
+            },
+        ],
+        [router]
+    );
+
+    const table = useReactTable({
+        data: groupsData?.content || [],
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    if (isLoadingGroups) return <Loading />
 
     return (
         <div>
             <div className="bg-background p-6">
                 <Table>
                     <TableHeader>
-                        <TableRow>
-                            <TableHead>Name</TableHead>
-                            <TableHead>Category</TableHead>
-                            <TableHead>Members/ Total Member</TableHead>
-                            <TableHead>Posts</TableHead>
-                            <TableHead>Posts/ Week</TableHead>
-                            <TableHead></TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    {/* <TableBody>
-                        {actorsData?.content?.map((actor) => {
-                            return (
-                                <TableRow key={actor.id}>
-                                    <TableCell>{actor.name}</TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell>10</TableCell>
-                                    <TableCell>{actor.awards.length}</TableCell>
-                                    <TableCell className="flex items-center gap-2">
-                                        <DropdownMenu modal={false}>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button aria-haspopup="true" size="icon" variant="ghost">
-                                                    <MoreHorizontal className="h-4 w-4" />
-                                                    <span className="sr-only">Toggle menu</span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem onClick={() => hanleEditActor(actor.id)}>Edit</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => hanleDeleteActor(actor.id)}>Delete</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </TableCell>
-                                </TableRow>
-
-                            )
-                        })}
-                    </TableBody> */}
-                </Table>
-                {/* <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0} />
-                        </PaginationItem>
-                        {Array.from({ length: Math.ceil((actorsData?.totalPages || 1)) }).map((_, index) => (
-                            <PaginationItem key={index}>
-                                <PaginationLink href="#" isActive={index === currentPage} onClick={() => handlePageChange(index)}>
-                                    {index + 1}
-                                </PaginationLink>
-                            </PaginationItem>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
+                                        {header.isPlaceholder
+                                            ? null
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
+                                    </TableHead>
+                                ))}
+                            </TableRow>
                         ))}
-                        <PaginationItem>
-                            <PaginationNext onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage >= (actorsData?.totalPages || 1) - 1} />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination> */}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.map((row) => (
+                            <TableRow key={row.id}>
+                                {row.getVisibleCells().map((cell) => (
+                                    <TableCell key={cell.id}>
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <div className="mt-4">
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => handlePageChange(currentPage - 1)}
+                                    disabled={currentPage === 0}
+                                    className={currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+
+                            {(() => {
+                                const totalPages = groupsData?.totalPages || 1;
+                                const pageNumbers = [];
+
+                                pageNumbers.push(0);
+
+                                let start = Math.max(1, currentPage - 1);
+                                let end = Math.min(currentPage + 1, totalPages - 2);
+
+                                if (start > 1) {
+                                    pageNumbers.push('...');
+                                }
+
+                                for (let i = start; i <= end; i++) {
+                                    pageNumbers.push(i);
+                                }
+
+                                if (end < totalPages - 2) {
+                                    pageNumbers.push('...');
+                                }
+
+                                if (totalPages > 1) {
+                                    pageNumbers.push(totalPages - 1);
+                                }
+
+                                return pageNumbers.map((pageNumber, index) => {
+                                    if (pageNumber === '...') {
+                                        return (
+                                            <PaginationItem key={`ellipsis-${index}`}>
+                                                <span className="px-4">...</span>
+                                            </PaginationItem>
+                                        );
+                                    }
+
+                                    return (
+                                        <PaginationItem key={pageNumber}>
+                                            <PaginationLink
+                                                href="#"
+                                                isActive={pageNumber === currentPage}
+                                                onClick={() => handlePageChange(pageNumber)}
+                                            >
+                                                {pageNumber + 1}
+                                            </PaginationLink>
+                                        </PaginationItem>
+                                    );
+                                });
+                            })()}
+
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => handlePageChange(currentPage + 1)}
+                                    disabled={currentPage >= (groupsData?.totalPages - 1)}
+                                    className={currentPage >= (groupsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+
+                <DialogConfirmDelete />
             </div>
         </div>
     )
