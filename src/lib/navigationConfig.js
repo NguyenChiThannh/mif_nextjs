@@ -34,46 +34,46 @@ export const headerMenuConfig = (t) => [
 export const navDashboardMenuConfig = (t) => [
     {
         title: t('home'),
-        href: '/dashboard',
+        href: '/admin/dashboard',
         icon: HouseIcon,
         active: (pathname) => pathname.replace(/^\/[a-z]{2}/, '') === '/dashboard',
     },
-    {
-        title: t('news'),
-        href: '/dashboard/news',
-        icon: NewspaperIcon,
-        active: (pathname) => pathname.includes('/dashboard/news'),
-    },
+    // {
+    //     title: t('news'),
+    //     href: '/admin/dashboard/news',
+    //     icon: NewspaperIcon,
+    //     active: (pathname) => pathname.includes('/dashboard/news'),
+    // },
     {
         title: t('movies'),
-        href: '/dashboard/movies',
+        href: '/admin/dashboard/movies',
         icon: ClapperboardIcon,
         active: (pathname) => pathname.includes('/dashboard/movies'),
     },
     {
         title: t('category'),
-        href: '/dashboard/categories',
+        href: '/admin/dashboard/categories',
         icon: LayoutListIcon,
         active: (pathname) => pathname.includes('/dashboard/categories'),
     },
     {
         title: t('actor'),
-        href: '/dashboard/actors',
+        href: '/admin/dashboard/actors',
         icon: UserRoundIcon,
         active: (pathname) => pathname.includes('/dashboard/actors'),
     },
     {
         title: t('group'),
-        href: '/dashboard/groups',
+        href: '/admin/dashboard/groups',
         icon: UsersIcon,
         active: (pathname) => pathname.includes('/dashboard/groups'),
     },
-    {
-        title: t('analytics'),
-        href: '/dashboard/analytics',
-        icon: LineChartIcon,
-        active: (pathname) => pathname.includes('/dashboard/analytics'),
-    },
+    // {
+    //     title: t('analytics'),
+    //     href: '/admin/dashboard/analytics',
+    //     icon: LineChartIcon,
+    //     active: (pathname) => pathname.includes('/dashboard/analytics'),
+    // },
 ];
 
 export const navProfileUserConfig = (t) => [

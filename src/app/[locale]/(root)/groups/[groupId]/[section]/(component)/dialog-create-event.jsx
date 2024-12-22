@@ -59,7 +59,7 @@ export function DialogCreateEvent({ groupId }) {
         const { year, month, day, hour, minute, second, millisecond } = data.startDate;
         const date = new Date(Date.UTC(year, month - 1, day, hour, minute, second, millisecond));
 
-        // Chuyển startDate thành chuỗi ISO
+        // Convert startDate to ISO string
         const startDateIsoString = date.toISOString();
 
         const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));

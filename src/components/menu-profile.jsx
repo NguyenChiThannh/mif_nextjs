@@ -27,15 +27,32 @@ import { userApi } from "@/services/userApi";
 export function MenuProfile({ id }) {
     const router = useRouter();
     const dispatch = useAppDispatch();
-    const handleLogout = () => {
-        const authState = {
-            isLogin: false,
-            accessToken: '',
+    const handleLogout = async () => {
+        try {
+            const response = await fetch('/api/auth', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (response.ok) {
+                const authState = {
+                    isLogin: false,
+                    accessToken: '',
+                };
+                dispatch(setAuthState(authState));
+
+                toast.success('Đăng xuất thành công');
+
+                router.push('/sign-in');
+            } else {
+                toast.error('Đăng xuất thất bại');
+            }
+        } catch (error) {
+            toast.error('Có lỗi xảy ra, vui lòng thử lại');
         }
-        dispatch(setAuthState(authState))
-        toast.success('Đăng xuất thành công')
-        router.push('/sign-in');
-    }
+    };
 
     const { data, isLoading } = userApi.query.useGetUserInfoById(id)
 
