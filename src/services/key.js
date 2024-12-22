@@ -5,6 +5,7 @@ export const QUERY_KEY = {
     allMovies: () => ['all_movies'],
     searchMoviesByTitle: (page, size, title) => ['search_movies_by_title', { page, size, title }],
     movieById: (id) => ['detail_movie', id],
+    moviesTable: (page, size) => ['movies_table', { page, size }],
     //Group
     groupsByOwnerId: (page, size) => ['groups_owner', { page, size }],
     userGroups: (page, size, id) => ['user_groups', { page, size, id }],
@@ -46,6 +47,6 @@ export const QUERY_KEY = {
     getSubscribedEvents: () => ['subscribed_events'],
     getEventsByGroupId: (groupId) => ['events_by_groupId', groupId],
     // comment
-    commentByPostId: (postId) => ['comments', postId]
+    commentByPostId: (postId) => ['comments', postId],
 
 }

@@ -17,7 +17,7 @@ export default function MoviePage() {
         hasNextPage,
         isFetchingNextPage,
         isLoading,
-    } = movieApi.query.useGetAllMovies()
+    } = movieApi.query.useGetAllMoviesInfinity()
 
     const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
 

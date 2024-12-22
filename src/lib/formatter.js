@@ -7,6 +7,7 @@ export const formatDate = (isoString) => {
         year: 'numeric'
     });
 };
+
 export const formatToVietnameseDateTime = (isoString) => {
     const date = new Date(isoString);
     return date.toLocaleString('vi-VN', {
@@ -60,7 +61,6 @@ export const formatDateOrTimeAgo = (isoString) => {
 
 
 export const formateTimestampToIso = (timestamp) => {
-    console.log('🚀 ~ formateTimestampToIso ~ timestamp:', timestamp)
     let date = new Date(timestamp * 1000);
     return date.toISOString();
 }
