@@ -51,6 +51,23 @@ const createMovie = async (data) => {
     return res.data
 }
 
+const getAllMoviesTable = async ({ queryKey }) => {
+    const [_key, { page, size, sortField, sortDirection }] = queryKey;
+    const res = await privateApi.get('/movies', {
+        params: {
+            page,
+            size,
+            pageView: true,
+        }
+    })
+    return res.data
+}
+
+const deleteMovie = async (movieId) => {
+    const res = await privateApi.delete(`/movies/${movieId}`)
+    return res.data
+}
+
 export const movieApi = {
     query: {
         useGetNewestMovie(page, size) {
@@ -65,7 +82,7 @@ export const movieApi = {
                 queryFn: getRandomMovies,
             })
         },
-        useGetAllMovies() {
+        useGetAllMoviesInfinity() {
             return useInfiniteQuery({
                 queryKey: QUERY_KEY.allMovies(),
                 queryFn: getAllMovies,
@@ -87,6 +104,12 @@ export const movieApi = {
                 queryFn: ({ queryKey }) => getMovieById(queryKey[1]),
             })
         },
+        useGetAllMoviesTable(page = 0, size = 10) {
+            return useQuery({
+                queryKey: QUERY_KEY.moviesTable(page, size),
+                queryFn: getAllMoviesTable,
+            })
+        },
     },
     mutation: {
         useCreateMovieMutation() {
@@ -96,6 +119,17 @@ export const movieApi = {
                 onSuccess: () => {
                     toast.success(t('create_movie_successful'))
                 },
+            })
+        },
+        useDeleteMovie() {
+            const queryClient = useQueryClient()
+            const t = useTranslations('Toast')
+            return useMutation({
+                mutationFn: deleteMovie,
+                onSuccess: () => {
+                    toast.success(t('delete_movie_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.moviesTable() })
+                }
             })
         }
     }

@@ -6,11 +6,12 @@ import { toast } from "react-toastify";
 const { privateApi } = require("@/services/config");
 
 export const getTopActors = async ({ queryKey }) => {
-    const [_key, { page, size }] = queryKey;
+    const [_key, { page, size, pageView }] = queryKey;
     const res = await privateApi.get('/actors', {
         params: {
             page,
             size,
+            pageView,
         }
     })
     return res.data
@@ -71,9 +72,9 @@ export const actorApi = {
                 enabled,
             })
         },
-        useGetTopActors(page, size) {
+        useGetTopActors(page, size, pageView = false) {
             return useQuery({
-                queryKey: QUERY_KEY.topActors(page, size),
+                queryKey: QUERY_KEY.topActors(page, size, pageView),
                 queryFn: getTopActors,
             })
         },
