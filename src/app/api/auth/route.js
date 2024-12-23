@@ -1,6 +1,18 @@
 import { NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 
+export async function GET(req) {
+    try {
+        const role = req.cookies.get('role')
+        return NextResponse.json({ role })
+    } catch (error) {
+        return NextResponse.json(
+            { message: 'Internal server error' },
+            { status: 500 }
+        )
+    }
+}
+
 export async function POST(req) {
     try {
         const body = await req.json()

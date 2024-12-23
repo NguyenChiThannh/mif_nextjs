@@ -129,7 +129,7 @@ const Header = memo(() => {
                                 </Button>
                             </Link>
                             <ModeToggle />
-                            <MenuProfile id={userId} />
+                            <MenuProfile id={userId} goToAdmin />
                         </div>
                 }
             </div>

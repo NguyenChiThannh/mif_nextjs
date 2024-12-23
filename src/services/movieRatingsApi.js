@@ -2,8 +2,7 @@ import { QUERY_KEY } from "@/services/key"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
 import { toast } from "react-toastify"
-
-const { privateApi } = require("@/services/config")
+import { privateApi } from "@/services/config"
 
 const createRating = async (data) => {
     const res = await privateApi.post('/movie-ratings', data)

@@ -1,8 +1,10 @@
 import {
     CreditCard,
+    House,
     LifeBuoy,
     LogOut,
     Settings,
+    ShieldCheck,
     User,
 } from "lucide-react"
 
@@ -20,12 +22,15 @@ import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/store";
 import { setAuthState } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
-import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { userApi } from "@/services/userApi";
+import { useGetRole } from "@/hooks/useGetRole";
 
-export function MenuProfile({ id }) {
+export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
     const router = useRouter();
+    const { role } = useGetRole()
+    console.log('🚀 ~ MenuProfile ~ role:', role)
+    console.log('🚀 ~ MenuProfile ~ role:', role)
     const dispatch = useAppDispatch();
     const handleLogout = async () => {
         try {
@@ -44,8 +49,7 @@ export function MenuProfile({ id }) {
                 dispatch(setAuthState(authState));
 
                 toast.success('Đăng xuất thành công');
-
-                router.push('/sign-in');
+                admin ? router.push('/admin/sign-in') : router.push('/sign-in')
             } else {
                 toast.error('Đăng xuất thất bại');
             }
@@ -68,31 +72,56 @@ export function MenuProfile({ id }) {
                 <DropdownMenuContent className="w-56 overflow-hidden">
                     <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuGroup>
+                    {
+                        role === 'ADMIN' && goToAdmin &&
                         <DropdownMenuItem>
+                            <ShieldCheck className="mr-2 h-4 w-4" />
                             <Link
-                                href={`/user/${id}`}
-                                className="w-full h-full flex"
-                            >
-                                <User className="mr-2 h-4 w-4" />
-                                <span>Trang cá nhân</span>
+                                href={'/admin/dashboard'}
+                            >Trang Admin
                             </Link>
                         </DropdownMenuItem>
+                    }
+                    {
+                        goToHome &&
                         <DropdownMenuItem>
-                            <CreditCard className="mr-2 h-4 w-4" />
-                            <span>Thanh toán</span>
+                            <House className="mr-2 h-4 w-4" />
+                            <Link
+                                href={'/'}
+                            >Trang Home
+                            </Link>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
-                            <Settings className="mr-2 h-4 w-4" />
-                            <span>Cài đặt</span>
-                        </DropdownMenuItem>
-                    </DropdownMenuGroup>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                        <LifeBuoy className="mr-2 h-4 w-4" />
-                        <span>Hỗ trợ</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
+                    }
+                    {
+                        !admin &&
+                        <>
+                            <DropdownMenuGroup>
+                                <DropdownMenuItem>
+                                    <Link
+                                        href={`/user/${id}`}
+                                        className="w-full h-full flex"
+                                    >
+                                        <User className="mr-2 h-4 w-4" />
+                                        <span>Trang cá nhân</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <CreditCard className="mr-2 h-4 w-4" />
+                                    <span>Thanh toán</span>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <Settings className="mr-2 h-4 w-4" />
+                                    <span>Cài đặt</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                                <LifeBuoy className="mr-2 h-4 w-4" />
+                                <span>Hỗ trợ</span>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    }
                     <DropdownMenuItem onClick={() => handleLogout()}>
                         <LogOut className="mr-2 h-4 w-4" />
                         <span>Log out</span>

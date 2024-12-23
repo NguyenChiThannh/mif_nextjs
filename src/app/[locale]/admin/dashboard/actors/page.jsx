@@ -80,7 +80,7 @@ export default function Actors() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/actors/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit/${row.original.id}`)}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
                             </DropdownMenuContent>

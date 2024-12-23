@@ -1,8 +1,11 @@
+import { MenuProfile } from '@/components/menu-profile'
+import useUserId from '@/hooks/useUserId'
 import { Film } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 
-export default function HeaderWithHomeIcon() {
+export default function HeaderAdmin() {
+    const userId = useUserId()
 
     return (
         <div className="fixed w-full z-10 drop-shadow-xl">
@@ -11,6 +14,9 @@ export default function HeaderWithHomeIcon() {
                     <Film />
                     <span className="text-xl font-bold gap-2 tracking-[.25em]">MIF</span>
                 </Link>
+                <div className='flex items-center gap-4'>
+                    <MenuProfile id={userId} admin goToHome />
+                </div>
             </div>
         </div>
     )

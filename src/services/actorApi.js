@@ -2,9 +2,7 @@ import { QUERY_KEY } from "@/services/key";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
-
-const { privateApi } = require("@/services/config");
-
+import { privateApi } from "@/services/config";
 export const getTopActors = async ({ queryKey }) => {
     const [_key, { page, size, pageView }] = queryKey;
     const res = await privateApi.get('/actors', {

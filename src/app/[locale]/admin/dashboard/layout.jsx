@@ -1,5 +1,5 @@
 'use client';
-import HeaderWithHomeIcon from "@/components/header-with-home-icon";
+import HeaderAdmin from "@/components/header-admin";
 import { navDashboardMenuConfig } from "@/lib/navigationConfig";
 import { useAppSelector } from "@/redux/store";
 import { useTranslations } from "next-intl";
@@ -7,21 +7,14 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-// Component RootLayout
 export default function RootLayout({ children }) {
-    const authState = useAppSelector((state) => state.auth.authState);
-    const router = useRouter();
     const pathname = usePathname();
 
     const t = useTranslations('Dashboard.Navbar');
 
-    useEffect(() => {
-        if (!authState.isLogin) router.push('/home');
-    }, [router, authState.isLogin]);
-
     return (
         <main>
-            <HeaderWithHomeIcon />
+            <HeaderAdmin />
             <div className="xl:px-36 lg:px-2 md:px-2 px-1 pt-24">
                 <div className="grid grid-cols-5 gap-4">
                     <SidebarMenu t={t} pathname={pathname} />
@@ -32,7 +25,6 @@ export default function RootLayout({ children }) {
     );
 }
 
-// SidebarMenu component
 function SidebarMenu({ t, pathname }) {
     return (
         <div className="col-span-1">

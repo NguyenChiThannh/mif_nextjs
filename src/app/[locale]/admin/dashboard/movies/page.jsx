@@ -24,7 +24,7 @@ import {
 export default function Movies() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(10);
+    const [pageSize] = useState(7);
 
     const {
         data: moviesData,
@@ -75,7 +75,10 @@ export default function Movies() {
             {
                 accessorKey: 'budget',
                 header: 'Budget',
-                cell: ({ row }) => `$${row.original.budget?.toLocaleString() || 'N/A'}`,
+                cell: ({ row }) => {
+                    const budget = row.original.budget;
+                    return budget != null ? `${budget.toLocaleString()} VND` : 'N/A';
+                },
             },
             {
                 id: 'actions',
