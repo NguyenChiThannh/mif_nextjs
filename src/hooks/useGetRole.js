@@ -19,7 +19,6 @@ export const useGetRole = () => {
                 }
 
                 const responseData = await response.json();
-                console.log('🚀 ~ fetchRole ~ responseData:', responseData)
                 setRole(responseData?.role?.value || null);
             } catch (err) {
                 console.error('Error fetching user role:', err);

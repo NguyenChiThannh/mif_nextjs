@@ -6,15 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { DatePickerPopover } from '@/components/date-picker-popover';
-import { X } from 'lucide-react';
+import { Loader2, X } from 'lucide-react';
 import { schemaActor } from '@/lib/schemas/actor.schema';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { actorApi } from '@/services/actorApi';
 import { toast } from 'react-toastify';
-import { useParams, useSearchParams } from 'next/navigation';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 
 export default function ActionsActor() {
-    const [idEdit, setIdEdit] = useState(false)
+    const [idEdit, setIdEdit] = useState(false);
+    const router = useRouter();
     const searchParams = useSearchParams();
 
     const { data: actor, isLoading: isLoading } = actorApi.query.useGetActorById(idEdit, !!idEdit)
@@ -67,14 +68,26 @@ export default function ActionsActor() {
 
 
     const onSubmit = (data) => {
-        idEdit ? '' : createActorMutation.mutate(data)
+        console.log('Here')
+        console.log('🚀 ~ onSubmit ~ data:', data)
+        idEdit ? '' : createActorMutation.mutate(data, {
+            onSuccess: () => {
+                router.push('/admin/dashboard/actors')
+            }
+        })
     };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
             <div className='flex justify-between'>
                 <p className='text-2xl font-bold'>Create Actor</p>
-                <Button type='submit'>Submit</Button>
+                <Button
+                    type='submit'
+                    disabled={createActorMutation.isPending || updateActorMutation.isPending}>
+                    {(createActorMutation.isPending || updateActorMutation.isPending) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Submit
+                </Button>
+
             </div>
 
             <div className='grid grid-cols-5 gap-4'>

@@ -1,29 +1,25 @@
 'use client'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Calendar, ChevronLeft, ChevronRight, Clock, Ellipsis, Eye, FilePen, Filter, House, LineChart, ListOrdered, MoreHorizontal, Newspaper, Package, Star, Tag, Trash, TrendingUp, User, Users } from 'lucide-react'
+import { MoreHorizontal } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import Link from "next/link"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { actorApi, getTopActors } from '@/services/actorApi'
-import { useRouter } from 'next/navigation'
-import { toast } from 'react-toastify'
-import DialogConfirmDelete from '@/components/dialog-confirm-delete'
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { actorApi } from '@/services/actorApi'
+import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
+import { useRouter } from 'next/navigation'
 
 
 export default function Actors() {
     const [currentPage, setCurrentPage] = useState(0)
-    const [pageSize] = useState(10)
-
+    console.log('🚀 ~ Actors ~ currentPage:', currentPage)
+    const [pageSize] = useState(2)
     const router = useRouter();
 
     const { isLoading: isLoadingActors, data: actorsData } = actorApi.query.useGetTopActors(currentPage, pageSize, true)
-    console.log('🚀 ~ Actors ~ actorsData:', actorsData)
 
     const deleteMutation = actorApi.mutation.useDeleteActor()
 
@@ -32,14 +28,18 @@ export default function Actors() {
         setCurrentPage(newPage)
     }
 
-    const hanleEditActor = (id) => {
-        router.push(`/dashboard/actors/edit?id=${id}`)
-    }
-
     const hanleDeleteActor = (actorId) => {
         confirmDelete('', (result) => {
             if (result) {
-                deleteMutation.mutate(actorId);
+                console.log('🚀 ~ confirmDelete ~ currentPage:', currentPage)
+                deleteMutation.mutate(
+                    {
+                        actorId: actorId,
+                        page: currentPage,
+                        size: pageSize,
+                        pageView: true
+                    }
+                );
             }
         });
 
@@ -81,8 +81,8 @@ export default function Actors() {
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit/${row.original.id}`)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => hanleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

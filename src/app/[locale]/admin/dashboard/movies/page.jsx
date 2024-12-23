@@ -20,7 +20,6 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 
-
 export default function Movies() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(0);
@@ -122,6 +121,7 @@ export default function Movies() {
 
     return (
         <div className="bg-background p-6">
+            {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                     <Input
@@ -133,7 +133,7 @@ export default function Movies() {
                     Add Movie
                 </Button>
             </div>
-
+            {/* Table */}
             <div className="rounded-md">
                 <Table>
                     <TableHeader>
@@ -169,6 +169,7 @@ export default function Movies() {
                 </Table>
             </div>
 
+            {/* Pagination */}
             <div className="mt-4">
                 <Pagination>
                     <PaginationContent>

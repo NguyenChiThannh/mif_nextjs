@@ -1,5 +1,5 @@
 import { QUERY_KEY } from "@/services/key";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import { privateApi } from "@/services/config";
@@ -39,8 +39,9 @@ const createActor = async (data) => {
     return res.data
 }
 
-const deleteActor = async (id) => {
-    const res = await privateApi.delete(`/actors/${id}`)
+const deleteActor = async ({ actorId }) => {
+    console.log('🚀 ~ deleteActor ~ actorId:', actorId)
+    const res = await privateApi.delete(`/actors/${actorId}`)
     return res.data
 }
 
@@ -97,23 +98,34 @@ export const actorApi = {
     mutation: {
         useCreateActor() {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: createActor,
                 onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: QUERY_KEY.topActors(0, 10, true),
+                    })
                     toast.success(t('create_actor_successful'))
                 },
             })
         },
         useDeleteActor() {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: deleteActor,
-                onSuccess: () => {
-                    toast.success(t('delete_actor_successful'))
+                onSuccess: (_, variables) => {
+                    // Lấy page, size, pageView từ variables (nếu cần, hoặc có thể lấy từ context nếu bạn đã lưu thông tin này)
+                    const { page, size, pageView } = variables || {};
+                    console.log('🚀 ~ useDeleteActor ~ variables:', variables)
+                    console.log('🚀 ~ useDeleteActor ~ page, size, pageView:', page, size, pageView)
+
+                    // Invalidate query cho đúng page, size và pageView
+                    queryClient.invalidateQueries({
+                        queryKey: QUERY_KEY.topActors(page, size, pageView),
+                    });
+                    toast.success(t('delete_actor_successful'));
                 },
-                onError: () => {
-                    toast.error(t('delete_actor_failed'))
-                }
             })
         },
     }
