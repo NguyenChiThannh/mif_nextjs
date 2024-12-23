@@ -29,6 +29,7 @@ export const QUERY_KEY = {
     // user
     userInfoById: (id) => ['user_info', id],
     profilePostByUserId: (id) => ['post_user', id],
+    usersTable: (page, size) => ['users_table', { page, size }],
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
     postById: (postId) => ['detail_post', postId],

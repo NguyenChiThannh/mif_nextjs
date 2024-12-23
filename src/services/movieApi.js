@@ -52,7 +52,7 @@ const createMovie = async (data) => {
 }
 
 const getAllMoviesTable = async ({ queryKey }) => {
-    const [_key, { page, size, sortField, sortDirection }] = queryKey;
+    const [_key, { page, size }] = queryKey;
     const res = await privateApi.get('/movies', {
         params: {
             page,

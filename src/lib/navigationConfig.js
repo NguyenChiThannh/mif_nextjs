@@ -1,4 +1,4 @@
-import { BookIcon, CalendarCheckIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
+import { BookIcon, CalendarCheckIcon, CircleUserIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
 
 export const headerMenuConfig = (t) => [
     {
@@ -67,6 +67,12 @@ export const navDashboardMenuConfig = (t) => [
         href: '/admin/dashboard/groups',
         icon: UsersIcon,
         active: (pathname) => pathname.includes('/dashboard/groups'),
+    },
+    {
+        title: t('user'),
+        href: '/admin/dashboard/users',
+        icon: CircleUserIcon,
+        active: (pathname) => pathname.includes('/dashboard/users'),
     },
     // {
     //     title: t('analytics'),

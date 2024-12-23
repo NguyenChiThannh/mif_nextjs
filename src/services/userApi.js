@@ -24,6 +24,17 @@ const updateUserProfile = async (data) => {
     return res.data
 }
 
+const getAllUsersTable = async ({ queryKey }) => {
+    const [_key, { page, size }] = queryKey;
+    const res = await privateApi.get('/users', {
+        params: {
+            page,
+            size,
+        }
+    })
+    return res.data
+}
+
 export const userApi = {
     query: {
         useGetUserInfoById(id) {
@@ -41,6 +52,12 @@ export const userApi = {
                     return lastPage.last ? undefined : nextPage;
                 },
             });
+        },
+        useGetAllUsersTable(page = 0, size = 10) {
+            return useQuery({
+                queryKey: QUERY_KEY.usersTable(page, size),
+                queryFn: getAllUsersTable,
+            })
         },
     },
     mutation: {
