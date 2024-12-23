@@ -2,22 +2,22 @@ import { NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
 import createMiddleware from 'next-intl/middleware';
 
-// Hàm kiểm tra nếu người dùng đã đăng nhập dựa trên cookie
+// Check if the user is authenticated based on cookies
 function isAuthenticated(req) {
     try {
         const accessToken = req.cookies.get('access_token');
-        return !!accessToken; // Nếu có access_token, người dùng đã đăng nhập
+        return !!accessToken; // If access_token exists, the user is authenticated
     } catch (error) {
         console.error('Error checking authentication:', error);
         return false;
     }
 }
 
-// Hàm lấy vai trò người dùng từ cookie
+// Retrieve the user's role from cookies
 function getUserRole(req) {
     try {
         const role = req.cookies.get('role');
-        return role || null;
+        return role?.value || null;
     } catch (error) {
         console.error('Error getting user role:', error);
         return null;
@@ -25,39 +25,60 @@ function getUserRole(req) {
 }
 
 export default function middleware(req) {
-    const { pathname } = req.nextUrl;
-    const isAuth = isAuthenticated(req);
-    const role = getUserRole(req)?.value;
-    console.log('🚀 ~ middleware ~ role:', role)
+    let { pathname } = req.nextUrl;
 
-    // Chuyển hướng đến trang đăng nhập nếu người dùng chưa đăng nhập
-    if (!isAuth && ((!pathname.includes('/sign-in') && !pathname.includes('/admin/sign-in')) && !pathname.includes('/home'))) {
-        console.log('Here')
+    // Remove locale prefix (e.g., /vi/, /en/) if present
+    const localePattern = /^\/([a-z]{2})(?:\/|$)/;
+    const match = pathname.match(localePattern);
+    if (match) {
+        pathname = pathname.replace(localePattern, '/');
+    }
+
+    const isAuth = isAuthenticated(req);
+    const role = getUserRole(req);
+
+    console.log('🚀 ~ middleware ~ role:', role);
+
+    // Public paths accessible to unauthenticated users
+    const publicPaths = [
+        '/',
+        '/home',
+        '/movies',
+        '/actors',
+        '/sign-in',
+        '/sign-up',
+        '/admin/sign-in'
+    ];
+
+    // Redirect unauthenticated users trying to access non-public paths
+    if (!isAuth && !publicPaths.some(path => pathname === path)) {
         return NextResponse.redirect(new URL('/sign-in', req.url));
     }
 
-    if (!isAuth && pathname.includes('/admin/dashboard')) {
-        return NextResponse.redirect(new URL('/admin/sign-in', req.url));
-    }
 
-    // Phân quyền cho admin: Chuyển hướng nếu không phải admin và cố truy cập trang admin
-    if (pathname.includes('/admin/dashboard') && role !== 'ADMIN') {
+    // Prevent authenticated users (non-admin) from accessing admin routes
+    if (isAuth && role !== 'ADMIN' && pathname.startsWith('/admin')) {
         return NextResponse.redirect(new URL('/', req.url));
     }
 
-    // Ngăn người dùng đã đăng nhập truy cập lại trang đăng nhập
-    if (pathname.includes('/sign-in') && isAuth) {
+    // Prevent authenticated users from accessing the sign-in page
+    if (pathname.startsWith('/sign-in') && isAuth) {
         return NextResponse.redirect(new URL('/', req.url));
     }
 
-    // Tiếp tục xử lý với middleware quốc tế hóa
+    // Allow admin users to access all routes
+    if (role === 'ADMIN') {
+        return createMiddleware(routing)(req);
+    }
+
+    // Continue processing with internationalization middleware for remaining paths
     return createMiddleware(routing)(req);
 }
 
-// Cấu hình matcher áp dụng middleware cho các route cần bảo vệ
+// Middleware configuration for protected routes
 export const config = {
     matcher: [
-        '/((?!api|_next|_vercel|.*\\..*).*)', // Loại trừ các đường dẫn như /api, /_next, /_vercel và các tệp tĩnh
-        '/admin/:path*' // Các đường dẫn bắt đầu với /admin/
+        '/((?!api|_next|_vercel|.*\\..*).*)', // Exclude paths like /api, /_next, /_vercel, and static files
+        '/admin/:path*' // Routes starting with /admin/
     ]
 };

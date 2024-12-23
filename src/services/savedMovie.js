@@ -3,13 +3,13 @@ import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query"
 import { privateApi } from "@/services/config"
 
 const saveMovie = async (movieId) => {
-    const res = await privateApi.post(`saved-movies/${movieId}`)
+    const res = await privateApi.post(`/saved-movies/${movieId}`)
     return res.data
 }
 
 const getSavedMovies = async ({ queryKey, pageParam = 0 }) => {
     const [_key, userId] = queryKey;
-    const res = await privateApi.get('saved-movies', {
+    const res = await privateApi.get('/saved-movies', {
         params: {
             page: pageParam,
         },
@@ -18,12 +18,12 @@ const getSavedMovies = async ({ queryKey, pageParam = 0 }) => {
 }
 
 const unSaveMovie = async (movieId) => {
-    const res = await privateApi.delete(`saved-movies/${movieId}`)
+    const res = await privateApi.delete(`/saved-movies/${movieId}`)
     return res.data
 }
 
 const batchCheckSavedStatus = async (data) => {
-    const res = await privateApi.post('saved-movies/batch-check', data)
+    const res = await privateApi.post('/saved-movies/batch-check', data)
     return res.data
 }
 

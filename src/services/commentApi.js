@@ -4,7 +4,7 @@ import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-q
 
 const getCommentsByPostId = async ({ pageParam = 0, queryKey }) => {
     const [_key, postId] = queryKey;
-    const res = await privateApi.get(`/api/post/${postId}/comments`, {
+    const res = await privateApi.get(`/post/${postId}/comments`, {
         params: {
             page: pageParam,
         }
@@ -13,7 +13,7 @@ const getCommentsByPostId = async ({ pageParam = 0, queryKey }) => {
 }
 
 const voteComment = async ({ commentId, voteType }) => {
-    const res = await privateApi.post(`/api/comments/${commentId}/${voteType}`);
+    const res = await privateApi.post(`/comments/${commentId}/${voteType}`);
     return res.data;
 };
 
