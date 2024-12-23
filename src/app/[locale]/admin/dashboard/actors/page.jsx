@@ -12,17 +12,14 @@ import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 
-
 export default function Actors() {
     const [currentPage, setCurrentPage] = useState(0)
-    console.log('🚀 ~ Actors ~ currentPage:', currentPage)
-    const [pageSize] = useState(2)
+    const [pageSize] = useState(10)
     const router = useRouter();
 
     const { isLoading: isLoadingActors, data: actorsData } = actorApi.query.useGetTopActors(currentPage, pageSize, true)
 
     const deleteMutation = actorApi.mutation.useDeleteActor()
-
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage)
@@ -31,15 +28,7 @@ export default function Actors() {
     const hanleDeleteActor = (actorId) => {
         confirmDelete('', (result) => {
             if (result) {
-                console.log('🚀 ~ confirmDelete ~ currentPage:', currentPage)
-                deleteMutation.mutate(
-                    {
-                        actorId: actorId,
-                        page: currentPage,
-                        size: pageSize,
-                        pageView: true
-                    }
-                );
+                deleteMutation.mutate(actorId);
             }
         });
 
@@ -58,7 +47,7 @@ export default function Actors() {
             {
                 accessorKey: 'awards',
                 header: 'Awards',
-                cell: ({ row }) => row.original.awards.length || 0,
+                cell: ({ row }) => row.original.awards?.length || 0,
             },
             {
                 accessorKey: 'ratings.scoreRank',
@@ -103,22 +92,32 @@ export default function Actors() {
     return (
         <div>
             <div className="bg-background p-6">
+                {/* Header */}
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
                         <Input
-                            placeholder="Search articles..."
+                            placeholder="Search actors..."
                             className="text-muted-foreground" />
                     </div>
                     <div className='flex items-center gap-2'>
-                        <Button onClick={() => { router.push('/admin/dashboard/actors/create') }}>Add Actor</Button>
+                        <Button
+                            onClick={() => { router.push('/admin/dashboard/actors/create') }}
+                        >
+                            Add Actor
+                        </Button>
                     </div>
                 </div>
+                {/* Table */}
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
+                                    <TableHead
+                                        key={header.id}
+                                        className={header.column.getCanSort()
+                                            ? "cursor-pointer select-none"
+                                            : ""}>
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -145,6 +144,7 @@ export default function Actors() {
                         ))}
                     </TableBody>
                 </Table>
+                {/* Pagination */}
                 <div className="mt-4">
                     <Pagination>
                         <PaginationContent>
@@ -203,7 +203,6 @@ export default function Actors() {
                                     );
                                 });
                             })()}
-
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => handlePageChange(currentPage + 1)}

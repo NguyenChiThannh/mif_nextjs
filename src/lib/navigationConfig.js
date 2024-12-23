@@ -34,9 +34,9 @@ export const headerMenuConfig = (t) => [
 export const navDashboardMenuConfig = (t) => [
     {
         title: t('home'),
-        href: '/admin/dashboard',
+        href: '/admin/dashboard/home',
         icon: HouseIcon,
-        active: (pathname) => pathname.replace(/^\/[a-z]{2}/, '') === '/dashboard',
+        active: (pathname) => pathname.includes('/dashboard/home'),
     },
     // {
     //     title: t('news'),

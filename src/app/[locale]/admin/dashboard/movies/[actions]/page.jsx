@@ -2,25 +2,26 @@
 import { CountrySelect } from '@/components/country-select';
 import { DatePickerPopover } from '@/components/date-picker-popover';
 import { FancyMultiSelect } from '@/components/fancy-multi-select';
+import Loading from '@/components/loading';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import useUploadImages from '@/hooks/useUploadImages';
 import { schemaMovie } from '@/lib/schemas/movie.schema';
+import { actorApi } from '@/services/actorApi';
 import { movieApi } from '@/services/movieApi';
 import { categoryApi } from '@/services/movieCategoriesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQuery } from '@tanstack/react-query';
 import { X } from 'lucide-react';
-import React, { useState } from 'react'
+import { useRouter } from 'next/navigation';
+import React from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 
 export default function ActionsMovie() {
     const {
         register,
         handleSubmit,
         control,
-        reset,
         setValue,
         formState: { errors }
     } = useForm({
@@ -40,23 +41,34 @@ export default function ActionsMovie() {
             awards: [{ name: '', date: undefined }],
         },
     });
-    const [selectedGenres, setSelectedGenres] = useState([]);
 
-    const handleSelectionChange = (selected) => {
+    const {
+        images,
+        handleImageChange,
+        removeImage,
+        uploadImage,
+    } = useUploadImages();
+
+    const handleSelectionGenre = (selected) => {
         setValue('genreIds', selected.map(option => option.value));
     };
+
+    const handleSelectionActor = (selected) => {
+        setValue('castIds', selected.map(option => option.value));
+    };
+
+    const route = useRouter()
 
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'awards',
     });
 
-    const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
+    const { data: movieCategories, isLoading: isLoadingMovieCategories } = categoryApi.query.useGetAllmovieCategories()
+    const { data: allActors, isLoading: isLoadingActors } = actorApi.query.useGetTopActors(0, 100)
     const createMovieMutation = movieApi.mutation.useCreateMovieMutation()
 
-    const onSubmit = (data) => {
-        createMovieMutation.mutate(data)
-    };
+    if (isLoadingMovieCategories || isLoadingActors) return <Loading />
 
     const genres = movieCategories?.map(category => {
         return {
@@ -64,6 +76,25 @@ export default function ActionsMovie() {
             label: category.categoryName,
         }
     })
+
+    const actors = allActors?.content?.map(actor => {
+        return {
+            value: actor.id,
+            label: actor.name,
+        }
+    })
+
+    const onSubmit = async (data) => {
+        const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));
+        createMovieMutation.mutate({
+            ...data,
+            posterUrl: uploadedImageUrls[0],
+        }, {
+            onSuccess: () => {
+                route.push('/admin/dashboard/movies')
+            }
+        })
+    };
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4'>
@@ -97,13 +128,26 @@ export default function ActionsMovie() {
                 <Textarea {...register('description')} />
             </div>
 
+            <div>
+                <p className='text-sm pb-2 font-semibold'>Actors</p>
+                <FancyMultiSelect
+                    values={actors}
+                    initialSelected={[]}
+                    onSelectionChange={handleSelectionActor}
+                    placeholder={'Chọn diễn viên ...'}
+                />
+            </div>
+
+
             <div className='grid grid-cols-9 gap-4'>
                 <div className='col-span-7'>
                     <p className='text-sm font-semibold pb-2'>Genre</p>
                     <FancyMultiSelect
                         values={genres}
                         initialSelected={[]}
-                        onSelectionChange={handleSelectionChange} />
+                        onSelectionChange={handleSelectionGenre}
+                        placeholder={'Chọn thể loại ...'}
+                    />
                 </div>
                 <div>
                     <p className='text-sm font-semibold pb-2'>Country</p>
@@ -115,16 +159,10 @@ export default function ActionsMovie() {
                 <div className='col-span-2'>
                     <p className='text-sm pb-2 font-semibold'>Poster</p>
                     <Input
-                        type='file' {...register('posterUrl')}
-                    // {...register('posterUrl', {
-                    //     onChange: (e) => {
-                    //         const file = e.target.files[0];
-                    //         if (file) {
-                    //             const url = URL.createObjectURL(file);
-                    //             return url;
-                    //         }
-                    //     }
-                    // })}
+                        type='file'
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        multiple
                     />
                 </div>
 

@@ -62,7 +62,9 @@ export default function Movies() {
                 cell: ({ row }) => {
                     const genres = row.original.genre;
                     const genreNames = genres.map((genre) => genre.categoryName).join(", ");
-                    return genreNames;
+                    return (
+                        <div className="truncate max-w-60">{genreNames}</div>
+                    );
                 },
                 enableSorting: false,
             },
@@ -95,7 +97,7 @@ export default function Movies() {
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => router.push(`/movies/${row.original.id}`)}>View</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit/${row.original.id}`)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit?${row.original.id}`)}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

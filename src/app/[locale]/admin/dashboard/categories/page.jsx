@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { categoryApi } from '@/services/movieCategoriesApi'
 import DialogCategory from '@/components/dialog-category'
 import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
+import { formatDate } from '@/lib/formatter'
 
 
 export default function CategoriesPage() {
@@ -88,6 +89,9 @@ export default function CategoriesPage() {
                     <TableHeader>
                         <TableRow>
                             <TableHead>Category</TableHead>
+                            <TableHead>Description</TableHead>
+                            <TableHead>CreatedAt</TableHead>
+                            <TableHead>UpdatedAt</TableHead>
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
@@ -97,6 +101,15 @@ export default function CategoriesPage() {
                                 <TableRow key={category.id}>
                                     <TableCell>
                                         {category?.categoryName}
+                                    </TableCell>
+                                    <TableCell className="truncate max-w-xs">
+                                        {category?.description}
+                                    </TableCell>
+                                    <TableCell>
+                                        {formatDate(category?.createdAt)}
+                                    </TableCell>
+                                    <TableCell>
+                                        {formatDate(category?.updatedAt)}
                                     </TableCell>
                                     <TableCell className="flex items-center gap-2">
                                         <DropdownMenu modal={false}>

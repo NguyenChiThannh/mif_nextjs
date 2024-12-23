@@ -39,8 +39,7 @@ const createActor = async (data) => {
     return res.data
 }
 
-const deleteActor = async ({ actorId }) => {
-    console.log('🚀 ~ deleteActor ~ actorId:', actorId)
+const deleteActor = async (actorId) => {
     const res = await privateApi.delete(`/actors/${actorId}`)
     return res.data
 }
@@ -102,9 +101,7 @@ export const actorApi = {
             return useMutation({
                 mutationFn: createActor,
                 onSuccess: () => {
-                    queryClient.invalidateQueries({
-                        queryKey: QUERY_KEY.topActors(0, 10, true),
-                    })
+                    queryClient.invalidateQueries({ queryKey: ['actors'] });
                     toast.success(t('create_actor_successful'))
                 },
             })
@@ -114,16 +111,8 @@ export const actorApi = {
             const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: deleteActor,
-                onSuccess: (_, variables) => {
-                    // Lấy page, size, pageView từ variables (nếu cần, hoặc có thể lấy từ context nếu bạn đã lưu thông tin này)
-                    const { page, size, pageView } = variables || {};
-                    console.log('🚀 ~ useDeleteActor ~ variables:', variables)
-                    console.log('🚀 ~ useDeleteActor ~ page, size, pageView:', page, size, pageView)
-
-                    // Invalidate query cho đúng page, size và pageView
-                    queryClient.invalidateQueries({
-                        queryKey: QUERY_KEY.topActors(page, size, pageView),
-                    });
+                onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['actors'] });
                     toast.success(t('delete_actor_successful'));
                 },
             })

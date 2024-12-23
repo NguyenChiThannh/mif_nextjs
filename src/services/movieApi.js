@@ -113,10 +113,12 @@ export const movieApi = {
     },
     mutation: {
         useCreateMovieMutation() {
+            const queryClient = useQueryClient()
             const t = useTranslations('Toast');
             return useMutation({
                 mutationFn: createMovie,
                 onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['movies_table'] })
                     toast.success(t('create_movie_successful'))
                 },
             })
@@ -128,7 +130,7 @@ export const movieApi = {
                 mutationFn: deleteMovie,
                 onSuccess: () => {
                     toast.success(t('delete_movie_successful'))
-                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.moviesTable() })
+                    queryClient.invalidateQueries({ queryKey: ['movies_table'] })
                 }
             })
         }

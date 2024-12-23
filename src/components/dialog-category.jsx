@@ -17,7 +17,7 @@ export default function DialogCategory({ isOpenDialog, setIsOpenDialog, queryCli
 
     const { data: category, isLoading: isLoadingCategory } = categoryApi.query.useGetCategoryById(idEdit, !!idEdit)
     const createCategoryMutation = categoryApi.mutation.useCreateCategory()
-    const updateCategoryMutation = categoryApi.mutation.useDeleteCategory()
+    const updateCategoryMutation = categoryApi.mutation.useUpdateCategory()
 
     useEffect(() => {
         if (category) {
