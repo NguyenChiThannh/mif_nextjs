@@ -227,6 +227,8 @@
         "login_successful": "Đăng nhập thành công",
         "verify_otp_successful": "Xác thực tài khoản thành công",
         "create_movie_successful": "Tạo phim thành công",
+        "delete_movie_successful": "Xóa phim thành công",
+        "update_movie_successful": "Cập nhật phim thành công",
         "create_group_successful": "Tạo nhóm thành công",
         "update_group_successful": "Cập nhật thông tin nhóm thành công",
         "add_pending_invitation_successful": "Gửi lời mời thành công",

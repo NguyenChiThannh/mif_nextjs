@@ -13,16 +13,28 @@ import { movieApi } from '@/services/movieApi';
 import { categoryApi } from '@/services/movieCategoriesApi';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React from 'react'
+import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 
 export default function ActionsMovie() {
+    const [idEdit, setIdEdit] = useState(false);
+
+    const searchParams = useSearchParams();
+
+    const { data: movie, isLoading: isLoadingMovie } = movieApi.query.useGetMovieById(idEdit, !!idEdit)
+
+    useEffect(() => {
+        const id = searchParams.get('id')
+        if (id) setIdEdit(id)
+    }, [])
     const {
         register,
         handleSubmit,
         control,
         setValue,
+        reset,
+        watch,
         formState: { errors }
     } = useForm({
         resolver: zodResolver(schemaMovie),
@@ -41,6 +53,28 @@ export default function ActionsMovie() {
             awards: [{ name: '', date: undefined }],
         },
     });
+
+    useEffect(() => {
+        if (movie) {
+            reset({
+                title: movie.title,
+                description: movie.description,
+                genreIds: movie.genre?.map(gerne => gerne.id),
+                releaseDate: new Date(movie.releaseDate),
+                directorId: [],
+                castIds: movie.castIds,
+                posterUrl: movie.posterUrl,
+                trailerUrl: movie.trailerUrl,
+                duration: String(movie.duration),
+                country: movie.country,
+                budget: movie.budget,
+                awards: movie.awards.map((award) => ({
+                    name: award.name,
+                    date: new Date(award.date),
+                })),
+            });
+        }
+    }, [movie]);
 
     const {
         images,
@@ -66,9 +100,17 @@ export default function ActionsMovie() {
 
     const { data: movieCategories, isLoading: isLoadingMovieCategories } = categoryApi.query.useGetAllmovieCategories()
     const { data: allActors, isLoading: isLoadingActors } = actorApi.query.useGetTopActors(0, 100)
-    const createMovieMutation = movieApi.mutation.useCreateMovieMutation()
+    const createMovieMutation = movieApi.mutation.useCreateMovie()
+    const updateMovieMutation = movieApi.mutation.useUpdateMovie()
 
-    if (isLoadingMovieCategories || isLoadingActors) return <Loading />
+    if (isLoadingMovieCategories || isLoadingActors || isLoadingMovie) return <Loading />
+
+    const initGernes = !!idEdit ? movie.genre?.map(gerne => {
+        return {
+            value: gerne.id,
+            label: gerne.categoryName,
+        }
+    }) : []
 
     const genres = movieCategories?.map(category => {
         return {
@@ -85,15 +127,31 @@ export default function ActionsMovie() {
     })
 
     const onSubmit = async (data) => {
-        const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));
-        createMovieMutation.mutate({
-            ...data,
-            posterUrl: uploadedImageUrls[0],
-        }, {
-            onSuccess: () => {
-                route.push('/admin/dashboard/movies')
+        if (idEdit) {
+            const movieData = { ...data, movieId: idEdit };
+
+            if (images) {
+                const uploadedImageUrls = await Promise.all(images.map(uploadImage));
+                movieData.posterUrl = uploadedImageUrls[0];
             }
-        })
+
+            updateMovieMutation.mutate(movieData, {
+                onSuccess: () => {
+                    route.push('/admin/dashboard/movies');
+                }
+            });
+        }
+        else {
+            const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));
+            createMovieMutation.mutate({
+                ...data,
+                posterUrl: uploadedImageUrls[0],
+            }, {
+                onSuccess: () => {
+                    route.push('/admin/dashboard/movies')
+                }
+            })
+        }
     };
 
     return (
@@ -144,14 +202,16 @@ export default function ActionsMovie() {
                     <p className='text-sm font-semibold pb-2'>Genre</p>
                     <FancyMultiSelect
                         values={genres}
-                        initialSelected={[]}
+                        initialSelected={initGernes}
                         onSelectionChange={handleSelectionGenre}
                         placeholder={'Chọn thể loại ...'}
                     />
                 </div>
                 <div>
                     <p className='text-sm font-semibold pb-2'>Country</p>
-                    <CountrySelect {...register('country')} />
+                    <CountrySelect
+                        value={watch('country')}
+                        onChange={(newValue) => setValue('country', newValue)} />
                 </div>
             </div>
 
