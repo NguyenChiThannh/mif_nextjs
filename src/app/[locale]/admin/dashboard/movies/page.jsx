@@ -99,6 +99,7 @@ export default function Movies() {
                                 <DropdownMenuItem onClick={() => router.push(`/movies/${row.original.id}`)}>View</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/add/photo?id=${row.original.id}`)}>Add Image</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

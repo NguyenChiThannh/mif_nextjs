@@ -6,6 +6,7 @@ export const QUERY_KEY = {
     searchMoviesByTitle: (page, size, title) => ['search_movies_by_title', { page, size, title }],
     movieById: (id) => ['detail_movie', id],
     moviesTable: (page, size) => ['movies_table', { page, size }],
+    movieImages: (movieId) => ['movie_images', movieId],
     //Group
     groupsByOwnerId: (page, size) => ['groups_owner', { page, size }],
     userGroups: (page, size, id) => ['user_groups', { page, size, id }],

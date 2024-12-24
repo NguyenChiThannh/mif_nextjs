@@ -74,6 +74,17 @@ const updateMovie = async (data) => {
     return res.data
 }
 
+const getMovieImages = async (movieId) => {
+    const res = await privateApi.get(`/movies/${movieId}/images`)
+    return res.data
+}
+
+const updateMovieImages = async (data) => {
+    const { movieId, ...updateData } = data
+    const res = await privateApi.put(`/movies/${movieId}/images`, updateData)
+    return res.data
+}
+
 export const movieApi = {
     query: {
         useGetNewestMovie(page, size) {
@@ -117,6 +128,12 @@ export const movieApi = {
                 queryFn: getAllMoviesTable,
             })
         },
+        useGetMovieImages(movieId) {
+            return useQuery({
+                queryKey: QUERY_KEY.movieImages(movieId),
+                queryFn: ({ queryKey }) => getMovieImages(queryKey[1]),
+            })
+        }
     },
     mutation: {
         useCreateMovie() {
@@ -149,6 +166,15 @@ export const movieApi = {
                 onSuccess: () => {
                     toast.success(t('update_movie_successful'))
                     queryClient.invalidateQueries({ queryKey: ['movies_table'] })
+                }
+            })
+        },
+        useUpdateMovieImages() {
+            const t = useTranslations('Toast')
+            return useMutation({
+                mutationFn: updateMovieImages,
+                onSuccess: () => {
+                    toast.success(t('update_movie_successful'))
                 }
             })
         }

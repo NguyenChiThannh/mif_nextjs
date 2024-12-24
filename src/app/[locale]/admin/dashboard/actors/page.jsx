@@ -25,7 +25,7 @@ export default function Actors() {
         setCurrentPage(newPage)
     }
 
-    const hanleDeleteActor = (actorId) => {
+    const handleDeleteActor = (actorId) => {
         confirmDelete('', (result) => {
             if (result) {
                 deleteMutation.mutate(actorId);
@@ -71,7 +71,7 @@ export default function Actors() {
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => hanleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
