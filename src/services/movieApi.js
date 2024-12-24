@@ -52,7 +52,7 @@ const createMovie = async (data) => {
 }
 
 const getAllMoviesTable = async ({ queryKey }) => {
-    const [_key, { page, size, sortField, sortDirection }] = queryKey;
+    const [_key, { page, size }] = queryKey;
     const res = await privateApi.get('/movies', {
         params: {
             page,
@@ -65,6 +65,23 @@ const getAllMoviesTable = async ({ queryKey }) => {
 
 const deleteMovie = async (movieId) => {
     const res = await privateApi.delete(`/movies/${movieId}`)
+    return res.data
+}
+
+const updateMovie = async (data) => {
+    const { movieId, ...updateData } = data
+    const res = await privateApi.put(`/movies/${movieId}`, updateData)
+    return res.data
+}
+
+const getMovieImages = async (movieId) => {
+    const res = await privateApi.get(`/movies/${movieId}/images`)
+    return res.data
+}
+
+const updateMovieImages = async (data) => {
+    const { movieId, ...updateData } = data
+    const res = await privateApi.put(`/movies/${movieId}/images`, updateData)
     return res.data
 }
 
@@ -98,10 +115,11 @@ export const movieApi = {
                 queryFn: searchMoviesByTitle,
             })
         },
-        useGetMovieById(id) {
+        useGetMovieById(id, enabled = true) {
             return useQuery({
                 queryKey: QUERY_KEY.movieById(id),
                 queryFn: ({ queryKey }) => getMovieById(queryKey[1]),
+                enabled,
             })
         },
         useGetAllMoviesTable(page = 0, size = 10) {
@@ -110,13 +128,21 @@ export const movieApi = {
                 queryFn: getAllMoviesTable,
             })
         },
+        useGetMovieImages(movieId) {
+            return useQuery({
+                queryKey: QUERY_KEY.movieImages(movieId),
+                queryFn: ({ queryKey }) => getMovieImages(queryKey[1]),
+            })
+        }
     },
     mutation: {
-        useCreateMovieMutation() {
+        useCreateMovie() {
+            const queryClient = useQueryClient()
             const t = useTranslations('Toast');
             return useMutation({
                 mutationFn: createMovie,
                 onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['movies_table'] })
                     toast.success(t('create_movie_successful'))
                 },
             })
@@ -128,7 +154,27 @@ export const movieApi = {
                 mutationFn: deleteMovie,
                 onSuccess: () => {
                     toast.success(t('delete_movie_successful'))
-                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.moviesTable() })
+                    queryClient.invalidateQueries({ queryKey: ['movies_table'] })
+                }
+            })
+        },
+        useUpdateMovie() {
+            const queryClient = useQueryClient()
+            const t = useTranslations('Toast')
+            return useMutation({
+                mutationFn: updateMovie,
+                onSuccess: () => {
+                    toast.success(t('update_movie_successful'))
+                    queryClient.invalidateQueries({ queryKey: ['movies_table'] })
+                }
+            })
+        },
+        useUpdateMovieImages() {
+            const t = useTranslations('Toast')
+            return useMutation({
+                mutationFn: updateMovieImages,
+                onSuccess: () => {
+                    toast.success(t('update_movie_successful'))
                 }
             })
         }

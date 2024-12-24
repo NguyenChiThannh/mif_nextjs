@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { useState } from "react";
-import { DatePickerPopover } from "@/components/date-picker-popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,7 +15,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { Controller, useForm } from "react-hook-form";
-import InputDemo, { DateTimePicker } from "@/components/date-and-time-picker";
+import { DateTimePicker } from "@/components/date-and-time-picker";
 import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
 import { schemaEvent } from "@/lib/schemas/event.schema";

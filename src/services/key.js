@@ -6,6 +6,7 @@ export const QUERY_KEY = {
     searchMoviesByTitle: (page, size, title) => ['search_movies_by_title', { page, size, title }],
     movieById: (id) => ['detail_movie', id],
     moviesTable: (page, size) => ['movies_table', { page, size }],
+    movieImages: (movieId) => ['movie_images', movieId],
     //Group
     groupsByOwnerId: (page, size) => ['groups_owner', { page, size }],
     userGroups: (page, size, id) => ['user_groups', { page, size, id }],
@@ -18,7 +19,7 @@ export const QUERY_KEY = {
     // Actor
     actorMovieography: (actorId) => ['actor_movieography', actorId],
     actorById: (actorId) => ['actor', actorId],
-    topActors: (page, size, pageView) => ['top_actor', { page, size, pageView }],
+    topActors: (page, size, pageView) => ['actors', { page, size, pageView }],
     topActorsInfinite: () => ['top_actor'],
     searchActorsByTitle: (name) => ['search_actors_by_title', name],
     // Category
@@ -29,6 +30,7 @@ export const QUERY_KEY = {
     // user
     userInfoById: (id) => ['user_info', id],
     profilePostByUserId: (id) => ['post_user', id],
+    usersTable: (page, size) => ['users_table', { page, size }],
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
     postById: (postId) => ['detail_post', postId],

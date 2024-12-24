@@ -20,7 +20,6 @@ import {
     PaginationPrevious,
 } from "@/components/ui/pagination"
 
-
 export default function Movies() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(0);
@@ -63,7 +62,9 @@ export default function Movies() {
                 cell: ({ row }) => {
                     const genres = row.original.genre;
                     const genreNames = genres.map((genre) => genre.categoryName).join(", ");
-                    return genreNames;
+                    return (
+                        <div className="truncate max-w-60">{genreNames}</div>
+                    );
                 },
                 enableSorting: false,
             },
@@ -96,8 +97,9 @@ export default function Movies() {
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => router.push(`/movies/${row.original.id}`)}>View</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit/${row.original.id}`)}>Edit</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/add/photo?id=${row.original.id}`)}>Add Image</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -122,6 +124,7 @@ export default function Movies() {
 
     return (
         <div className="bg-background p-6">
+            {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-4">
                     <Input
@@ -133,7 +136,7 @@ export default function Movies() {
                     Add Movie
                 </Button>
             </div>
-
+            {/* Table */}
             <div className="rounded-md">
                 <Table>
                     <TableHeader>
@@ -169,6 +172,7 @@ export default function Movies() {
                 </Table>
             </div>
 
+            {/* Pagination */}
             <div className="mt-4">
                 <Pagination>
                     <PaginationContent>

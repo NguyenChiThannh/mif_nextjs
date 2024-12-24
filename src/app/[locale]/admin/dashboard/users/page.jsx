@@ -11,102 +11,96 @@ import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
+import { userApi } from '@/services/userApi'
+import { formatDate } from '@/lib/formatter'
 
-export default function Actors() {
+export default function Users() {
     const [currentPage, setCurrentPage] = useState(0)
     const [pageSize] = useState(10)
     const router = useRouter();
 
-    const { isLoading: isLoadingActors, data: actorsData } = actorApi.query.useGetTopActors(currentPage, pageSize, true)
-
-    const deleteMutation = actorApi.mutation.useDeleteActor()
+    const { isLoading: isLoadingUsers, data: usersData } = userApi.query.useGetAllUsersTable(currentPage, pageSize)
+    console.log('🚀 ~ Users ~ usersData:', usersData)
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage)
     }
 
-    const handleDeleteActor = (actorId) => {
-        confirmDelete('', (result) => {
-            if (result) {
-                deleteMutation.mutate(actorId);
-            }
-        });
+    // const hanleDeleteActor = (actorId) => {
+    //     confirmDelete('', (result) => {
+    //         if (result) {
+    //             deleteMutation.mutate(actorId);
+    //         }
+    //     });
 
-    };
+    // };
 
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'name',
-                header: 'Name',
+                accessorKey: 'email',
+                header: 'Email',
             },
             {
-                accessorKey: 'favoriteCount',
-                header: 'Favorite Count',
+                accessorKey: 'displayName',
+                header: 'Display Name',
             },
             {
-                accessorKey: 'awards',
-                header: 'Awards',
-                cell: ({ row }) => row.original.awards?.length || 0,
+                accessorKey: 'dob',
+                header: 'Day of birth',
+                cell: ({ row }) => formatDate(row.original.dob),
             },
             {
-                accessorKey: 'ratings.scoreRank',
-                header: 'Score',
-                cell: ({ row }) => Number(row.original.scoreRank).toFixed(1),
+                accessorKey: 'isActive',
+                header: 'isActive',
             },
             {
-                id: 'actions',
-                header: 'Actions',
-                enableSorting: false,
-                cell: ({ row }) => (
-                    <div className="flex items-center gap-2">
-                        <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger asChild>
-                                <Button aria-haspopup="true" size="icon" variant="ghost">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Toggle menu</span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                ),
+                accessorKey: 'userType',
+                header: 'Type',
             },
+            {
+                accessorKey: 'authorities',
+                header: 'Role',
+                cell: ({ row }) => row.getValue('authorities')?.[0]?.authority,
+            }
+            // {
+            //     id: 'actions',
+            //     header: 'Actions',
+            //     enableSorting: false,
+            //     cell: ({ row }) => (
+            //         <div className="flex items-center gap-2">
+            //             <DropdownMenu modal={false}>
+            //                 <DropdownMenuTrigger asChild>
+            //                     <Button aria-haspopup="true" size="icon" variant="ghost">
+            //                         <MoreHorizontal className="h-4 w-4" />
+            //                         <span className="sr-only">Toggle menu</span>
+            //                     </Button>
+            //                 </DropdownMenuTrigger>
+            //                 <DropdownMenuContent align="end">
+            //                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            //                     <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
+            //                     <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
+            //                     <DropdownMenuItem onClick={() => hanleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
+            //                 </DropdownMenuContent>
+            //             </DropdownMenu>
+            //         </div>
+            //     ),
+            // },
         ],
         [router]
     );
 
     const table = useReactTable({
-        data: actorsData?.content || [],
+        data: usersData?.content || [],
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
 
-    if (isLoadingActors) return <Loading />
+    if (isLoadingUsers) return <Loading />
 
     return (
         <div>
             <div className="bg-background p-6">
-                {/* Header */}
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                        <Input
-                            placeholder="Search actors..."
-                            className="text-muted-foreground" />
-                    </div>
-                    <div className='flex items-center gap-2'>
-                        <Button
-                            onClick={() => { router.push('/admin/dashboard/actors/create') }}
-                        >
-                            Add Actor
-                        </Button>
-                    </div>
-                </div>
                 {/* Table */}
                 <Table>
                     <TableHeader>
@@ -157,7 +151,7 @@ export default function Actors() {
                             </PaginationItem>
 
                             {(() => {
-                                const totalPages = actorsData?.totalPages || 1;
+                                const totalPages = usersData?.totalPages || 1;
                                 const pageNumbers = [];
 
                                 pageNumbers.push(0);
@@ -206,8 +200,8 @@ export default function Actors() {
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={currentPage >= (actorsData?.totalPages - 1)}
-                                    className={currentPage >= (actorsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    disabled={currentPage >= (usersData?.totalPages - 1)}
+                                    className={currentPage >= (usersData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
                                 />
                             </PaginationItem>
                         </PaginationContent>

@@ -19,12 +19,11 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-export function CountrySelect() {
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState("")
+export function CountrySelect({ value, onChange }) {
+    const [open, setOpen] = React.useState(false);
 
     return (
-        <Popover open={open} onOpenChange={setOpen} >
+        <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
@@ -49,8 +48,8 @@ export function CountrySelect() {
                                     key={country.value}
                                     value={country.value}
                                     onSelect={(currentValue) => {
-                                        setValue(currentValue === value ? "" : currentValue)
-                                        setOpen(false)
+                                        onChange(currentValue === value ? "" : currentValue);
+                                        setOpen(false);
                                     }}
                                 >
                                     <Check
@@ -67,7 +66,7 @@ export function CountrySelect() {
                 </Command>
             </PopoverContent>
         </Popover>
-    )
+    );
 }
 
 const countries = [

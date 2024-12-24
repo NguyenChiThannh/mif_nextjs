@@ -1,5 +1,5 @@
 import { QUERY_KEY } from "@/services/key";
-import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "react-toastify";
 import { privateApi } from "@/services/config";
@@ -39,8 +39,8 @@ const createActor = async (data) => {
     return res.data
 }
 
-const deleteActor = async (id) => {
-    const res = await privateApi.delete(`/actors/${id}`)
+const deleteActor = async (actorId) => {
+    const res = await privateApi.delete(`/actors/${actorId}`)
     return res.data
 }
 
@@ -97,23 +97,24 @@ export const actorApi = {
     mutation: {
         useCreateActor() {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: createActor,
                 onSuccess: () => {
+                    queryClient.invalidateQueries({ queryKey: ['actors'] });
                     toast.success(t('create_actor_successful'))
                 },
             })
         },
         useDeleteActor() {
             const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
             return useMutation({
                 mutationFn: deleteActor,
                 onSuccess: () => {
-                    toast.success(t('delete_actor_successful'))
+                    queryClient.invalidateQueries({ queryKey: ['actors'] });
+                    toast.success(t('delete_actor_successful'));
                 },
-                onError: () => {
-                    toast.error(t('delete_actor_failed'))
-                }
             })
         },
     }

@@ -83,6 +83,7 @@
             "category": "Thể loại",
             "actor": "Diễn viên",
             "group": "Nhóm",
+            "user": "Người dùng",
             "analytics": "Phân tích"
         }
     },
@@ -227,6 +228,8 @@
         "login_successful": "Đăng nhập thành công",
         "verify_otp_successful": "Xác thực tài khoản thành công",
         "create_movie_successful": "Tạo phim thành công",
+        "delete_movie_successful": "Xóa phim thành công",
+        "update_movie_successful": "Cập nhật phim thành công",
         "create_group_successful": "Tạo nhóm thành công",
         "update_group_successful": "Cập nhật thông tin nhóm thành công",
         "add_pending_invitation_successful": "Gửi lời mời thành công",
@@ -237,7 +240,6 @@
         "remove_member_group_successful": "Xóa thành viên thành công",
         "add_member_group_successful": "Thêm thành viên thành công",
         "delete_actor_successful": "Xóa diễn viên thành công",
-        "delete_actor_failed": "Xóa diễn viên thất bại",
         "create_actor_successful": "Thêm diễn viên thành công",
         "create_category_successful": "Thêm category thành công",
         "delete_category_successful": "Xóa category thành công",

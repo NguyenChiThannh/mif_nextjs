@@ -1,11 +1,9 @@
 'use client';
 import HeaderAdmin from "@/components/header-admin";
 import { navDashboardMenuConfig } from "@/lib/navigationConfig";
-import { useAppSelector } from "@/redux/store";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
     const pathname = usePathname();

@@ -5,7 +5,6 @@ const award = z.object({
     date: z.date(),
 })
 
-
 export const schemaActor = z.object({
     name: z.string(),
     dateOfBirth: z.date(),

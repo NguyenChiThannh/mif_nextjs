@@ -1,14 +1,14 @@
 'use client'
 import React, { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { ArrowUpDown, Calendar, ChevronLeft, ChevronRight, Ellipsis, Eye, FilePen, Filter, House, LineChart, ListOrdered, MoreHorizontal, Newspaper, Package, Tag, Trash, User, Users } from 'lucide-react'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import Link from "next/link"
 import { useQueryClient } from '@tanstack/react-query'
 import { categoryApi } from '@/services/movieCategoriesApi'
 import DialogCategory from '@/components/dialog-category'
+import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
+import { formatDate } from '@/lib/formatter'
 
 
 export default function CategoriesPage() {
@@ -20,21 +20,18 @@ export default function CategoriesPage() {
     const deleteMutation = categoryApi.mutation.useDeleteCategory()
 
     const hanleDeleteCategory = async (id) => {
-        if (window.confirm('Are you sure you want to delete this item?')) {
-            deleteMutation.mutate(id);
-        }
+        confirmDelete('', (result) => {
+            if (result) {
+                deleteMutation.mutate(id);
+            }
+        });
     }
 
     return (
         <div>
             <div className="bg-background p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                        <Input
-                            placeholder="Search articles..."
-                            className="text-muted-foreground"
-                        />
-                    </div>
+                {/* Header */}
+                <div className="flex items-center justify-end mb-6">
                     <div className='flex items-center gap-2'>
                         {/* <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -87,12 +84,14 @@ export default function CategoriesPage() {
                         />
                     </div>
                 </div>
+                {/* Table */}
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>Category</TableHead>
-                            <TableHead>Movies </TableHead>
-                            <TableHead>Groups</TableHead>
+                            <TableHead>Description</TableHead>
+                            <TableHead>CreatedAt</TableHead>
+                            <TableHead>UpdatedAt</TableHead>
                             <TableHead></TableHead>
                         </TableRow>
                     </TableHeader>
@@ -103,8 +102,15 @@ export default function CategoriesPage() {
                                     <TableCell>
                                         {category?.categoryName}
                                     </TableCell>
-                                    <TableCell>7.9</TableCell>
-                                    <TableCell>100</TableCell>
+                                    <TableCell className="truncate max-w-xs">
+                                        {category?.description}
+                                    </TableCell>
+                                    <TableCell>
+                                        {formatDate(category?.createdAt)}
+                                    </TableCell>
+                                    <TableCell>
+                                        {formatDate(category?.updatedAt)}
+                                    </TableCell>
                                     <TableCell className="flex items-center gap-2">
                                         <DropdownMenu modal={false}>
                                             <DropdownMenuTrigger asChild>
@@ -129,6 +135,7 @@ export default function CategoriesPage() {
                     </TableBody>
                 </Table>
             </div>
+            <DialogConfirmDelete />
         </div>
     )
 }

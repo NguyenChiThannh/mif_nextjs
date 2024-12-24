@@ -29,8 +29,6 @@ import { useGetRole } from "@/hooks/useGetRole";
 export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
     const router = useRouter();
     const { role } = useGetRole()
-    console.log('🚀 ~ MenuProfile ~ role:', role)
-    console.log('🚀 ~ MenuProfile ~ role:', role)
     const dispatch = useAppDispatch();
     const handleLogout = async () => {
         try {
