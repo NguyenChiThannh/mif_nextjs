@@ -125,13 +125,13 @@ export default function Movies() {
     return (
         <div className="bg-background p-6">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
+            <div className="flex items-center justify-end mb-6">
+                {/* <div className="flex items-center gap-4">
                     <Input
                         placeholder="Search movies..."
                         className="max-w-sm"
                     />
-                </div>
+                </div> */}
                 <Button onClick={() => router.push('/admin/dashboard/movies/create')}>
                     Add Movie
                 </Button>

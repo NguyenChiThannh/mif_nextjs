@@ -75,7 +75,9 @@ export default function CategoriesPage() {
                         <Button onClick={() => {
                             setIsOpenDialog(true)
                             setIdEdit(null)
-                        }}>Add</Button>
+                        }}>
+                            Add Category
+                        </Button>
                         <DialogCategory
                             isOpenDialog={isOpenDialog}
                             setIsOpenDialog={setIsOpenDialog}

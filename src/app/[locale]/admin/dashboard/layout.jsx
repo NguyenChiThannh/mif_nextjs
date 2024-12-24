@@ -1,5 +1,6 @@
 'use client';
 import HeaderAdmin from "@/components/header-admin";
+import { useGetRole } from "@/hooks/useGetRole";
 import { navDashboardMenuConfig } from "@/lib/navigationConfig";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
@@ -7,6 +8,7 @@ import { usePathname } from "next/navigation";
 
 export default function RootLayout({ children }) {
     const pathname = usePathname();
+    const { role } = useGetRole()
 
     const t = useTranslations('Dashboard.Navbar');
 
@@ -15,7 +17,7 @@ export default function RootLayout({ children }) {
             <HeaderAdmin />
             <div className="xl:px-36 lg:px-2 md:px-2 px-1 pt-24">
                 <div className="grid grid-cols-5 gap-4">
-                    <SidebarMenu t={t} pathname={pathname} />
+                    <SidebarMenu t={t} pathname={pathname} role={role} />
                     <div className="col-span-4">{children}</div>
                 </div>
             </div>
@@ -23,11 +25,15 @@ export default function RootLayout({ children }) {
     );
 }
 
-function SidebarMenu({ t, pathname }) {
+function SidebarMenu({ t, pathname, role }) {
+    console.log('🚀 ~ SidebarMenu ~ role:', role)
+    const getNavItems = role === 'ADMIN'
+        ? navDashboardMenuConfig.adminMenu(t) : role === 'CONTENT_CREATOR'
+            ? navDashboardMenuConfig.contentCreateMenu(t) : navDashboardMenuConfig.adminMenu(t)
     return (
         <div className="col-span-1">
             <div className="space-y-4 text-sm font-medium">
-                {navDashboardMenuConfig(t).map((item, index) => {
+                {getNavItems.map((item, index) => {
                     const { href, icon: Icon, title, active } = item;
                     return (
                         <Link

@@ -35,6 +35,7 @@ export const QUERY_KEY = {
     groupPosts: (groupId) => ['group_posts', { groupId }],
     postById: (postId) => ['detail_post', postId],
     allPosts: () => ['all_posts'],
+    allPostsTable: () => ['all_posts_table', { page, size }],
     // group_rules
     groupRules: (groupId) => ['group_rules', groupId],
     // movie Rating

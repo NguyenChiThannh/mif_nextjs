@@ -84,6 +84,8 @@
             "actor": "Diễn viên",
             "group": "Nhóm",
             "user": "Người dùng",
+            "post": "Bài viết",
+            "event": "Sự kiện",
             "analytics": "Phân tích"
         }
     },

@@ -1,23 +1,18 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Calendar, ChevronLeft, ChevronRight, Clock, Ellipsis, Eye, FilePen, Filter, House, LineChart, ListOrdered, MoreHorizontal, Newspaper, Package, Star, Tag, Trash, TrendingUp, User, Users } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuCheckboxItem, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
-import Link from "next/link"
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { actorApi, getTopActors } from '@/services/actorApi'
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { useRouter } from 'next/navigation'
-import { toast } from 'react-toastify'
 import DialogConfirmDelete from '@/components/dialog-confirm-delete'
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { groupsApi } from '@/services/groupsApi'
+import { MoreHorizontal } from 'lucide-react'
 
 
-export default function GroupsAdmin() {
+export default function PostsAdmin() {
     const [currentPage, setCurrentPage] = useState(0)
     const [pageSize] = useState(10)
 
@@ -36,16 +31,20 @@ export default function GroupsAdmin() {
                 header: 'Group Name',
             },
             {
-                accessorKey: 'owner.displayName',
+                accessorKey: 'groupType',
                 header: 'Owner',
             },
             {
-                accessorKey: 'groupType',
-                header: 'Group Type',
+                accessorKey: 'memberCount',
+                header: 'Title',
             },
             {
                 accessorKey: 'memberCount',
-                header: 'Member',
+                header: 'Content',
+            },
+            {
+                accessorKey: 'memberCount',
+                header: 'Vote Number',
             },
             {
                 accessorKey: 'weeklyPostCount',
@@ -68,6 +67,7 @@ export default function GroupsAdmin() {
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Block</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>

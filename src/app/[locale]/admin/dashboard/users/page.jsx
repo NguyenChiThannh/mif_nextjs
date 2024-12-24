@@ -61,8 +61,31 @@ export default function Users() {
             {
                 accessorKey: 'authorities',
                 header: 'Role',
-                cell: ({ row }) => row.getValue('authorities')?.[0]?.authority,
-            }
+                cell: ({ row }) => row.getValue('authorities')?.[row.getValue('authorities').length - 1]?.authority,
+            },
+            {
+                id: 'actions',
+                header: 'Actions',
+                enableSorting: false,
+                cell: ({ row }) => (
+                    <div className="flex items-center gap-2">
+                        <DropdownMenu modal={false}>
+                            <DropdownMenuTrigger asChild>
+                                <Button aria-haspopup="true" size="icon" variant="ghost">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                    <span className="sr-only">Toggle menu</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Ban</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Block</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Promote</DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                ),
+            },
             // {
             //     id: 'actions',
             //     header: 'Actions',

@@ -71,7 +71,7 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                     <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {
-                        role === 'ADMIN' && goToAdmin &&
+                        (role === 'ADMIN' || role === 'CONTENT_CREATOR') && goToAdmin &&
                         <DropdownMenuItem>
                             <ShieldCheck className="mr-2 h-4 w-4" />
                             <Link

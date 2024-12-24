@@ -30,7 +30,7 @@ export function MainCarousel() {
     }
 
     return (
-        <div className="relative rounded-lg overflow-hidden">
+        <div className="relative rounded-lg">
             <Carousel
                 opts={{ align: 'start', loop: true }}
                 plugins={[Autoplay({ delay: 3000 })]}
