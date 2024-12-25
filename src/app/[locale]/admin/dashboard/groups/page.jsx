@@ -15,11 +15,14 @@ import DialogConfirmDelete from '@/components/dialog-confirm-delete'
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { groupsApi } from '@/services/groupsApi'
+import DialogDetailGroup from '@/app/[locale]/admin/dashboard/groups/(components)/dialog-detail-group'
 
 
-export default function Actors() {
+export default function GroupsAdmin() {
     const [currentPage, setCurrentPage] = useState(0)
     const [pageSize] = useState(10)
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedGroup, setSelectedGroup] = useState(null);
 
     const router = useRouter();
 
@@ -29,11 +32,20 @@ export default function Actors() {
         setCurrentPage(newPage)
     }
 
+    const openDialog = (group) => {
+        setSelectedGroup(group);
+        setIsDialogOpen(true);
+    };
+
     const columns = useMemo(
         () => [
             {
                 accessorKey: 'groupName',
                 header: 'Group Name',
+            },
+            {
+                accessorKey: 'owner.displayName',
+                header: 'Owner',
             },
             {
                 accessorKey: 'groupType',
@@ -63,14 +75,14 @@ export default function Actors() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
                 ),
             },
         ],
-        [router]
+        []
     );
 
     const table = useReactTable({
@@ -187,6 +199,15 @@ export default function Actors() {
                 </div>
 
                 <DialogConfirmDelete />
+
+                {selectedGroup && (
+                    <DialogDetailGroup
+                        isOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        groupData={selectedGroup}
+                        router={router}
+                    />
+                )}
             </div>
         </div>
     )

@@ -55,9 +55,11 @@ export default function middleware(req) {
         return NextResponse.redirect(new URL('/sign-in', req.url));
     }
 
+    // List of roles allowed to access admin routes
+    const adminRoles = ['ADMIN', 'CONTENT_CREATOR', 'SUPER_ADMIN'];
 
-    // Prevent authenticated users (non-admin) from accessing admin routes
-    if (isAuth && role !== 'ADMIN' && pathname.startsWith('/admin')) {
+    // Prevent authenticated users (non-admin roles) from accessing admin routes
+    if (isAuth && !adminRoles.includes(role) && pathname.startsWith('/admin')) {
         return NextResponse.redirect(new URL('/', req.url));
     }
 
@@ -67,7 +69,7 @@ export default function middleware(req) {
     }
 
     // Allow admin users to access all routes
-    if (role === 'ADMIN') {
+    if (adminRoles.includes(role)) {
         return createMiddleware(routing)(req);
     }
 

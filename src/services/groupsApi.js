@@ -185,7 +185,6 @@ export const groupsApi = {
                 queryKey: QUERY_KEY.allGroups(page, size),
                 queryFn: findAllGroupsAsPage,
             })
-
         }
     },
     mutation: {

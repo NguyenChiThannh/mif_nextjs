@@ -1,64 +1,55 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { MoreHorizontal } from 'lucide-react'
 import React, { useMemo, useState } from 'react'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
+import { useRouter } from 'next/navigation'
+import DialogConfirmDelete from '@/components/dialog-confirm-delete'
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
-import { useRouter } from 'next/navigation'
-import { userApi } from '@/services/userApi'
-import { formatDate } from '@/lib/formatter'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
-import DialogDetailUser from '@/app/[locale]/admin/dashboard/users/(components)/dialog-detail-user'
+import { groupsApi } from '@/services/groupsApi'
+import { MoreHorizontal } from 'lucide-react'
 
-export default function Users() {
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(10);
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+export default function PostsAdmin() {
+    const [currentPage, setCurrentPage] = useState(0)
+    const [pageSize] = useState(10)
+
     const router = useRouter();
 
-    const { isLoading: isLoadingUsers, data: usersData } = userApi.query.useGetAllUsersTable(currentPage, pageSize);
+    const { isLoading: isLoadingGroups, data: groupsData } = groupsApi.query.useFindAllGroupsAsPage(currentPage, pageSize)
 
     const handlePageChange = (newPage) => {
-        setCurrentPage(newPage);
-    };
-
-    const openDialog = (user) => {
-        setSelectedUser(user);
-        setIsDialogOpen(true);
-    };
+        setCurrentPage(newPage)
+    }
 
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'email',
-                header: 'Email',
+                accessorKey: 'groupName',
+                header: 'Group Name',
             },
             {
-                accessorKey: 'displayName',
-                header: 'Display Name',
+                accessorKey: 'groupType',
+                header: 'Owner',
             },
             {
-                accessorKey: 'dob',
-                header: 'Day of birth',
-                cell: ({ row }) => formatDate(row.original.dob),
+                accessorKey: 'memberCount',
+                header: 'Title',
             },
             {
-                accessorKey: 'isActive',
-                header: 'isActive',
+                accessorKey: 'memberCount',
+                header: 'Content',
             },
             {
-                accessorKey: 'userType',
-                header: 'Type',
+                accessorKey: 'memberCount',
+                header: 'Vote Number',
             },
             {
-                accessorKey: 'authorities',
-                header: 'Role',
-                cell: ({ row }) => row.getValue('authorities')?.[row.getValue('authorities').length - 1]?.authority,
+                accessorKey: 'weeklyPostCount',
+                header: 'Post/week',
+                cell: ({ row }) => row.original?.weeklyPostCount || 0,
             },
             {
                 id: 'actions',
@@ -75,43 +66,40 @@ export default function Users() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
-                                <DropdownMenuItem>Ban</DropdownMenuItem>
-                                <DropdownMenuItem>Block</DropdownMenuItem>
-                                <DropdownMenuItem>Promote</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Block</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
                 ),
             },
         ],
-        []
+        [router]
     );
 
     const table = useReactTable({
-        data: usersData?.content || [],
+        data: groupsData?.content || [],
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
 
-    if (isLoadingUsers) return <Loading />;
+    if (isLoadingGroups) return <Loading />
 
     return (
         <div>
             <div className="bg-background p-6">
-                {/* Table */}
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => (
-                                    <TableHead
-                                        key={header.id}
-                                        className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
-                                    >
+                                    <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
                                         {header.isPlaceholder
                                             ? null
-                                            : flexRender(header.column.columnDef.header, header.getContext())}
+                                            : flexRender(
+                                                header.column.columnDef.header,
+                                                header.getContext()
+                                            )}
                                     </TableHead>
                                 ))}
                             </TableRow>
@@ -122,19 +110,19 @@ export default function Users() {
                             <TableRow key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
                                     </TableCell>
                                 ))}
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
-
-                {/* Pagination */}
                 <div className="mt-4">
                     <Pagination>
                         <PaginationContent>
-                            {/* Previous Button */}
                             <PaginationItem>
                                 <PaginationPrevious
                                     onClick={() => handlePageChange(currentPage - 1)}
@@ -143,9 +131,8 @@ export default function Users() {
                                 />
                             </PaginationItem>
 
-                            {/* Page Numbers */}
                             {(() => {
-                                const totalPages = usersData?.totalPages || 1;
+                                const totalPages = groupsData?.totalPages || 1;
                                 const pageNumbers = [];
 
                                 pageNumbers.push(0);
@@ -191,26 +178,20 @@ export default function Users() {
                                     );
                                 });
                             })()}
-                            {/* Next Button */}
+
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={currentPage >= (usersData?.totalPages - 1)}
-                                    className={currentPage >= (usersData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    disabled={currentPage >= (groupsData?.totalPages - 1)}
+                                    className={currentPage >= (groupsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
                                 />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
                 </div>
 
-                {selectedUser && (
-                    <DialogDetailUser
-                        isOpen={isDialogOpen}
-                        onClose={() => setIsDialogOpen(false)}
-                        userData={selectedUser}
-                    />
-                )}
+                <DialogConfirmDelete />
             </div>
         </div>
-    );
+    )
 }
