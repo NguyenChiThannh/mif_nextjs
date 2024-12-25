@@ -11,10 +11,13 @@ import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
+import DialogDetailActor from '@/app/[locale]/admin/dashboard/actors/(components)/dialog-detail-actor'
 
 export default function Actors() {
     const [currentPage, setCurrentPage] = useState(0)
     const [pageSize] = useState(10)
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedActor, setSelectedActor] = useState(null);
     const router = useRouter();
 
     const { isLoading: isLoadingActors, data: actorsData } = actorApi.query.useGetTopActors(currentPage, pageSize, true)
@@ -24,6 +27,11 @@ export default function Actors() {
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage)
     }
+
+    const openDialog = (actor) => {
+        setSelectedActor(actor);
+        setIsDialogOpen(true);
+    };
 
     const handleDeleteActor = (actorId) => {
         confirmDelete('', (result) => {
@@ -69,7 +77,7 @@ export default function Actors() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
                             </DropdownMenuContent>
@@ -78,7 +86,7 @@ export default function Actors() {
                 ),
             },
         ],
-        [router]
+        []
     );
 
     const table = useReactTable({
@@ -215,6 +223,16 @@ export default function Actors() {
                 </div>
 
                 <DialogConfirmDelete />
+
+                {selectedActor && (
+                    <DialogDetailActor
+                        isOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        actorData={selectedActor}
+                        router={router}
+                    />
+                )}
+
             </div>
         </div>
     )

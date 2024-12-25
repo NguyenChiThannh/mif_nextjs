@@ -3,12 +3,11 @@ import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-
 import Loading from '@/components/loading';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { formatDate } from '@/lib/formatter';
 import { movieApi } from '@/services/movieApi';
 import { flexRender, getCoreRowModel, useReactTable, getSortedRowModel } from '@tanstack/react-table';
-import { MoreHorizontal, ArrowUpDown } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
 import {
@@ -19,11 +18,14 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination"
+import DialogDetailMovie from '@/app/[locale]/admin/dashboard/movies/(components)/dialog-detail-movie';
 
 export default function Movies() {
     const router = useRouter();
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize] = useState(7);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedMovie, setSelectedMovie] = useState(null);
 
     const {
         data: moviesData,
@@ -43,6 +45,11 @@ export default function Movies() {
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
+    };
+
+    const openDialog = (user) => {
+        setSelectedMovie(user);
+        setIsDialogOpen(true);
     };
 
     const columns = useMemo(
@@ -96,7 +103,7 @@ export default function Movies() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/movies/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/add/photo?id=${row.original.id}`)}>Add Image</DropdownMenuItem>
@@ -244,6 +251,15 @@ export default function Movies() {
             </div>
 
             <DialogConfirmDelete />
+
+            {selectedMovie && (
+                <DialogDetailMovie
+                    isOpen={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                    movieData={selectedMovie}
+                    router={router}
+                />
+            )}
         </div>
     );
 

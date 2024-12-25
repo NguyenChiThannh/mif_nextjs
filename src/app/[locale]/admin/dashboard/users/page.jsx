@@ -6,34 +6,31 @@ import React, { useMemo, useState } from 'react'
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel } from "@/components/ui/dropdown-menu"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
-import { actorApi } from '@/services/actorApi'
-import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
 import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { useRouter } from 'next/navigation'
 import { userApi } from '@/services/userApi'
 import { formatDate } from '@/lib/formatter'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import DialogDetailUser from '@/app/[locale]/admin/dashboard/users/(components)/dialog-detail-user'
 
 export default function Users() {
-    const [currentPage, setCurrentPage] = useState(0)
-    const [pageSize] = useState(10)
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize] = useState(10);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const router = useRouter();
 
-    const { isLoading: isLoadingUsers, data: usersData } = userApi.query.useGetAllUsersTable(currentPage, pageSize)
-    console.log('🚀 ~ Users ~ usersData:', usersData)
+    const { isLoading: isLoadingUsers, data: usersData } = userApi.query.useGetAllUsersTable(currentPage, pageSize);
 
     const handlePageChange = (newPage) => {
-        setCurrentPage(newPage)
-    }
+        setCurrentPage(newPage);
+    };
 
-    // const hanleDeleteActor = (actorId) => {
-    //     confirmDelete('', (result) => {
-    //         if (result) {
-    //             deleteMutation.mutate(actorId);
-    //         }
-    //     });
-
-    // };
+    const openDialog = (user) => {
+        setSelectedUser(user);
+        setIsDialogOpen(true);
+    };
 
     const columns = useMemo(
         () => [
@@ -78,39 +75,17 @@ export default function Users() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Ban</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Block</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Promote</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
+                                <DropdownMenuItem>Ban</DropdownMenuItem>
+                                <DropdownMenuItem>Block</DropdownMenuItem>
+                                <DropdownMenuItem>Promote</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
                 ),
             },
-            // {
-            //     id: 'actions',
-            //     header: 'Actions',
-            //     enableSorting: false,
-            //     cell: ({ row }) => (
-            //         <div className="flex items-center gap-2">
-            //             <DropdownMenu modal={false}>
-            //                 <DropdownMenuTrigger asChild>
-            //                     <Button aria-haspopup="true" size="icon" variant="ghost">
-            //                         <MoreHorizontal className="h-4 w-4" />
-            //                         <span className="sr-only">Toggle menu</span>
-            //                     </Button>
-            //                 </DropdownMenuTrigger>
-            //                 <DropdownMenuContent align="end">
-            //                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            //                     <DropdownMenuItem onClick={() => router.push(`/actor/${row.original.id}`)}>View</DropdownMenuItem>
-            //                     <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/actors/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
-            //                     <DropdownMenuItem onClick={() => hanleDeleteActor(row.original.id)}>Delete</DropdownMenuItem>
-            //                 </DropdownMenuContent>
-            //             </DropdownMenu>
-            //         </div>
-            //     ),
-            // },
         ],
-        [router]
+        []
     );
 
     const table = useReactTable({
@@ -119,7 +94,7 @@ export default function Users() {
         getCoreRowModel: getCoreRowModel(),
     });
 
-    if (isLoadingUsers) return <Loading />
+    if (isLoadingUsers) return <Loading />;
 
     return (
         <div>
@@ -132,15 +107,11 @@ export default function Users() {
                                 {headerGroup.headers.map((header) => (
                                     <TableHead
                                         key={header.id}
-                                        className={header.column.getCanSort()
-                                            ? "cursor-pointer select-none"
-                                            : ""}>
+                                        className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
+                                    >
                                         {header.isPlaceholder
                                             ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
+                                            : flexRender(header.column.columnDef.header, header.getContext())}
                                     </TableHead>
                                 ))}
                             </TableRow>
@@ -151,20 +122,19 @@ export default function Users() {
                             <TableRow key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
+                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </TableCell>
                                 ))}
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
+
                 {/* Pagination */}
                 <div className="mt-4">
                     <Pagination>
                         <PaginationContent>
+                            {/* Previous Button */}
                             <PaginationItem>
                                 <PaginationPrevious
                                     onClick={() => handlePageChange(currentPage - 1)}
@@ -173,6 +143,7 @@ export default function Users() {
                                 />
                             </PaginationItem>
 
+                            {/* Page Numbers */}
                             {(() => {
                                 const totalPages = usersData?.totalPages || 1;
                                 const pageNumbers = [];
@@ -220,6 +191,7 @@ export default function Users() {
                                     );
                                 });
                             })()}
+                            {/* Next Button */}
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => handlePageChange(currentPage + 1)}
@@ -231,8 +203,14 @@ export default function Users() {
                     </Pagination>
                 </div>
 
-                <DialogConfirmDelete />
+                {selectedUser && (
+                    <DialogDetailUser
+                        isOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        userData={selectedUser}
+                    />
+                )}
             </div>
         </div>
-    )
+    );
 }
