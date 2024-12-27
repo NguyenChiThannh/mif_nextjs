@@ -248,6 +248,8 @@
         "update_category_successful": "Cập nhật category thành công",
         "update_category_failed": "Cập nhật category thất bại",
         "update_user_info_successful": "Cập nhật thông tin người dùng thành công",
+        "change_user_role_successful": "Đổi role người dùng thành công",
+        "block_user_successful": "Cập nhật người dùng thành công",
         "create_post_successful": "Tạo bài viết thành công",
         "copy_link_successful": "Liên kết đã được sao chép!",
         "copy_link_failed": "Liên kết sao chép thất bại",

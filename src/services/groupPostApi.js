@@ -49,6 +49,7 @@ const getAllPostsTable = async ({ queryKey }) => {
         params: {
             page,
             size,
+            pageView: true,
         }
     })
     return res.data

@@ -102,10 +102,11 @@ export default function ActionsMovie() {
     const { data: allActors, isLoading: isLoadingActors } = actorApi.query.useGetTopActors(0, 100)
     const createMovieMutation = movieApi.mutation.useCreateMovie()
     const updateMovieMutation = movieApi.mutation.useUpdateMovie()
+    const addCastMutation = movieApi.mutation.useAddCast()
 
     if (isLoadingMovieCategories || isLoadingActors || isLoadingMovie) return <Loading />
 
-    const initGernes = !!idEdit ? movie.genre?.map(gerne => {
+    const initGernes = !!idEdit ? movie?.genre?.map(gerne => {
         return {
             value: gerne.id,
             label: gerne.categoryName,
@@ -135,6 +136,11 @@ export default function ActionsMovie() {
                 movieData.posterUrl = uploadedImageUrls[0];
             }
 
+            addCastMutation.mutate({
+                movieId: movieData.movieId,
+                castIds: movieData.castIds,
+            })
+
             updateMovieMutation.mutate(movieData, {
                 onSuccess: () => {
                     route.push('/admin/dashboard/movies');
@@ -143,6 +149,7 @@ export default function ActionsMovie() {
         }
         else {
             const uploadedImageUrls = await Promise.all(images.map((image) => uploadImage(image)));
+
             createMovieMutation.mutate({
                 ...data,
                 posterUrl: uploadedImageUrls[0],

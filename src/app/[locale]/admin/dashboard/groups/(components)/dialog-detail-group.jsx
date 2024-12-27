@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/formatter';
 
 export default function DialogDetailGroup({ isOpen, onClose, groupData, router }) {
-    console.log('🚀 ~ DialogDetailGroup ~ groupData:', groupData)
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>

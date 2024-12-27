@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { formatDate } from '@/lib/formatter';
 
 export default function DialogDetailMovie({ isOpen, onClose, movieData, router }) {
-    console.log('🚀 ~ DialogDetailMovie ~ movieData:', movieData)
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent>

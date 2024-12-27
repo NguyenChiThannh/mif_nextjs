@@ -68,7 +68,6 @@ export function DialogCreateEvent({ groupId }) {
             startDate: startDateIsoString,
             eventPicture: uploadedImageUrls[0],
         };
-        console.log('🚀 ~ onSubmit ~ formData:', formData)
 
         createEventMutation.mutate(formData, {
             onSuccess: () => {

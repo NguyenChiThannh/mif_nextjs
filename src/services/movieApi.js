@@ -79,6 +79,12 @@ const getMovieImages = async (movieId) => {
     return res.data
 }
 
+const addCast = async (data) => {
+    const { movieId, castIds } = data
+    const res = await privateApi.post(`/movies/${movieId}/cast`, castIds)
+    return res.data
+}
+
 const updateMovieImages = async (data) => {
     const { movieId, ...updateData } = data
     const res = await privateApi.put(`/movies/${movieId}/images`, updateData)
@@ -176,6 +182,11 @@ export const movieApi = {
                 onSuccess: () => {
                     toast.success(t('update_movie_successful'))
                 }
+            })
+        },
+        useAddCast() {
+            return useMutation({
+                mutationFn: addCast,
             })
         }
     }
