@@ -99,7 +99,7 @@ export default function Users() {
                                     onClick={() => openDialogDetail(row.original)}>
                                     View
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>Ban</DropdownMenuItem>
+                                {/* <DropdownMenuItem>Ban</DropdownMenuItem> */}
                                 <DropdownMenuItem
                                     onClick={() => row.original.accountNonLocked ? handleBlockUser(row.original.id, true) : handleBlockUser(row.original.id, false)}>
                                     {row.original.accountNonLocked ? 'Block' : 'UnBlock'}
