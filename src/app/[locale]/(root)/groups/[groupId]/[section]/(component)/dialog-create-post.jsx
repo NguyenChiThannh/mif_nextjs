@@ -44,7 +44,6 @@ export default function CreatePostDialog({ groupId }) {
     if (isLoading) return <Loading />
 
     const onSubmit = async (data) => {
-        console.log('Here')
         setIsLoading(true)
         const mediaUrls = await Promise.all(images.map((image) => uploadImage(image)));
 

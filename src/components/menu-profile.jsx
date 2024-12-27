@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { userApi } from "@/services/userApi";
 import { useGetRole } from "@/hooks/useGetRole";
+import { Badge } from "@/components/ui/badge";
 
 export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
     const router = useRouter();
@@ -60,6 +61,7 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
 
     return (
         <>
+            {admin && <p className="text-sm font-semibold">{data?.displayName}</p>}
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
                     <Avatar className="w-8 h-8 flex items-center justify-center object-contain">
@@ -126,6 +128,13 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
+            {
+                admin &&
+                <>
+                    {role === 'ADMIN' && <Badge > ADMIN </Badge>}
+                    {role === 'CONTENT_CREATOR' && <Badge > CONTENT_CREATOR </Badge>}
+                </>
+            }
         </>
     )
 }

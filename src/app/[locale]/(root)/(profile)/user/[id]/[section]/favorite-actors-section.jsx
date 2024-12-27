@@ -4,7 +4,6 @@ import { favoriteActorsApi } from '@/services/favoriteActorsApi';
 import React from 'react'
 
 export default function FavoriteActorsSection() {
-    console.log('Here')
     const {
         data,
         fetchNextPage,

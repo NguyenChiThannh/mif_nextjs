@@ -13,24 +13,39 @@ import { userApi } from '@/services/userApi'
 import { formatDate } from '@/lib/formatter'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import DialogDetailUser from '@/app/[locale]/admin/dashboard/users/(components)/dialog-detail-user'
+import DialogPromoteUser from '@/app/[locale]/admin/dashboard/users/(components)/dialog-promote-user'
 
 export default function Users() {
     const [currentPage, setCurrentPage] = useState(0);
     const [pageSize] = useState(10);
     const [selectedUser, setSelectedUser] = useState(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const router = useRouter();
+    const [isDialogDetailOpen, setIsDialogDetailOpen] = useState(false);
+    const [isDialogPromoteOpen, setIsDialogPromoteOpen] = useState(false);
 
     const { isLoading: isLoadingUsers, data: usersData } = userApi.query.useGetAllUsersTable(currentPage, pageSize);
+    const blockUserMutation = userApi.mutation.useSetAccountStatus()
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
     };
 
-    const openDialog = (user) => {
+    const openDialogDetail = (user) => {
         setSelectedUser(user);
-        setIsDialogOpen(true);
+        setIsDialogDetailOpen(true);
     };
+
+    const openDialogPromote = (user) => {
+        setSelectedUser(user);
+        setIsDialogPromoteOpen(true);
+    };
+
+    const handleBlockUser = (userId, isLocked) => {
+        blockUserMutation.mutate({
+            userId,
+            isLocked
+        })
+
+    }
 
     const columns = useMemo(
         () => [
@@ -48,17 +63,22 @@ export default function Users() {
                 cell: ({ row }) => formatDate(row.original.dob),
             },
             {
-                accessorKey: 'isActive',
-                header: 'isActive',
+                accessorKey: 'enabled',
+                header: 'enabled',
             },
             {
                 accessorKey: 'userType',
                 header: 'Type',
             },
             {
+                accessorKey: 'accountNonLocked',
+                header: 'isLock',
+                cell: ({ row }) => row.original.accountNonLocked ? 'Unlocked' : 'Locked',
+            },
+            {
                 accessorKey: 'authorities',
                 header: 'Role',
-                cell: ({ row }) => row.getValue('authorities')?.[row.getValue('authorities').length - 1]?.authority,
+                cell: ({ row }) => row.getValue('authorities')?.[row.getValue('authorities').length - 1]?.authority.replace('ROLE_', ''),
             },
             {
                 id: 'actions',
@@ -75,10 +95,19 @@ export default function Users() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
-                                <DropdownMenuItem>Ban</DropdownMenuItem>
-                                <DropdownMenuItem>Block</DropdownMenuItem>
-                                <DropdownMenuItem>Promote</DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => openDialogDetail(row.original)}>
+                                    View
+                                </DropdownMenuItem>
+                                {/* <DropdownMenuItem>Ban</DropdownMenuItem> */}
+                                <DropdownMenuItem
+                                    onClick={() => row.original.accountNonLocked ? handleBlockUser(row.original.id, true) : handleBlockUser(row.original.id, false)}>
+                                    {row.original.accountNonLocked ? 'Block' : 'UnBlock'}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => openDialogPromote(row.original)}>
+                                    Promote
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -205,11 +234,17 @@ export default function Users() {
 
                 {selectedUser && (
                     <DialogDetailUser
-                        isOpen={isDialogOpen}
-                        onClose={() => setIsDialogOpen(false)}
+                        isOpen={isDialogDetailOpen}
+                        onClose={() => setIsDialogDetailOpen(false)}
                         userData={selectedUser}
                     />
                 )}
+
+                <DialogPromoteUser
+                    isOpen={isDialogPromoteOpen}
+                    onClose={() => setIsDialogPromoteOpen(false)}
+                    userData={selectedUser}
+                />
             </div>
         </div>
     );

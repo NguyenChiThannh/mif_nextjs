@@ -26,7 +26,6 @@ export default function RootLayout({ children }) {
 }
 
 function SidebarMenu({ t, pathname, role }) {
-    console.log('🚀 ~ SidebarMenu ~ role:', role)
     const getNavItems = role === 'ADMIN'
         ? navDashboardMenuConfig.adminMenu(t) : role === 'CONTENT_CREATOR'
             ? navDashboardMenuConfig.contentCreateMenu(t) : navDashboardMenuConfig.adminMenu(t)

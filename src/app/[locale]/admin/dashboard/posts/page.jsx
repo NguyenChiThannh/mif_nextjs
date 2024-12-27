@@ -10,46 +10,50 @@ import Loading from '@/components/loading'
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { groupsApi } from '@/services/groupsApi'
 import { MoreHorizontal } from 'lucide-react'
+import { groupPostApi } from '@/services/groupPostApi'
+import DialogDetailPost from '@/app/[locale]/admin/dashboard/posts/(components)/dialog-detail-post'
 
 
 export default function PostsAdmin() {
     const [currentPage, setCurrentPage] = useState(0)
     const [pageSize] = useState(10)
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [selectedPost, setSelectedPost] = useState(null);
 
     const router = useRouter();
 
-    const { isLoading: isLoadingGroups, data: groupsData } = groupsApi.query.useFindAllGroupsAsPage(currentPage, pageSize)
+    const { isLoading: isLoadingPosts, data: postsData } = groupPostApi.query.useGetAllPostsTable(currentPage, pageSize)
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage)
     }
 
+    const openDialog = (user) => {
+        setSelectedPost(user);
+        setIsDialogOpen(true);
+    };
+
     const columns = useMemo(
         () => [
             {
-                accessorKey: 'groupName',
-                header: 'Group Name',
-            },
-            {
-                accessorKey: 'groupType',
-                header: 'Owner',
-            },
-            {
-                accessorKey: 'memberCount',
+                accessorKey: 'title',
                 header: 'Title',
             },
             {
-                accessorKey: 'memberCount',
+                accessorKey: 'content',
                 header: 'Content',
+                className: '',
+                cell: ({ row }) => (
+                    <div className="max-w-xs">{row.getValue('content')}</div>
+                )
             },
             {
-                accessorKey: 'memberCount',
+                accessorKey: 'owner.displayName',
+                header: 'Owner',
+            },
+            {
+                accessorKey: 'voteNumber',
                 header: 'Vote Number',
-            },
-            {
-                accessorKey: 'weeklyPostCount',
-                header: 'Post/week',
-                cell: ({ row }) => row.original?.weeklyPostCount || 0,
             },
             {
                 id: 'actions',
@@ -66,7 +70,7 @@ export default function PostsAdmin() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => router.push(`/groups/${row.original.id}`)}>Block</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -78,12 +82,12 @@ export default function PostsAdmin() {
     );
 
     const table = useReactTable({
-        data: groupsData?.content || [],
+        data: postsData?.content || [],
         columns,
         getCoreRowModel: getCoreRowModel(),
     });
 
-    if (isLoadingGroups) return <Loading />
+    if (isLoadingPosts) return <Loading />
 
     return (
         <div>
@@ -132,7 +136,7 @@ export default function PostsAdmin() {
                             </PaginationItem>
 
                             {(() => {
-                                const totalPages = groupsData?.totalPages || 1;
+                                const totalPages = postsData?.totalPages || 1;
                                 const pageNumbers = [];
 
                                 pageNumbers.push(0);
@@ -182,8 +186,8 @@ export default function PostsAdmin() {
                             <PaginationItem>
                                 <PaginationNext
                                     onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={currentPage >= (groupsData?.totalPages - 1)}
-                                    className={currentPage >= (groupsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                    disabled={currentPage >= (postsData?.totalPages - 1)}
+                                    className={currentPage >= (postsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
                                 />
                             </PaginationItem>
                         </PaginationContent>
@@ -191,6 +195,15 @@ export default function PostsAdmin() {
                 </div>
 
                 <DialogConfirmDelete />
+
+                {selectedPost && (
+                    <DialogDetailPost
+                        isOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        postData={selectedPost}
+                        router={router}
+                    />
+                )}
             </div>
         </div>
     )
