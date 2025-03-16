@@ -225,6 +225,50 @@
         "director_actor": "Diễn viên",
         "no_matching_results_found": "Không có kế quả tìm kiếm phù hợp"
     },
+    "Settings": {
+        "title": "Cài đặt",
+        "title_description": "Quản lý cài đặt và tùy chọn tài khoản của bạn.",
+        "navbar": {
+            "account": "Tài khoản",
+            "notifications": "Thông báo",
+            "appearance": "Giao diện",
+            "security": "Bảo mật"
+        },
+        "account_section": {
+            "profile": "Hồ sơ",
+            "profile_description": "Cập nhật thông tin cá nhân của bạn và cách người khác nhìn thấy bạn trên website.",
+            "upload_photo_button": "Tải ảnh mới",
+            "format_file_updload_photo": "JPG, GIF or PNG. 1MB max.",
+            "first_name": "Họ",
+            "last_name": "Tên",
+            "email": "Email",
+            "bio": "Giới thiệu",
+            "save_button": "Lưu"
+        },
+        "appearance": {
+            "title": "Giao diện",
+            "title_description": "Tùy chỉnh giao diện của ứng dụng.",
+            "light": "Sáng",
+            "dark": "Tối",
+            "system": "Hệ thống"
+        },
+        "security": {
+            "password": "Mật khẩu",
+            "password_description": "Thay đổi mật khẩu và quản lý bảo mật tài khoản của bạn.",
+            "current_password": "Mật khẩu hiện tại",
+            "new_password": "Mật khẩu mới",
+            "confirm_password": "Xác nhận mật khẩu",
+            "save_button": "Lưu",
+            "two_factor_authentication": "Xác thực 2 bước",
+            "two_factor_authentication_description": "Bảo vệ tài khoản của bạn bằng lớp bảo mật bổ sung.",
+            "set_up_two_factor_authentication": "Cài đặt bảo mật 2 bước",
+            "sessions": "Phiên đăng nhập",
+            "sessions_description": "Quản lý các phiên và thiết bị đang hoạt động của bạn.",
+            "log_out_of_all_devices": "Đăng xuất tất cả thiết bị",
+            "delete_account": "Xóa tài khoản",
+            "delete_account_description": "Xóa vĩnh viễn tài khoản và toàn bộ nội dung của bạn. Không thể hoàn tác hành động này."
+        }
+    },
     "Toast": {
         "register_successful": "Mã OTP được gửi về Email. Vui lòng nhập để xác nhận tài khoản.",
         "login_successful": "Đăng nhập thành công",

@@ -22,9 +22,6 @@ export const resetPasswordApi = {
         useRequestPasswordReset() {
             return useMutation({
                 mutationFn: requestPasswordReset,
-                onSuccess: () => {
-
-                }
             })
         },
         useVerifyRequestPassOTP() {

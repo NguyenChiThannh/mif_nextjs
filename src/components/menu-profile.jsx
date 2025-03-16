@@ -110,8 +110,13 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                                     <span>Thanh toán</span>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                    <Settings className="mr-2 h-4 w-4" />
-                                    <span>Cài đặt</span>
+                                    <Link
+                                        href={`/setting`}
+                                        className="w-full h-full flex"
+                                    >
+                                        <Settings className="mr-2 h-4 w-4" />
+                                        <span>Cài đặt</span>
+                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
