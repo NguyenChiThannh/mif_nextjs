@@ -4,7 +4,7 @@ import Title from '@/components/title'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { adminStatisticsApi } from '@/services/adminStatisticsApi'
 import { Clock, FileText, Film, Heart, Star, Tag, TrendingUp, UserPlus, Users, Zap, Download } from 'lucide-react'
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState } from 'react'
 import {
     LineChart,
     Line,
@@ -27,129 +27,50 @@ import {
 } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import * as XLSX from 'xlsx'
-import { useTheme } from 'next-themes'
+import { monthlyData, dataTypeOptions } from '@/app/[locale]/admin/dashboard/home/mock-data'
+import StatsCard from '@/app/[locale]/admin/dashboard/home/(components)/stats-card'
 
 export default function DashboardHome() {
     const { data, isLoading } = adminStatisticsApi.query.useGetStatistics()
     const [selectedDataType, setSelectedDataType] = useState('users')
     const [chartType, setChartType] = useState('line')
-    const themeColors = {
-        primary: 'hsl(346.8, 77.2%, 49.8%)',
-        border: 'hsl(240, 5.9%, 90%)',
-        background: 'hsl(0, 0%, 100%)',
-        shadow: 'hsl(240, 5.9%, 90%)',
-        text: 'hsl(240, 10%, 3.9%)',
-        muted: 'hsl(240, 4.8%, 90%)'
+    const [selectedYear, setSelectedYear] = useState('2023')
 
-        // primary: '#8884d8',
-        // border: '#f0f0f0',
-        // background: 'white',
-        // shadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-        // text: '#333',
-        // muted: '#888'
+    // Sử dụng các biến CSS từ theme của bạn
+    const themeColors = {
+        primary: 'var(--primary)',
+        primaryForeground: 'var(--primary-foreground)',
+        secondary: 'var(--secondary)',
+        secondaryForeground: 'var(--secondary-foreground)',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        muted: 'var(--muted)',
+        mutedForeground: 'var(--muted-foreground)',
+        accent: 'var(--accent)',
+        accentForeground: 'var(--accent-foreground)',
+        border: 'var(--border)',
+        card: 'var(--card)',
+        cardForeground: 'var(--card-foreground)'
     };
 
-
-    // Giả lập dữ liệu theo tháng cho các loại thống kê
-    const monthlyData = {
-        users: [
-            { month: 'Tháng 1', count: 120 },
-            { month: 'Tháng 2', count: 150 },
-            { month: 'Tháng 3', count: 200 },
-            { month: 'Tháng 4', count: 180 },
-            { month: 'Tháng 5', count: 220 },
-            { month: 'Tháng 6', count: 250 },
-            { month: 'Tháng 7', count: 280 },
-            { month: 'Tháng 8', count: 310 },
-            { month: 'Tháng 9', count: 340 },
-            { month: 'Tháng 10', count: 360 },
-            { month: 'Tháng 11', count: 390 },
-            { month: 'Tháng 12', count: data?.totalUser || 400 },
-        ],
-        posts: [
-            { month: 'Tháng 1', count: 50 },
-            { month: 'Tháng 2', count: 65 },
-            { month: 'Tháng 3', count: 80 },
-            { month: 'Tháng 4', count: 95 },
-            { month: 'Tháng 5', count: 110 },
-            { month: 'Tháng 6', count: 125 },
-            { month: 'Tháng 7', count: 140 },
-            { month: 'Tháng 8', count: 155 },
-            { month: 'Tháng 9', count: 170 },
-            { month: 'Tháng 10', count: 185 },
-            { month: 'Tháng 11', count: 200 },
-            { month: 'Tháng 12', count: data?.totalPost || 215 },
-        ],
-        groups: [
-            { month: 'Tháng 1', count: 10 },
-            { month: 'Tháng 2', count: 15 },
-            { month: 'Tháng 3', count: 20 },
-            { month: 'Tháng 4', count: 25 },
-            { month: 'Tháng 5', count: 30 },
-            { month: 'Tháng 6', count: 35 },
-            { month: 'Tháng 7', count: 40 },
-            { month: 'Tháng 8', count: 45 },
-            { month: 'Tháng 9', count: 50 },
-            { month: 'Tháng 10', count: 55 },
-            { month: 'Tháng 11', count: 60 },
-            { month: 'Tháng 12', count: data?.totalGroup || 65 },
-        ],
-        movies: [
-            { month: 'Tháng 1', count: 30 },
-            { month: 'Tháng 2', count: 40 },
-            { month: 'Tháng 3', count: 50 },
-            { month: 'Tháng 4', count: 60 },
-            { month: 'Tháng 5', count: 70 },
-            { month: 'Tháng 6', count: 80 },
-            { month: 'Tháng 7', count: 90 },
-            { month: 'Tháng 8', count: 100 },
-            { month: 'Tháng 9', count: 110 },
-            { month: 'Tháng 10', count: 120 },
-            { month: 'Tháng 11', count: 130 },
-            { month: 'Tháng 12', count: data?.totalMovie || 140 },
-        ],
-        ratings: [
-            { month: 'Tháng 1', count: 200 },
-            { month: 'Tháng 2', count: 250 },
-            { month: 'Tháng 3', count: 300 },
-            { month: 'Tháng 4', count: 350 },
-            { month: 'Tháng 5', count: 400 },
-            { month: 'Tháng 6', count: 450 },
-            { month: 'Tháng 7', count: 500 },
-            { month: 'Tháng 8', count: 550 },
-            { month: 'Tháng 9', count: 600 },
-            { month: 'Tháng 10', count: 650 },
-            { month: 'Tháng 11', count: 700 },
-            { month: 'Tháng 12', count: data?.totalRatingMovie || 750 },
-        ],
-        actors: [
-            { month: 'Tháng 1', count: 20 },
-            { month: 'Tháng 2', count: 25 },
-            { month: 'Tháng 3', count: 30 },
-            { month: 'Tháng 4', count: 35 },
-            { month: 'Tháng 5', count: 40 },
-            { month: 'Tháng 6', count: 45 },
-            { month: 'Tháng 7', count: 50 },
-            { month: 'Tháng 8', count: 55 },
-            { month: 'Tháng 9', count: 60 },
-            { month: 'Tháng 10', count: 65 },
-            { month: 'Tháng 11', count: 70 },
-            { month: 'Tháng 12', count: data?.totalActor || 75 },
-        ],
-    }
-
-    const dataTypeOptions = [
-        { value: 'users', label: 'Người dùng' },
-        { value: 'posts', label: 'Bài viết' },
-        { value: 'groups', label: 'Nhóm' },
-        { value: 'movies', label: 'Phim' },
-        { value: 'ratings', label: 'Đánh giá' },
-        { value: 'actors', label: 'Diễn viên' },
+    // Danh sách các năm để chọn
+    const yearOptions = [
+        { value: '2021', label: '2021' },
+        { value: '2022', label: '2022' },
+        { value: '2023', label: '2023' },
+        { value: '2024', label: '2024' },
+        { value: '2025', label: '2025' },
     ]
 
+    // Lọc dữ liệu theo năm đã chọn
+    const getFilteredData = () => {
+        // Trong thực tế, bạn sẽ lọc dữ liệu theo năm từ API
+        return monthlyData[selectedDataType]
+    }
+
     const handleExportCSV = () => {
-        const currentData = monthlyData[selectedDataType]
-        let csvContent = "data:text/csv;charset=utf-8,Tháng,Số lượng\n"
+        const currentData = getFilteredData()
+        let csvContent = `data:text/csv;charset=utf-8,Tháng,Số lượng (${selectedYear})\n`
 
         currentData.forEach(item => {
             csvContent += `${item.month},${item.count}\n`
@@ -158,40 +79,43 @@ export default function DashboardHome() {
         const encodedUri = encodeURI(csvContent)
         const link = document.createElement("a")
         link.setAttribute("href", encodedUri)
-        link.setAttribute("download", `thong_ke_${selectedDataType}_theo_thang.csv`)
+        link.setAttribute("download", `thong_ke_${selectedDataType}_${selectedYear}.csv`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
     }
 
     const handleExportExcel = () => {
-        const currentData = monthlyData[selectedDataType]
+        const currentData = getFilteredData()
         const worksheet = XLSX.utils.json_to_sheet(currentData)
         const workbook = XLSX.utils.book_new()
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Thống kê theo tháng")
-        XLSX.writeFile(workbook, `thong_ke_${selectedDataType}_theo_thang.xlsx`)
+        XLSX.utils.book_append_sheet(workbook, worksheet, `Thống kê ${selectedYear}`)
+        XLSX.writeFile(workbook, `thong_ke_${selectedDataType}_${selectedYear}.xlsx`)
     }
 
     if (isLoading) return <Loading />
 
     return (
         <div>
-            <div className='p-4 '>
+            <div className='p-4'>
                 <Title title={'Dashboard'} />
             </div>
+
+            {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                <UserStats data={data} />
-                <PostStats data={data} />
-                <GroupStats data={data} />
-                <MovieStats data={data} />
-                <RatingStats data={data} />
-                <ActorStats data={data} />
+                <StatsCard type="user" count={data.totalUser} />
+                <StatsCard type="post" count={data.totalPost} />
+                <StatsCard type="group" count={data.totalGroup} />
+                <StatsCard type="movie" count={data.totalMovie} />
+                <StatsCard type="rating" count={data.totalRatingMovie} />
+                <StatsCard type="actor" count={data.totalActor} />
             </div>
 
-            {/* Phần biểu đồ phân tích */}
+            {/* Chart Section */}
             <div className="p-4">
-                <Card className="w-full">
-                    <CardHeader className="pb-6">
+                <Card>
+                    <CardHeader className="pb-6 border-b">
+                        {/* Title */}
                         <div className="flex flex-col space-y-1.5">
                             <CardTitle className="text-xl font-semibold">Phân tích dữ liệu theo tháng</CardTitle>
                             <p className="text-sm text-muted-foreground">
@@ -199,7 +123,8 @@ export default function DashboardHome() {
                             </p>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                            {/* Data filter */}
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Loại dữ liệu</label>
                                 <Select value={selectedDataType} onValueChange={setSelectedDataType}>
@@ -216,6 +141,24 @@ export default function DashboardHome() {
                                 </Select>
                             </div>
 
+                            {/* Select Year */}
+                            <div className="space-y-2">
+                                <label className="text-sm font-medium">Năm</label>
+                                <Select value={selectedYear} onValueChange={setSelectedYear}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="Chọn năm" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {yearOptions.map(option => (
+                                            <SelectItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Chart Type */}
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Kiểu biểu đồ</label>
                                 <Tabs defaultValue="line" className="w-full" onValueChange={setChartType}>
@@ -236,6 +179,7 @@ export default function DashboardHome() {
                                 </Tabs>
                             </div>
 
+                            {/* Export File */}
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Xuất dữ liệu</label>
                                 <div className="grid grid-cols-2 gap-2">
@@ -252,19 +196,20 @@ export default function DashboardHome() {
                         </div>
                     </CardHeader>
 
-                    <CardContent>
-                        <div className="mb-6">
+                    <CardContent className="pt-6">
+                        {/* Info Section */}
+                        <div className="mb-6 p-4 bg-accent rounded-lg">
                             <div className="flex items-center justify-between">
                                 <div>
                                     <h3 className="text-lg font-semibold">
-                                        {dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType}
+                                        {dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType} - {selectedYear}
                                     </h3>
                                     <p className="text-sm text-muted-foreground">
-                                        Tổng: {monthlyData[selectedDataType].reduce((sum, item) => sum + item.count, 0)}
+                                        Tổng: {getFilteredData().reduce((sum, item) => sum + item.count, 0)}
                                     </p>
                                 </div>
-                                <div className="flex items-center space-x-2">
-                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeColors.primary }}></div>
+                                <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-card">
+                                    <div className="w-3 h-3 rounded-full bg-primary"></div>
                                     <span className="text-sm text-muted-foreground">
                                         {dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType}
                                     </span>
@@ -272,220 +217,107 @@ export default function DashboardHome() {
                             </div>
                         </div>
 
-                        <div className="h-[400px] w-full">
+                        <div className="h-[400px] w-full p-2 rounded-lg bg-accent/20">
                             <ResponsiveContainer width="100%" height="100%">
-                                {chartType === 'line' ? (
-                                    <LineChart
-                                        data={monthlyData[selectedDataType]}
-                                        margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
-                                    >
-                                        <defs>
-                                            <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor={themeColors.primary} stopOpacity={0.8} />
-                                                <stop offset="95%" stopColor={themeColors.primary} stopOpacity={0.1} />
-                                            </linearGradient>
-                                        </defs>
-                                        <CartesianGrid strokeDasharray="3 3" stroke={themeColors.border} />
-                                        <XAxis
-                                            dataKey="month"
-                                            tick={{ fontSize: 12, fill: themeColors.text }}
-                                            tickLine={false}
-                                            axisLine={{ stroke: themeColors.border }}
-                                        />
-                                        <YAxis
-                                            tick={{ fontSize: 12, fill: themeColors.text }}
-                                            tickLine={false}
-                                            axisLine={{ stroke: themeColors.border }}
-                                        />
-                                        <Tooltip
-                                            contentStyle={{
-                                                backgroundColor: themeColors.background,
-                                                border: 'none',
-                                                borderRadius: '8px',
-                                                boxShadow: themeColors.shadow,
-                                                color: themeColors.text
-                                            }}
-                                        />
-                                        <Legend
-                                            wrapperStyle={{ paddingTop: 10 }}
-                                            formatter={(value) => <span style={{ color: themeColors.text }}>{value}</span>}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="count"
-                                            name={dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType}
-                                            stroke={themeColors.primary}
-                                            strokeWidth={2}
-                                            activeDot={{ r: 8, fill: themeColors.primary, stroke: themeColors.background, strokeWidth: 2 }}
-                                            dot={{ r: 4, fill: themeColors.background, stroke: themeColors.primary, strokeWidth: 2 }}
-                                            fill="url(#colorCount)"
-                                        />
-                                    </LineChart>
-                                ) : (
-                                    <BarChart
-                                        data={monthlyData[selectedDataType]}
-                                        margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
-                                    >
-                                        <defs>
-                                            <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor={themeColors.primary} stopOpacity={0.8} />
-                                                <stop offset="100%" stopColor={themeColors.primary} stopOpacity={0.4} />
-                                            </linearGradient>
-                                        </defs>
-                                        <CartesianGrid strokeDasharray="3 3" stroke={themeColors.border} vertical={false} />
-                                        <XAxis
-                                            dataKey="month"
-                                            tick={{ fontSize: 12, fill: themeColors.text }}
-                                            tickLine={false}
-                                            axisLine={{ stroke: themeColors.border }}
-                                        />
-                                        <YAxis
-                                            tick={{ fontSize: 12, fill: themeColors.text }}
-                                            tickLine={false}
-                                            axisLine={{ stroke: themeColors.border }}
-                                        />
-                                        <Tooltip
-                                            cursor={{ fill: `${themeColors.primary}20` }}
-                                            contentStyle={{
-                                                backgroundColor: themeColors.background,
-                                                border: 'none',
-                                                borderRadius: '8px',
-                                                boxShadow: themeColors.shadow,
-                                                color: themeColors.text
-                                            }}
-                                        />
-                                        <Legend
-                                            wrapperStyle={{ paddingTop: 10 }}
-                                            formatter={(value) => <span style={{ color: themeColors.text }}>{value}</span>}
-                                        />
-                                        <Bar
-                                            dataKey="count"
-                                            name={dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType}
-                                            fill="url(#barGradient)"
-                                            radius={[4, 4, 0, 0]}
-                                            barSize={30}
-                                        />
-                                    </BarChart>
-                                )}
+                                {chartType === 'line'
+                                    ? (
+                                        <LineChart
+                                            data={getFilteredData()}
+                                            margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
+                                        >
+                                            <defs>
+                                                <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="5%" stopColor="hsl(346.8, 77.2%, 49.8%)" stopOpacity={0.8} />
+                                                    <stop offset="95%" stopColor="hsl(346.8, 77.2%, 49.8%)" stopOpacity={0.1} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 5.9%, 90%)" />
+                                            <XAxis
+                                                dataKey="month"
+                                                tick={{ fontSize: 12, fill: "hsl(240, 10%, 3.9%)" }}
+                                                tickLine={false}
+                                                axisLine={{ stroke: "hsl(240, 5.9%, 90%)" }}
+                                            />
+                                            <YAxis
+                                                tick={{ fontSize: 12, fill: "hsl(240, 10%, 3.9%)" }}
+                                                tickLine={false}
+                                                axisLine={{ stroke: "hsl(240, 5.9%, 90%)" }}
+                                            />
+                                            <Tooltip
+                                                contentStyle={{
+                                                    backgroundColor: "hsl(0, 0%, 100%)",
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                                                    color: "hsl(240, 10%, 3.9%)"
+                                                }}
+                                            />
+                                            <Legend
+                                                wrapperStyle={{ paddingTop: 10 }}
+                                                formatter={(value) => <span style={{ color: "hsl(240, 10%, 3.9%)" }}>{value}</span>}
+                                            />
+                                            <Line
+                                                type="monotone"
+                                                dataKey="count"
+                                                name={`${dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType} (${selectedYear})`}
+                                                stroke="hsl(346.8, 77.2%, 49.8%)"
+                                                strokeWidth={2}
+                                                activeDot={{ r: 8, fill: "hsl(346.8, 77.2%, 49.8%)", stroke: "hsl(0, 0%, 100%)", strokeWidth: 2 }}
+                                                dot={{ r: 4, fill: "hsl(0, 0%, 100%)", stroke: "hsl(346.8, 77.2%, 49.8%)", strokeWidth: 2 }}
+                                                fill="url(#colorCount)"
+                                            />
+                                        </LineChart>
+                                    ) : (
+                                        <BarChart
+                                            data={getFilteredData()}
+                                            margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
+                                        >
+                                            <defs>
+                                                <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                                                    <stop offset="0%" stopColor="hsl(346.8, 77.2%, 49.8%)" stopOpacity={0.8} />
+                                                    <stop offset="100%" stopColor="hsl(346.8, 77.2%, 49.8%)" stopOpacity={0.4} />
+                                                </linearGradient>
+                                            </defs>
+                                            <CartesianGrid strokeDasharray="3 3" stroke="hsl(240, 5.9%, 90%)" vertical={false} />
+                                            <XAxis
+                                                dataKey="month"
+                                                tick={{ fontSize: 12, fill: "hsl(240, 10%, 3.9%)" }}
+                                                tickLine={false}
+                                                axisLine={{ stroke: "hsl(240, 5.9%, 90%)" }}
+                                            />
+                                            <YAxis
+                                                tick={{ fontSize: 12, fill: "hsl(240, 10%, 3.9%)" }}
+                                                tickLine={false}
+                                                axisLine={{ stroke: "hsl(240, 5.9%, 90%)" }}
+                                            />
+                                            <Tooltip
+                                                cursor={{ fill: 'hsl(346.8, 77.2%, 49.8%, 0.1)' }}
+                                                contentStyle={{
+                                                    backgroundColor: "hsl(0, 0%, 100%)",
+                                                    border: 'none',
+                                                    borderRadius: '8px',
+                                                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                                                    color: "hsl(240, 10%, 3.9%)"
+                                                }}
+                                            />
+                                            <Legend
+                                                wrapperStyle={{ paddingTop: 10 }}
+                                                formatter={(value) => <span style={{ color: "hsl(240, 10%, 3.9%)" }}>{value}</span>}
+                                            />
+                                            <Bar
+                                                dataKey="count"
+                                                name={`${dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType} (${selectedYear})`}
+                                                fill="url(#barGradient)"
+                                                radius={[4, 4, 0, 0]}
+                                                barSize={30}
+                                            />
+                                        </BarChart>
+                                    )}
                             </ResponsiveContainer>
                         </div>
                     </CardContent>
                 </Card>
             </div>
         </div>
-    )
-}
-
-function ActorStats({ data }) {
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                    Diễn viên
-                </CardTitle>
-                <Heart className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{data.totalActor}</div>
-                <p className="text-xs text-muted-foreground">
-                    Tổng số phim trong cơ sở dữ liệu
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-function GroupStats({ data }) {
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                    Nhóm và cộng đồng
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{data.totalGroup}</div>
-                <p className="text-xs text-muted-foreground">
-                    Số lượng nhóm được tạo
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-function MovieStats({ data }) {
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                    Phim
-                </CardTitle>
-                <Film className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{data.totalMovie}</div>
-                <p className="text-xs text-muted-foreground">
-                    Tổng số phim trong cơ sở dữ liệu
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-function PostStats({ data }) {
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                    Bài viết
-                </CardTitle>
-                <FileText className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{data.totalPost}</div>
-                <p className="text-xs text-muted-foreground">
-                    Số lượng bài viết được tạo
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-function RatingStats({ data }) {
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                    Đánh giá và Xếp hạng
-                </CardTitle>
-                <Star className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{data.totalRatingMovie}</div>
-                <p className="text-xs text-muted-foreground">
-                    Số lượng đánh giá được thực hiện
-                </p>
-            </CardContent>
-        </Card>
-    )
-}
-
-function UserStats({ data }) {
-    return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                    Người dùng
-                </CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{data.totalUser}</div>
-                <p className="text-xs text-muted-foreground">
-                    Số lượng người dùng đã đăng ký
-                </p>
-            </CardContent>
-        </Card>
     )
 }
