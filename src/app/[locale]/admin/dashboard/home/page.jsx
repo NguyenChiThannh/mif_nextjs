@@ -4,7 +4,7 @@ import Title from '@/components/title'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { adminStatisticsApi } from '@/services/adminStatisticsApi'
 import { Clock, FileText, Film, Heart, Star, Tag, TrendingUp, UserPlus, Users, Zap, Download } from 'lucide-react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
     LineChart,
     Line,
@@ -33,36 +33,22 @@ export default function DashboardHome() {
     const { data, isLoading } = adminStatisticsApi.query.useGetStatistics()
     const [selectedDataType, setSelectedDataType] = useState('users')
     const [chartType, setChartType] = useState('line')
-    const { theme, resolvedTheme } = useTheme()
+    const themeColors = {
+        primary: 'hsl(346.8, 77.2%, 49.8%)',
+        border: 'hsl(240, 5.9%, 90%)',
+        background: 'hsl(0, 0%, 100%)',
+        shadow: 'hsl(240, 5.9%, 90%)',
+        text: 'hsl(240, 10%, 3.9%)',
+        muted: 'hsl(240, 4.8%, 90%)'
 
-    // Màu sắc cho biểu đồ dựa trên theme
-    const chartColors = {
-        primary: '#8884d8',
-        border: '#e5e7eb',
-        background: '#ffffff',
-        text: '#374151',
-        tooltip: {
-            background: '#ffffff',
-            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)'
-        }
-    }
+        // primary: '#8884d8',
+        // border: '#f0f0f0',
+        // background: 'white',
+        // shadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+        // text: '#333',
+        // muted: '#888'
+    };
 
-    // Cập nhật màu sắc dựa trên theme
-    useEffect(() => {
-        if (resolvedTheme === 'dark') {
-            chartColors.border = '#2d3748'
-            chartColors.background = '#1f2937'
-            chartColors.text = '#e5e7eb'
-            chartColors.tooltip.background = '#374151'
-            chartColors.tooltip.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.5)'
-        } else {
-            chartColors.border = '#e5e7eb'
-            chartColors.background = '#ffffff'
-            chartColors.text = '#374151'
-            chartColors.tooltip.background = '#ffffff'
-            chartColors.tooltip.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)'
-        }
-    }, [resolvedTheme])
 
     // Giả lập dữ liệu theo tháng cho các loại thống kê
     const monthlyData = {
@@ -278,7 +264,7 @@ export default function DashboardHome() {
                                     </p>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <div className="w-3 h-3 rounded-full bg-primary"></div>
+                                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: themeColors.primary }}></div>
                                     <span className="text-sm text-muted-foreground">
                                         {dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType}
                                     </span>
@@ -295,43 +281,43 @@ export default function DashboardHome() {
                                     >
                                         <defs>
                                             <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor={chartColors.primary} stopOpacity={0.8} />
-                                                <stop offset="95%" stopColor={chartColors.primary} stopOpacity={0.1} />
+                                                <stop offset="5%" stopColor={themeColors.primary} stopOpacity={0.8} />
+                                                <stop offset="95%" stopColor={themeColors.primary} stopOpacity={0.1} />
                                             </linearGradient>
                                         </defs>
-                                        <CartesianGrid strokeDasharray="3 3" stroke={chartColors.border} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke={themeColors.border} />
                                         <XAxis
                                             dataKey="month"
-                                            tick={{ fontSize: 12, fill: chartColors.text }}
+                                            tick={{ fontSize: 12, fill: themeColors.text }}
                                             tickLine={false}
-                                            axisLine={{ stroke: chartColors.border }}
+                                            axisLine={{ stroke: themeColors.border }}
                                         />
                                         <YAxis
-                                            tick={{ fontSize: 12, fill: chartColors.text }}
+                                            tick={{ fontSize: 12, fill: themeColors.text }}
                                             tickLine={false}
-                                            axisLine={{ stroke: chartColors.border }}
+                                            axisLine={{ stroke: themeColors.border }}
                                         />
                                         <Tooltip
                                             contentStyle={{
-                                                backgroundColor: chartColors.tooltip.background,
+                                                backgroundColor: themeColors.background,
                                                 border: 'none',
                                                 borderRadius: '8px',
-                                                boxShadow: chartColors.tooltip.boxShadow,
-                                                color: chartColors.text
+                                                boxShadow: themeColors.shadow,
+                                                color: themeColors.text
                                             }}
                                         />
                                         <Legend
                                             wrapperStyle={{ paddingTop: 10 }}
-                                            formatter={(value) => <span style={{ color: chartColors.text }}>{value}</span>}
+                                            formatter={(value) => <span style={{ color: themeColors.text }}>{value}</span>}
                                         />
                                         <Line
                                             type="monotone"
                                             dataKey="count"
                                             name={dataTypeOptions.find(opt => opt.value === selectedDataType)?.label || selectedDataType}
-                                            stroke={chartColors.primary}
+                                            stroke={themeColors.primary}
                                             strokeWidth={2}
-                                            activeDot={{ r: 8, fill: chartColors.primary, stroke: chartColors.background, strokeWidth: 2 }}
-                                            dot={{ r: 4, fill: chartColors.background, stroke: chartColors.primary, strokeWidth: 2 }}
+                                            activeDot={{ r: 8, fill: themeColors.primary, stroke: themeColors.background, strokeWidth: 2 }}
+                                            dot={{ r: 4, fill: themeColors.background, stroke: themeColors.primary, strokeWidth: 2 }}
                                             fill="url(#colorCount)"
                                         />
                                     </LineChart>
@@ -342,35 +328,35 @@ export default function DashboardHome() {
                                     >
                                         <defs>
                                             <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stopColor={chartColors.primary} stopOpacity={0.8} />
-                                                <stop offset="100%" stopColor={chartColors.primary} stopOpacity={0.4} />
+                                                <stop offset="0%" stopColor={themeColors.primary} stopOpacity={0.8} />
+                                                <stop offset="100%" stopColor={themeColors.primary} stopOpacity={0.4} />
                                             </linearGradient>
                                         </defs>
-                                        <CartesianGrid strokeDasharray="3 3" stroke={chartColors.border} vertical={false} />
+                                        <CartesianGrid strokeDasharray="3 3" stroke={themeColors.border} vertical={false} />
                                         <XAxis
                                             dataKey="month"
-                                            tick={{ fontSize: 12, fill: chartColors.text }}
+                                            tick={{ fontSize: 12, fill: themeColors.text }}
                                             tickLine={false}
-                                            axisLine={{ stroke: chartColors.border }}
+                                            axisLine={{ stroke: themeColors.border }}
                                         />
                                         <YAxis
-                                            tick={{ fontSize: 12, fill: chartColors.text }}
+                                            tick={{ fontSize: 12, fill: themeColors.text }}
                                             tickLine={false}
-                                            axisLine={{ stroke: chartColors.border }}
+                                            axisLine={{ stroke: themeColors.border }}
                                         />
                                         <Tooltip
-                                            cursor={{ fill: `${chartColors.primary}20` }}
+                                            cursor={{ fill: `${themeColors.primary}20` }}
                                             contentStyle={{
-                                                backgroundColor: chartColors.tooltip.background,
+                                                backgroundColor: themeColors.background,
                                                 border: 'none',
                                                 borderRadius: '8px',
-                                                boxShadow: chartColors.tooltip.boxShadow,
-                                                color: chartColors.text
+                                                boxShadow: themeColors.shadow,
+                                                color: themeColors.text
                                             }}
                                         />
                                         <Legend
                                             wrapperStyle={{ paddingTop: 10 }}
-                                            formatter={(value) => <span style={{ color: chartColors.text }}>{value}</span>}
+                                            formatter={(value) => <span style={{ color: themeColors.text }}>{value}</span>}
                                         />
                                         <Bar
                                             dataKey="count"
