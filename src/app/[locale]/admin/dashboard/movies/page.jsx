@@ -10,14 +10,7 @@ import { flexRender, getCoreRowModel, useReactTable, getSortedRowModel } from '@
 import { MoreHorizontal } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
-import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious,
-} from "@/components/ui/pagination"
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import DialogDetailMovie from '@/app/[locale]/admin/dashboard/movies/(components)/dialog-detail-movie';
 
 export default function Movies() {
@@ -27,11 +20,7 @@ export default function Movies() {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [selectedMovie, setSelectedMovie] = useState(null);
 
-    const {
-        data: moviesData,
-        isLoading,
-    } = movieApi.query.useGetAllMoviesTable(currentPage, pageSize);
-
+    const { data: moviesData, isLoading } = movieApi.query.useGetAllMoviesTable(currentPage, pageSize);
     const deleteMovieMutation = movieApi.mutation.useDeleteMovie();
 
     const handleDeleteMovie = (movieId) => {
@@ -40,138 +29,65 @@ export default function Movies() {
                 deleteMovieMutation.mutate(movieId);
             }
         });
-
     };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
 
-    const openDialog = (user) => {
-        setSelectedMovie(user);
-        setIsDialogOpen(true);
-    };
-
     const columns = useMemo(
         () => [
-            {
-                accessorKey: 'title',
-                header: 'Title',
-            },
-            {
-                accessorKey: 'releaseDate',
-                header: 'Release Date',
-                cell: ({ row }) => formatDate(row.original?.releaseDate),
-            },
-            {
-                accessorKey: 'genre',
-                header: 'Genre',
-                cell: ({ row }) => {
-                    const genres = row.original.genre;
-                    const genreNames = genres.map((genre) => genre.categoryName).join(", ");
-                    return (
-                        <div className="truncate max-w-60">{genreNames}</div>
-                    );
-                },
-                enableSorting: false,
-            },
-            {
-                accessorKey: 'ratings.averageRating',
-                header: 'Rating',
-                cell: ({ row }) => row.original.ratings?.averageRating || '0.0',
-            },
-            {
-                accessorKey: 'budget',
-                header: 'Budget',
-                cell: ({ row }) => {
-                    const budget = row.original.budget;
-                    return budget != null ? `${budget.toLocaleString()} VND` : 'N/A';
-                },
-            },
+            { accessorKey: 'title', header: 'Title' },
+            { accessorKey: 'releaseDate', header: 'Release Date', cell: ({ row }) => formatDate(row.original?.releaseDate) },
+            { accessorKey: 'genre', header: 'Genre', cell: ({ row }) => row.original.genre.map((g) => g.categoryName).join(", "), enableSorting: false },
+            { accessorKey: 'ratings.averageRating', header: 'Rating', cell: ({ row }) => row.original.ratings?.averageRating || '0.0' },
+            { accessorKey: 'budget', header: 'Budget', cell: ({ row }) => row.original.budget != null ? `${row.original.budget.toLocaleString()} VND` : 'N/A' },
             {
                 id: 'actions',
                 header: 'Actions',
                 enableSorting: false,
                 cell: ({ row }) => (
-                    <div className="flex items-center gap-2">
-                        <DropdownMenu modal={false}>
-                            <DropdownMenuTrigger asChild>
-                                <Button aria-haspopup="true" size="icon" variant="ghost">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                    <span className="sr-only">Toggle menu</span>
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => openDialog(row.original)}>View</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/add/photo?id=${row.original.id}`)}>Add Image</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
+                    <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="ghost"><MoreHorizontal className="h-4 w-4" /></Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => setSelectedMovie(row.original)}>View</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => router.push(`/admin/dashboard/movies/edit?id=${row.original.id}`)}>Edit</DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDeleteMovie(row.original.id)}>Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 ),
             },
         ],
         [router]
     );
 
-    const table = useReactTable({
-        data: moviesData?.content || [],
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        // onSortingChange: setSorting,
-        // state: {
-        //     sorting,
-        // },
-    });
-
+    const table = useReactTable({ data: moviesData?.content || [], columns, getCoreRowModel: getCoreRowModel(), getSortedRowModel: getSortedRowModel() });
     if (isLoading) return <Loading />;
 
     return (
         <div className="bg-background p-6">
-            {/* Header */}
             <div className="flex items-center justify-end mb-6">
-                {/* <div className="flex items-center gap-4">
-                    <Input
-                        placeholder="Search movies..."
-                        className="max-w-sm"
-                    />
-                </div> */}
-                <Button onClick={() => router.push('/admin/dashboard/movies/create')}>
-                    Add Movie
-                </Button>
+                <Button onClick={() => router.push('/admin/dashboard/movies/create')}>Add Movie</Button>
             </div>
-            {/* Table */}
-            <div className="rounded-md">
+            <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} className="bg-muted">
                                 {headerGroup.headers.map((header) => (
-                                    <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
+                                    <TableHead key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</TableHead>
                                 ))}
                             </TableRow>
                         ))}
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id} className="hover:bg-muted transition">
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </TableCell>
+                                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                 ))}
                             </TableRow>
                         ))}
@@ -183,7 +99,7 @@ export default function Movies() {
             <div className="mt-4">
                 <Pagination>
                     <PaginationContent>
-                        <PaginationItem>
+                        <PaginationItem className="mt-4 shadow-md rounded-lg">
                             <PaginationPrevious
                                 onClick={() => handlePageChange(currentPage - 1)}
                                 disabled={currentPage === 0}
@@ -219,14 +135,14 @@ export default function Movies() {
                             return pageNumbers.map((pageNumber, index) => {
                                 if (pageNumber === '...') {
                                     return (
-                                        <PaginationItem key={`ellipsis-${index}`}>
+                                        <PaginationItem key={`ellipsis-${index}`} className="mt-4 shadow-md rounded-lg">
                                             <span className="px-4">...</span>
                                         </PaginationItem>
                                     );
                                 }
 
                                 return (
-                                    <PaginationItem key={pageNumber}>
+                                    <PaginationItem key={pageNumber} className="mt-4 shadow-md rounded-lg">
                                         <PaginationLink
                                             href="#"
                                             isActive={pageNumber === currentPage}
@@ -239,7 +155,7 @@ export default function Movies() {
                             });
                         })()}
 
-                        <PaginationItem>
+                        <PaginationItem className="mt-4 shadow-md rounded-lg">
                             <PaginationNext
                                 onClick={() => handlePageChange(currentPage + 1)}
                                 disabled={currentPage >= (moviesData?.totalPages - 1)}
@@ -251,16 +167,7 @@ export default function Movies() {
             </div>
 
             <DialogConfirmDelete />
-
-            {selectedMovie && (
-                <DialogDetailMovie
-                    isOpen={isDialogOpen}
-                    onClose={() => setIsDialogOpen(false)}
-                    movieData={selectedMovie}
-                    router={router}
-                />
-            )}
-        </div>
+            {selectedMovie && <DialogDetailMovie isOpen={isDialogOpen} onClose={() => setIsDialogOpen(false)} movieData={selectedMovie} router={router} />}
+        </div >
     );
-
 }
