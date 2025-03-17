@@ -8,22 +8,30 @@ import { formatDate } from '@/lib/formatter';
 export default function DialogDetailMovie({ isOpen, onClose, movieData, router }) {
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent>
+            <DialogContent className="max-w-2xl rounded-xl border border-muted shadow-lg bg-background">
                 <DialogHeader>
-                    <DialogTitle>Movie Details</DialogTitle>
+                    <DialogTitle className="text-lg font-semibold text-foreground">Movie Details</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
-                    <p><strong>Id</strong> {movieData?.id}</p>
-                    <p><strong>Title:</strong> {movieData?.title}</p>
-                    <p><strong>Description:</strong> {movieData?.description}</p>
-                    <p><strong>Release Date:</strong> {formatDate(movieData?.releaseDate)}</p>
-                    <p><strong>Average Rating:</strong> {movieData?.ratings?.averageRating}</p>
-                    <p><strong>Number Of Ratings:</strong> {movieData?.ratings?.numberOfRatings}</p>
-                    <p><strong>Country:</strong> {movieData?.country}</p>
-                    <p><strong>Budget:</strong> {`${movieData?.budget} VND`}</p>
+                <div className="space-y-3 max-h-[70vh] overflow-y-auto">
+                    {[
+                        { label: 'Id', value: movieData?.id },
+                        { label: 'Title', value: movieData?.title },
+                        { label: 'Description', value: movieData?.description || 'N/A' },
+                        { label: 'Release Date', value: formatDate(movieData?.releaseDate) },
+                        { label: 'Average Rating', value: movieData?.ratings?.averageRating ?? 'N/A' },
+                        { label: 'Number Of Ratings', value: movieData?.ratings?.numberOfRatings ?? 0 },
+                        { label: 'Country', value: movieData?.country || 'Unknown' },
+                        { label: 'Budget', value: movieData?.budget ? `${movieData.budget} VND` : 'N/A' },
+                    ].map((item, index) => (
+                        <div key={index} className="flex justify-between px-4 py-2 rounded-md bg-muted/50 text-wrap">
+                            <span className="text-muted-foreground">{item.label}:</span>
+                            <span className="font-medium text-foreground">{item.value}</span>
+                        </div>
+                    ))}
+
                     {movieData?.awards?.length > 0 && (
-                        <div>
-                            <p><strong>Awards:</strong></p>
+                        <div className="bg-muted/50 rounded-md p-4">
+                            <p className="text-muted-foreground font-medium mb-2">Awards:</p>
                             <ul className="list-disc pl-5 space-y-2">
                                 {movieData.awards.map((award, index) => (
                                     <li key={index} className="text-sm">
@@ -35,12 +43,11 @@ export default function DialogDetailMovie({ isOpen, onClose, movieData, router }
                         </div>
                     )}
                 </div>
-                <DialogFooter>
+                <DialogFooter className="mt-4 flex justify-end gap-2">
                     <Button variant="secondary" onClick={onClose}>Close</Button>
                     <Button onClick={() => router.push(`/movies/${movieData.id}`)}>Go to page</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
-};
-
+}
