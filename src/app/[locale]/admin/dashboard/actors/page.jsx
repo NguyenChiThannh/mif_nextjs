@@ -116,47 +116,49 @@ export default function Actors() {
                     </div>
                 </div>
                 {/* Table */}
-                <Table>
-                    <TableHeader>
-                        {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => (
-                                    <TableHead
-                                        key={header.id}
-                                        className={header.column.getCanSort()
-                                            ? "cursor-pointer select-none"
-                                            : ""}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
+                <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
+                    <Table>
+                        <TableHeader>
+                            {table.getHeaderGroups().map((headerGroup) => (
+                                <TableRow key={headerGroup.id} className="bg-muted">
+                                    {headerGroup.headers.map((header) => (
+                                        <TableHead
+                                            key={header.id}
+                                            className={header.column.getCanSort()
+                                                ? "cursor-pointer select-none"
+                                                : ""}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableHeader>
+                        <TableBody>
+                            {table.getRowModel().rows.map((row) => (
+                                <TableRow key={row.id} className="hover:bg-muted transition">
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
                                             )}
-                                    </TableHead>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableHeader>
-                    <TableBody>
-                        {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(
-                                            cell.column.columnDef.cell,
-                                            cell.getContext()
-                                        )}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
                 {/* Pagination */}
                 <div className="mt-4">
                     <Pagination>
                         <PaginationContent>
-                            <PaginationItem>
+                            <PaginationItem className="mt-4 shadow-md rounded-lg">
                                 <PaginationPrevious
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     disabled={currentPage === 0}
@@ -192,14 +194,14 @@ export default function Actors() {
                                 return pageNumbers.map((pageNumber, index) => {
                                     if (pageNumber === '...') {
                                         return (
-                                            <PaginationItem key={`ellipsis-${index}`}>
+                                            <PaginationItem key={`ellipsis-${index}`} className="mt-4 shadow-md rounded-lg">
                                                 <span className="px-4">...</span>
                                             </PaginationItem>
                                         );
                                     }
 
                                     return (
-                                        <PaginationItem key={pageNumber}>
+                                        <PaginationItem key={pageNumber} className="mt-4 shadow-md rounded-lg">
                                             <PaginationLink
                                                 href="#"
                                                 isActive={pageNumber === currentPage}
@@ -211,7 +213,7 @@ export default function Actors() {
                                     );
                                 });
                             })()}
-                            <PaginationItem>
+                            <PaginationItem className="mt-4 shadow-md rounded-lg">
                                 <PaginationNext
                                     onClick={() => handlePageChange(currentPage + 1)}
                                     disabled={currentPage >= (actorsData?.totalPages - 1)}

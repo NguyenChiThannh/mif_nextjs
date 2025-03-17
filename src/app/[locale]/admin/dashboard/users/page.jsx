@@ -44,7 +44,6 @@ export default function Users() {
             userId,
             isLocked
         })
-
     }
 
     const columns = useMemo(
@@ -64,7 +63,7 @@ export default function Users() {
             },
             {
                 accessorKey: 'enabled',
-                header: 'enabled',
+                header: 'Enabled',
             },
             {
                 accessorKey: 'userType',
@@ -72,7 +71,7 @@ export default function Users() {
             },
             {
                 accessorKey: 'accountNonLocked',
-                header: 'isLock',
+                header: 'Status',
                 cell: ({ row }) => row.original.accountNonLocked ? 'Unlocked' : 'Locked',
             },
             {
@@ -95,19 +94,11 @@ export default function Users() {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem
-                                    onClick={() => openDialogDetail(row.original)}>
-                                    View
-                                </DropdownMenuItem>
-                                {/* <DropdownMenuItem>Ban</DropdownMenuItem> */}
-                                <DropdownMenuItem
-                                    onClick={() => row.original.accountNonLocked ? handleBlockUser(row.original.id, true) : handleBlockUser(row.original.id, false)}>
+                                <DropdownMenuItem onClick={() => openDialogDetail(row.original)}>View</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => row.original.accountNonLocked ? handleBlockUser(row.original.id, true) : handleBlockUser(row.original.id, false)}>
                                     {row.original.accountNonLocked ? 'Block' : 'UnBlock'}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem
-                                    onClick={() => openDialogPromote(row.original)}>
-                                    Promote
-                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openDialogPromote(row.original)}>Promote</DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -126,18 +117,14 @@ export default function Users() {
     if (isLoadingUsers) return <Loading />;
 
     return (
-        <div>
-            <div className="bg-background p-6">
-                {/* Table */}
+        <div className="bg-background p-6">
+            <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} className="bg-muted">
                                 {headerGroup.headers.map((header) => (
-                                    <TableHead
-                                        key={header.id}
-                                        className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}
-                                    >
+                                    <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(header.column.columnDef.header, header.getContext())}
@@ -148,7 +135,7 @@ export default function Users() {
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id} className="hover:bg-muted transition">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -158,94 +145,92 @@ export default function Users() {
                         ))}
                     </TableBody>
                 </Table>
+            </div>
 
-                {/* Pagination */}
-                <div className="mt-4">
-                    <Pagination>
-                        <PaginationContent>
-                            {/* Previous Button */}
-                            <PaginationItem>
-                                <PaginationPrevious
-                                    onClick={() => handlePageChange(currentPage - 1)}
-                                    disabled={currentPage === 0}
-                                    className={currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                                />
-                            </PaginationItem>
+            {/* Pagination */}
+            <div className="mt-4">
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem className="mt-4 shadow-md rounded-lg">
+                            <PaginationPrevious
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 0}
+                                className={currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                            />
+                        </PaginationItem>
 
-                            {/* Page Numbers */}
-                            {(() => {
-                                const totalPages = usersData?.totalPages || 1;
-                                const pageNumbers = [];
+                        {(() => {
+                            const totalPages = usersData?.totalPages || 1;
+                            const pageNumbers = [];
 
-                                pageNumbers.push(0);
+                            pageNumbers.push(0);
 
-                                let start = Math.max(1, currentPage - 1);
-                                let end = Math.min(currentPage + 1, totalPages - 2);
+                            let start = Math.max(1, currentPage - 1);
+                            let end = Math.min(currentPage + 1, totalPages - 2);
 
-                                if (start > 1) {
-                                    pageNumbers.push('...');
-                                }
+                            if (start > 1) {
+                                pageNumbers.push('...');
+                            }
 
-                                for (let i = start; i <= end; i++) {
-                                    pageNumbers.push(i);
-                                }
+                            for (let i = start; i <= end; i++) {
+                                pageNumbers.push(i);
+                            }
 
-                                if (end < totalPages - 2) {
-                                    pageNumbers.push('...');
-                                }
+                            if (end < totalPages - 2) {
+                                pageNumbers.push('...');
+                            }
 
-                                if (totalPages > 1) {
-                                    pageNumbers.push(totalPages - 1);
-                                }
+                            if (totalPages > 1) {
+                                pageNumbers.push(totalPages - 1);
+                            }
 
-                                return pageNumbers.map((pageNumber, index) => {
-                                    if (pageNumber === '...') {
-                                        return (
-                                            <PaginationItem key={`ellipsis-${index}`}>
-                                                <span className="px-4">...</span>
-                                            </PaginationItem>
-                                        );
-                                    }
-
+                            return pageNumbers.map((pageNumber, index) => {
+                                if (pageNumber === '...') {
                                     return (
-                                        <PaginationItem key={pageNumber}>
-                                            <PaginationLink
-                                                href="#"
-                                                isActive={pageNumber === currentPage}
-                                                onClick={() => handlePageChange(pageNumber)}
-                                            >
-                                                {pageNumber + 1}
-                                            </PaginationLink>
+                                        <PaginationItem key={`ellipsis-${index}`} className="mt-4 shadow-md rounded-lg">
+                                            <span className="px-4">...</span>
                                         </PaginationItem>
                                     );
-                                });
-                            })()}
-                            {/* Next Button */}
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={currentPage >= (usersData?.totalPages - 1)}
-                                    className={currentPage >= (usersData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                </div>
+                                }
 
-                {selectedUser && (
-                    <DialogDetailUser
-                        isOpen={isDialogDetailOpen}
-                        onClose={() => setIsDialogDetailOpen(false)}
-                        userData={selectedUser}
-                    />
-                )}
+                                return (
+                                    <PaginationItem key={pageNumber} className="mt-4 shadow-md rounded-lg">
+                                        <PaginationLink
+                                            href="#"
+                                            isActive={pageNumber === currentPage}
+                                            onClick={() => handlePageChange(pageNumber)}
+                                        >
+                                            {pageNumber + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                );
+                            });
+                        })()}
 
-                <DialogPromoteUser
-                    isOpen={isDialogPromoteOpen}
-                    onClose={() => setIsDialogPromoteOpen(false)}
+                        <PaginationItem className="mt-4 shadow-md rounded-lg">
+                            <PaginationNext
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage >= (usersData?.totalPages - 1)}
+                                className={currentPage >= (usersData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            </div>
+
+            {selectedUser && (
+                <DialogDetailUser
+                    isOpen={isDialogDetailOpen}
+                    onClose={() => setIsDialogDetailOpen(false)}
                     userData={selectedUser}
                 />
-            </div>
+            )}
+
+            <DialogPromoteUser
+                isOpen={isDialogPromoteOpen}
+                onClose={() => setIsDialogPromoteOpen(false)}
+                userData={selectedUser}
+            />
         </div>
     );
 }

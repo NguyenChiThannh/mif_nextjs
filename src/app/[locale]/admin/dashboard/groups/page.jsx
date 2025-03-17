@@ -94,12 +94,12 @@ export default function GroupsAdmin() {
     if (isLoadingGroups) return <Loading />
 
     return (
-        <div>
-            <div className="bg-background p-6">
+        <div className="bg-background p-6">
+            <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
-                            <TableRow key={headerGroup.id}>
+                            <TableRow key={headerGroup.id} className="bg-muted">
                                 {headerGroup.headers.map((header) => (
                                     <TableHead key={header.id} className={header.column.getCanSort() ? "cursor-pointer select-none" : ""}>
                                         {header.isPlaceholder
@@ -115,7 +115,7 @@ export default function GroupsAdmin() {
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows.map((row) => (
-                            <TableRow key={row.id}>
+                            <TableRow key={row.id} className="hover:bg-muted transition">
                                 {row.getVisibleCells().map((cell) => (
                                     <TableCell key={cell.id}>
                                         {flexRender(
@@ -128,87 +128,89 @@ export default function GroupsAdmin() {
                         ))}
                     </TableBody>
                 </Table>
-                <div className="mt-4">
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious
-                                    onClick={() => handlePageChange(currentPage - 1)}
-                                    disabled={currentPage === 0}
-                                    className={currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                                />
-                            </PaginationItem>
+            </div>
 
-                            {(() => {
-                                const totalPages = groupsData?.totalPages || 1;
-                                const pageNumbers = [];
+            <div className="mt-4">
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem className="mt-4 shadow-md rounded-lg">
+                            <PaginationPrevious
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 0}
+                                className={currentPage === 0 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                            />
+                        </PaginationItem>
 
-                                pageNumbers.push(0);
+                        {(() => {
+                            const totalPages = groupsData?.totalPages || 1;
+                            const pageNumbers = [];
 
-                                let start = Math.max(1, currentPage - 1);
-                                let end = Math.min(currentPage + 1, totalPages - 2);
+                            pageNumbers.push(0);
 
-                                if (start > 1) {
-                                    pageNumbers.push('...');
-                                }
+                            let start = Math.max(1, currentPage - 1);
+                            let end = Math.min(currentPage + 1, totalPages - 2);
 
-                                for (let i = start; i <= end; i++) {
-                                    pageNumbers.push(i);
-                                }
+                            if (start > 1) {
+                                pageNumbers.push('...');
+                            }
 
-                                if (end < totalPages - 2) {
-                                    pageNumbers.push('...');
-                                }
+                            for (let i = start; i <= end; i++) {
+                                pageNumbers.push(i);
+                            }
 
-                                if (totalPages > 1) {
-                                    pageNumbers.push(totalPages - 1);
-                                }
+                            if (end < totalPages - 2) {
+                                pageNumbers.push('...');
+                            }
 
-                                return pageNumbers.map((pageNumber, index) => {
-                                    if (pageNumber === '...') {
-                                        return (
-                                            <PaginationItem key={`ellipsis-${index}`}>
-                                                <span className="px-4">...</span>
-                                            </PaginationItem>
-                                        );
-                                    }
+                            if (totalPages > 1) {
+                                pageNumbers.push(totalPages - 1);
+                            }
 
+                            return pageNumbers.map((pageNumber, index) => {
+                                if (pageNumber === '...') {
                                     return (
-                                        <PaginationItem key={pageNumber}>
-                                            <PaginationLink
-                                                href="#"
-                                                isActive={pageNumber === currentPage}
-                                                onClick={() => handlePageChange(pageNumber)}
-                                            >
-                                                {pageNumber + 1}
-                                            </PaginationLink>
+                                        <PaginationItem key={`ellipsis-${index}`} className="mt-4 shadow-md rounded-lg">
+                                            <span className="px-4">...</span>
                                         </PaginationItem>
                                     );
-                                });
-                            })()}
+                                }
 
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() => handlePageChange(currentPage + 1)}
-                                    disabled={currentPage >= (groupsData?.totalPages - 1)}
-                                    className={currentPage >= (groupsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                </div>
+                                return (
+                                    <PaginationItem key={pageNumber} className="mt-4 shadow-md rounded-lg">
+                                        <PaginationLink
+                                            href="#"
+                                            isActive={pageNumber === currentPage}
+                                            onClick={() => handlePageChange(pageNumber)}
+                                        >
+                                            {pageNumber + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                );
+                            });
+                        })()}
 
-                <DialogConfirmDelete />
-
-                {selectedGroup && (
-                    <DialogDetailGroup
-                        isOpen={isDialogOpen}
-                        onClose={() => setIsDialogOpen(false)}
-                        groupData={selectedGroup}
-                        router={router}
-                    />
-                )}
+                        <PaginationItem className="mt-4 shadow-md rounded-lg">
+                            <PaginationNext
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage >= (groupsData?.totalPages - 1)}
+                                className={currentPage >= (groupsData?.totalPages - 1) ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             </div>
+
+            <DialogConfirmDelete />
+
+            {selectedGroup && (
+                <DialogDetailGroup
+                    isOpen={isDialogOpen}
+                    onClose={() => setIsDialogOpen(false)}
+                    groupData={selectedGroup}
+                    router={router}
+                />
+            )}
+
         </div>
     )
 }
