@@ -7,9 +7,10 @@ on:
 
 jobs:
   sync:
-   permissions:
+    runs-on: ubuntu-latest
+    permissions:
       contents: write
-  runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,6 +33,7 @@ jobs:
           git checkout main
           git merge upstream/main --allow-unrelated-histories
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/NguyenChiThannh/mif_nextjs.git main
+
   deploy:
     needs: sync  # Chỉ chạy khi job sync hoàn thành
     runs-on: ubuntu-latest
