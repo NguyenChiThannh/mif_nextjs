@@ -9,8 +9,10 @@ import useUserId from "@/hooks/useUserId";
 import { formatToVietnameseDateTime } from "@/lib/formatter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { eventApi } from "@/services/eventApi";
+import { useTranslations } from "next-intl";
 
 export default function CardEvent({ event }) {
+    const t = useTranslations('Event');
     const userId = useUserId();
     const [status, setStatus] = useState("");
 
@@ -52,7 +54,7 @@ export default function CardEvent({ event }) {
                         <div className="flex items-center gap-2">
                             <Users className="w-4 h-4" />
                             <span className="text-sm text-muted-foreground">
-                                {event.userJoin.length || 0} tham gia
+                                {event.userJoin.length || 0} {t("participate")}
                             </span>
                         </div>
                         <div className="flex items-center gap-2">
@@ -79,7 +81,7 @@ export default function CardEvent({ event }) {
                         className={`w-full ${status === "join" ? "hover:bg-primary hover:text-primary-foreground transition-all duration-200" : ""} `}
                         onClick={() => handleEventAction(status === "joined" ? "leave" : "join")}
                     >
-                        {status === "joined" ? "Hủy tham gia sự kiện" : "Tham gia sự kiện"}
+                        {status === "joined" ? t("cancel_participate_event") : t("participate_event")}
                     </Button>
                 </div>
             </CardContent>

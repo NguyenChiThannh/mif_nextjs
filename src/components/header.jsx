@@ -115,12 +115,12 @@ const Header = memo(() => {
                     !isLogin
                         ?
                         <Link href='/sign-in'>
-                            <Button>Đăng nhập</Button>
+                            <Button>{t("login")}</Button>
                         </Link>
                         :
                         <div className="flex items-center gap-4">
-                            <SearchHeader />
-                            <NotificationPopover />
+                            <SearchHeader t={t}/>
+                            <NotificationPopover t={t}/>
                             <Link href='/chat'>
                                 <Button variant="ghost" size="icon">
                                     {/* <BadgeIcon icon={MessageCircle} badgeContent={' '} /> */}

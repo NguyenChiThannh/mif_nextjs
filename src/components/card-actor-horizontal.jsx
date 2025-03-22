@@ -8,9 +8,11 @@ import Loading from '@/components/loading';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { favoriteActorsApi } from '@/services/favoriteActorsApi';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslations } from 'use-intl';
 
 
 export default function CardActorHorizontal({ actor, isTopRanked }) {
+    const t = useTranslations('Actor');
     const [isInitialLoading, setIsInitialLoading] = useState(true);
     const [isLiked, setLiked] = useState(false);
 
@@ -83,7 +85,7 @@ function ActorInfo({ actor, isTopRanked }) {
                     <span className="text-sm">16)</span>
                 </div> */}
                 <div className="flex items-center gap-1">
-                    <span className="text-sm">Diễn viên</span>
+                    <span className="text-sm">{t("actor")}</span>
 
                 </div>
             </div>

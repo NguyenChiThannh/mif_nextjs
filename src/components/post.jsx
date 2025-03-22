@@ -9,11 +9,13 @@ import { formatDateOrTimeAgo } from '@/lib/formatter'
 import { groupPostApi } from '@/services/groupPostApi'
 import { savedPostApi } from '@/services/savedPostApi'
 import { Bookmark, Ellipsis, LogOut, MessageCircle, MessageSquareWarning, PencilLine, Play, Trash2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 export default function Post({ className, post, isGroup }) {
+    const t = useTranslations('Groups.Post')
     const userId = useUserId()
     const [vote, setVote] = useState(post?.userVotes || null);
     const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
@@ -139,17 +141,17 @@ export default function Post({ className, post, isGroup }) {
                             <DropdownMenuContent align="end">
                                 <DropdownMenuItem>
                                     <MessageSquareWarning className="h-4 w-4 mr-2" />
-                                    Báo cáo bài viết
+                                    {t("report_post")}
                                 </DropdownMenuItem>
                                 {(post.owner.id === userId) &&
                                     <>
                                         <DropdownMenuItem onClick={() => { }}>
                                             <PencilLine className="h-4 w-4 mr-2" />
-                                            Chỉnh sửa bài viết
+                                            {t("edit_post")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem onClick={() => { }}>
                                             <Trash2 className="h-4 w-4 mr-2" />
-                                            Xóa bài viết
+                                            {t("delete_post")}
                                         </DropdownMenuItem>
                                     </>
                                 }
@@ -194,7 +196,7 @@ export default function Post({ className, post, isGroup }) {
                 >
                     <Button variant="ghost" className="gap-1 items-center rounded-full">
                         <MessageCircle className='h-5 w-5' />
-                        Bình luận
+                        {t("comment")}
                     </Button>
                 </Link>
                 <Button
@@ -206,7 +208,7 @@ export default function Post({ className, post, isGroup }) {
                     <Bookmark
                         className={`h-5 w-5 ${saved ? 'fill-yellow-500' : 'fill-none'}`}
                     />
-                    {saved ? 'Đã lưu' : 'Lưu'}
+                    {saved ? t("saved") : t("save")}
                 </Button>
             </div>
         </div>
@@ -233,7 +235,7 @@ function ContentWithReadMore({ content, hashtags, maxLength = 200 }) {
                     onClick={() => toggleContent()}
                     className="ml-2 text-blue-600 h-4"
                 >
-                    {isExpanded ? "" : "Xem thêm"}
+                    {isExpanded ? "" : t("more")}
                 </Button>
             )}
             {isExpanded && (

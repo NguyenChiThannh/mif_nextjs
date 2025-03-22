@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 export default function DialogRating({ movieId }) {
+    const t = useTranslations('Movie.Review');
     const [isOpen, setIsOpen] = useState(false);
     const createRatingMutation = movieRatingsApi.mutation.useCreateRating(movieId);
     const { handleSubmit, control, reset, formState: { errors } } = useForm({
@@ -32,15 +33,15 @@ export default function DialogRating({ movieId }) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button size="lg" variant='outline' onClick={() => setIsOpen(true)}>Đánh giá</Button>
+                <Button size="lg" variant='outline' onClick={() => setIsOpen(true)}>{t("button_rating")}</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Đánh giá phim</DialogTitle>
+                    <DialogTitle>{t("rating")}</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
                     <div className="flex items-center gap-4">
-                        <p className="font-bold">Điểm đánh giá</p>
+                        <p className="font-bold">{t("rating_score")}</p>
                         <Controller
                             name="ratingValue"
                             control={control}
@@ -60,7 +61,7 @@ export default function DialogRating({ movieId }) {
                         <p className="text-red-500 text-sm font-bold">{errors.ratingValue.message}</p>
                     )}
 
-                    <p className="font-bold">Nội dung đánh giá</p>
+                    <p className="font-bold">{t("rating_input")}</p>
                     <Controller
                         name="comment"
                         control={control}
@@ -73,7 +74,7 @@ export default function DialogRating({ movieId }) {
                     )}
 
                     <DialogFooter>
-                        <Button type="submit">Đánh giá</Button>
+                        <Button type="submit">{t("button_rating")}</Button>
                     </DialogFooter>
                 </form>
             </DialogContent>

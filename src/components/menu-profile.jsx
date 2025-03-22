@@ -28,6 +28,7 @@ import { useGetRole } from "@/hooks/useGetRole";
 import { Badge } from "@/components/ui/badge";
 
 export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
+    const t = useTranslations('Header.MenuProfile')
     const router = useRouter();
     const { role } = useGetRole()
     const dispatch = useAppDispatch();
@@ -70,7 +71,7 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                     </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56 overflow-hidden">
-                    <DropdownMenuLabel>Tài khoản</DropdownMenuLabel>
+                    <DropdownMenuLabel>{t("account")}</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     {
                         (role === 'ADMIN' || role === 'CONTENT_CREATOR') && goToAdmin &&
@@ -78,7 +79,7 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                             <ShieldCheck className="mr-2 h-4 w-4" />
                             <Link
                                 href={'/admin/dashboard'}
-                            >Trang Admin
+                            >{t("admin_page")}
                             </Link>
                         </DropdownMenuItem>
                     }
@@ -88,7 +89,7 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                             <House className="mr-2 h-4 w-4" />
                             <Link
                                 href={'/'}
-                            >Trang Home
+                            >{t("home_page")}
                             </Link>
                         </DropdownMenuItem>
                     }
@@ -102,34 +103,34 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                                         className="w-full h-full flex"
                                     >
                                         <User className="mr-2 h-4 w-4" />
-                                        <span>Trang cá nhân</span>
+                                        <span>{t("my_profile")}</span>
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
+                                {/* <DropdownMenuItem>
                                     <CreditCard className="mr-2 h-4 w-4" />
                                     <span>Thanh toán</span>
-                                </DropdownMenuItem>
+                                </DropdownMenuItem> */}
                                 <DropdownMenuItem>
                                     <Link
                                         href={`/setting`}
                                         className="w-full h-full flex"
                                     >
                                         <Settings className="mr-2 h-4 w-4" />
-                                        <span>Cài đặt</span>
+                                        <span>{t("settings")}</span>
                                     </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuGroup>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <LifeBuoy className="mr-2 h-4 w-4" />
-                                <span>Hỗ trợ</span>
+                                <span>{t("help")}</span>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                         </>
                     }
                     <DropdownMenuItem onClick={() => handleLogout()}>
                         <LogOut className="mr-2 h-4 w-4" />
-                        <span>Log out</span>
+                        <span>{t("logout")}</span>
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
