@@ -4,7 +4,6 @@ import Background from "@/app/[locale]/(auth)/bg-movie/background";
 import { Film } from "lucide-react";
 import Link from "next/link";
 
-
 const LOGO_TEXT = "MIF";
 
 export default function AuthLayout({ children }) {

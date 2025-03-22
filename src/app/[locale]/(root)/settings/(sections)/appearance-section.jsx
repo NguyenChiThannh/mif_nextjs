@@ -1,21 +1,20 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Moon, Sun } from 'lucide-react'
 import React from 'react'
 
-function AppearanceSection({ t }) {
+function AppearanceSection() {
+    const t = useTranslations('Settings.Appearance')
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Appearance</CardTitle>
-                <CardDescription>Customize how the application looks and feels.</CardDescription>
+                <CardTitle>{t("title")}</CardTitle>
+                <CardDescription>{t("title_description")}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Theme</h3>
+                    <h3 className="text-lg font-medium">{t("theme")}</h3>
                     <Separator />
                     <div className="grid grid-cols-3 gap-4">
                         <div className="flex flex-col items-center gap-2">
@@ -26,7 +25,7 @@ function AppearanceSection({ t }) {
                             >
                                 <Sun className="h-6 w-6" />
                             </Button>
-                            <span className="text-sm">Light</span>
+                            <span className="text-sm">{t("light")}</span>
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <Button
@@ -36,7 +35,7 @@ function AppearanceSection({ t }) {
                             >
                                 <Moon className="h-6 w-6 text-white" />
                             </Button>
-                            <span className="text-sm">Dark</span>
+                            <span className="text-sm">{t("dark")}</span>
                         </div>
                         <div className="flex flex-col items-center gap-2">
                             <Button
@@ -52,12 +51,12 @@ function AppearanceSection({ t }) {
                                     <Moon className="h-6 w-6 text-white" />
                                 </div>
                             </Button>
-                            <span className="text-sm">System</span>
+                            <span className="text-sm">{t("system")}</span>
                         </div>
                     </div>
                 </div>
 
-                <div className="space-y-4">
+                {/* <div className="space-y-4">
                     <h3 className="text-lg font-medium">Font Size</h3>
                     <Separator />
                     <div className="grid gap-2">
@@ -92,11 +91,10 @@ function AppearanceSection({ t }) {
                             </SelectContent>
                         </Select>
                     </div>
-                </div>
+                </div> */}
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="outline">Reset to defaults</Button>
-                <Button >Save changes</Button>
+                <Button >{t("save_button")}</Button>
             </CardFooter>
         </Card>
     )

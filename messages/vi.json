@@ -73,6 +73,10 @@
             "saved_movie": "Đã lưu phim",
             "share": "Share",
             "category": "Thể loại"
+        },
+        "Review":{
+            "movie_review":"Đánh giá của phim",
+            "no_review":"Không có đánh giá nào cho bộ phim này."
         }
     },
     "Dashboard": {
@@ -124,6 +128,29 @@
         "rules": "Quy tắc",
         "rules_description": "Những quy định chung của nhóm",
         "add_rule": "Thêm quy tắc",
+        "title_about":"Giới thiệu về nhóm",
+        "public":"Công khai",
+        "private":"Riêng tư",
+        "public_description":" Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "private_description":"Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "display":"Hiển thị",
+        "display_description":"Ai cũng có thể tìm thấy nhóm này.",
+        "button_see_all_members":"Xem tất cả thành viên",
+        "activity":"Hoạt động",
+        "date_of_establishment":"Ngày thành lập",
+        "established_on":"Thành lập ngày",
+        "post":"Bài viết",
+        "week_this_post":"bài viết tuần này",
+        "request_to_join_group":"Yêu cầu tham gia nhóm",
+        "founder":"Người thành lập",
+        "recently_joined":"Tham gia gần đây",
+        "joined_a_while_ago":"Tham gia cách đây",
+        "view_profile":"Xem trang cá nhân",
+        "leave_group":"Rời nhóm",
+        "actions":"Hành động",
+        "delete":"Xóa",
+        "edit":"Chỉnh sửa",
+
         "NavbarGroup": {
             "feed": "Bảng tin",
             "message": "Nhắn tin",
@@ -172,6 +199,10 @@
             "public": "Công khai",
             "private": "Riêng tư",
             "button_submit": "Đăng"
+        },
+        "Post":{
+            "comment_placeholder":"Nhập bình luận...",
+            "send":"Gửi"
         }
     },
     "Actor": {
@@ -197,7 +228,8 @@
             "member_type": "Thành viên",
             "bio": "Về bản thân",
             "bio_placeholder": "Nhập thông tin về bản thân",
-            "button_submit_edit_profile": "Thay đổi"
+            "button_submit_edit_profile": "Thay đổi",
+            "no_permission": "Bạn không có quyền truy cập trang này"
         },
         "Actor": {
             "like_level": "Mức độ yêu thích",
@@ -234,7 +266,7 @@
             "appearance": "Giao diện",
             "security": "Bảo mật"
         },
-        "account_section": {
+        "Account": {
             "profile": "Hồ sơ",
             "profile_description": "Cập nhật thông tin cá nhân của bạn và cách người khác nhìn thấy bạn trên website.",
             "upload_photo_button": "Tải ảnh mới",
@@ -245,14 +277,16 @@
             "bio": "Giới thiệu",
             "save_button": "Lưu"
         },
-        "appearance": {
+        "Appearance": {
             "title": "Giao diện",
             "title_description": "Tùy chỉnh giao diện của ứng dụng.",
+            "theme": "Chủ đề",
             "light": "Sáng",
             "dark": "Tối",
-            "system": "Hệ thống"
+            "system": "Hệ thống",
+            "save_button": "Lưu"
         },
-        "security": {
+        "Security": {
             "password": "Mật khẩu",
             "password_description": "Thay đổi mật khẩu và quản lý bảo mật tài khoản của bạn.",
             "current_password": "Mật khẩu hiện tại",
@@ -307,5 +341,6 @@
     "duration": "Thời lượng",
     "minutes": "phút",
     "release_day": "Ngày phát hành",
-    "is_more": "Xem thêm"
+    "is_more": "Xem thêm",
+    "you_have_read_the_entire_article": "Bạn đã xem hết bài viết"
 }

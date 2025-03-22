@@ -4,7 +4,8 @@ export function ProfilePermissionGuard({
     id,
     children,
     fallback = null,
-    requireOwner = false
+    requireOwner = false,
+    t
 }) {
     const { isOwnProfile, canView } = useProfilePermission(id)
 

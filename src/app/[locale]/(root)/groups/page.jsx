@@ -6,13 +6,14 @@ import { SectionGroup } from '@/app/[locale]/(root)/groups/(sections)/section-gr
 import SectionExploreGroup from '@/app/[locale]/(root)/groups/(sections)/section-explore-group'
 
 export default function Groups() {
+    const t = useTranslations('Groups')
     const userId = useUserId()
     const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
 
     return (
         <div className="flex flex-col w-full min-h-screen">
-            <SectionGroup movieCategories={movieCategories} userId={userId} />
-            <SectionExploreGroup movieCategories={movieCategories} />
+            <SectionGroup movieCategories={movieCategories} userId={userId} t={t}/>
+            <SectionExploreGroup movieCategories={movieCategories} t={t} />
         </div>
     );
 }

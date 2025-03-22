@@ -35,7 +35,10 @@ export default function SearchPage() {
         data: actors,
     } = actorApi.query.useSearchActorsByTitle(search)
 
-    const noResults = groups?.content?.length === 0 && movies?.content?.length === 0 && actors?.content?.length === 0;
+    const noResults = 
+            groups?.content?.length === 0 && 
+            movies?.content?.length === 0 && 
+            actors?.content?.length === 0;
 
     if (isLoadingMovies || isLoadingGroup || isLoadingActor) return <Loading />
 
@@ -60,15 +63,18 @@ export default function SearchPage() {
                     <MovieResults
                         activeTab={activeTab}
                         movies={movies}
+                        t={t}
                     />
                     <GroupResults
                         activeTab={activeTab}
                         groups={groups}
                         movieCategories={movieCategories}
+                        t={t}
                     />
                     <ActorDirectorResults
                         activeTab={activeTab}
                         actors={actors}
+                        t={t}
                     />
                 </div>
             )}
