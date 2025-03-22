@@ -26,13 +26,12 @@ const tab = (t) => [
 ]
 
 
-export function SectionGroup({ movieCategories, userId }) {
+export function SectionGroup({ movieCategories, userId, t }) {
     const [activeTab, setActiveTab] = useState('all');
 
     const { isLoading: loadingOwnerGroups, data: ownerGroups } = groupsApi.query.useFindByOwnerId(0, 24)
     const { isLoading: loadingUserGroups, data: userGroups } = groupsApi.query.useGetUserGroups(0, 24, userId)
 
-    const t = useTranslations('Groups')
     return (
         <>
             <div>

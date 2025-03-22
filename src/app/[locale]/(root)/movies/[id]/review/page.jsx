@@ -10,7 +10,8 @@ import { movieRatingsApi } from '@/services/movieRatingsApi';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
-export default function MovieReviewsPage({ }) {
+export default function MovieReviewsPage() {
+    const t = useTranslations("Movie.Review");
     const { id: movieId } = useParams();
 
     const { isLoading: isLoadingMovie, data: movie } = movieApi.query.useGetMovieById(movieId)
@@ -22,7 +23,7 @@ export default function MovieReviewsPage({ }) {
     if (isLoadingReview) {
         return (
             <div className="p-4">
-                <Title title="Đánh giá của phim" isMore={false} />
+                <Title title={t("movie_review")} isMore={false} />
                 <div className="grid gap-4 mt-6">
                     {Array.from({ length: 5 }).map((_, index) => (
                         <CardReviewSkeleton key={index} />
@@ -35,8 +36,8 @@ export default function MovieReviewsPage({ }) {
     if (isErrorReview || !review?.content.length) {
         return (
             <div className="p-4 text-center">
-                <Title title="Đánh giá của phim" isMore={false} />
-                <p className="text-muted-foreground mt-4">Không có đánh giá nào cho bộ phim này.</p>
+                <Title title={t("movie_review")} isMore={false} />
+                <p className="text-muted-foreground mt-4">{t("no_review")}</p>
             </div>
         );
     }
@@ -46,7 +47,7 @@ export default function MovieReviewsPage({ }) {
             <p className="text-2xl md:text-3xl font-bold px-4">{movie.title}</p>
             <div className='grid grid-cols-[7fr,3fr]'>
                 < div className="p-4" >
-                    <Title title="Đánh giá của phim" isMore={false} />
+                    <Title title={t("movie_review")} isMore={false} />
                     <div className="grid gap-4 mt-6">
                         {review.content.map((review) => (
                             <CardReview key={review.id} review={review} />

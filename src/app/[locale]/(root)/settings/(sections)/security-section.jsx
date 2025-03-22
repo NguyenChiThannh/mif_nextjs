@@ -1,54 +1,51 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
-import { Textarea } from '@/components/ui/textarea'
 import { Lock, LogOut } from 'lucide-react'
 import React from 'react'
 
-function SecuritySection({ t }) {
+function SecuritySection() {
+    const t = useTranslations('Settings.Security')
     return (
         <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Password</CardTitle>
-                    <CardDescription>Change your password and manage your account security.</CardDescription>
+                    <CardTitle>{t("password")}</CardTitle>
+                    <CardDescription>{t("password_description")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="grid gap-2">
-                        <Label htmlFor="current-password">Current password</Label>
+                        <Label htmlFor="current-password">{t("current_password")}</Label>
                         <Input id="current-password" type="password" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="new-password">New password</Label>
+                        <Label htmlFor="new-password">{t("new_password")}</Label>
                         <Input id="new-password" type="password" />
                     </div>
                     <div className="grid gap-2">
-                        <Label htmlFor="confirm-password">Confirm password</Label>
+                        <Label htmlFor="confirm-password">{t("confirm_password")}</Label>
                         <Input id="confirm-password" type="password" />
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                    <Button variant="outline">Cancel</Button>
-                    <Button >Update password</Button>
+                    <Button >{t("save_button")}</Button>
                 </CardFooter>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Two-Factor Authentication</CardTitle>
-                    <CardDescription>Add an extra layer of security to your account.</CardDescription>
+                    <CardTitle>{t("two_factor_authentication")}</CardTitle>
+                    <CardDescription>{t("two_factor_authentication_description")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
-                            <Label htmlFor="2fa">Two-factor authentication</Label>
+                            <Label htmlFor="2fa">{t("two_factor_authentication")}</Label>
                             <p className="text-sm text-muted-foreground">
-                                Protect your account with an additional security layer.
+                                {t("two_factor_authentication_description")}
                             </p>
                         </div>
                         <Switch id="2fa" />
@@ -56,15 +53,15 @@ function SecuritySection({ t }) {
                 </CardContent>
                 <CardFooter>
                     <Button variant="outline" className="w-full">
-                        Set up two-factor authentication
+                        {t("set_up_two_factor_authentication")}
                     </Button>
                 </CardFooter>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Sessions</CardTitle>
-                    <CardDescription>Manage your active sessions and devices.</CardDescription>
+                    <CardTitle>{t("sessions")}</CardTitle>
+                    <CardDescription>{t("sessions_description")}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-4">
@@ -104,27 +101,26 @@ function SecuritySection({ t }) {
                 </CardContent>
                 <CardFooter>
                     <Button variant="destructive" className="w-full">
-                        Log out of all devices
+                        {t("log_out_of_all_devices")}
                     </Button>
                 </CardFooter>
             </Card>
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Danger Zone</CardTitle>
-                    <CardDescription>Irreversible and destructive actions.</CardDescription>
+                    <CardTitle>{t("delete_account")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="space-y-2">
-                        <h3 className="font-medium">Delete Account</h3>
+                        <h3 className="font-medium">{t("delete_account")}</h3>
                         <p className="text-sm text-muted-foreground">
-                            Permanently delete your account and all of your content. This action cannot be undone.
+                            {t("delete_account_description")}
                         </p>
                     </div>
                 </CardContent>
                 <CardFooter>
                     <Button variant="destructive" className="w-full">
-                        Delete account
+                        {t("delete_account")}
                     </Button>
                 </CardFooter>
             </Card>

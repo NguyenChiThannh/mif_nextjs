@@ -21,6 +21,7 @@ export default function DetailPost() {
     const userId = useUserId();
     const authState = useAppSelector((state) => state.auth.authState);
     const queryClient = useQueryClient();
+    const t = useTranslations("Group.Post");
 
     // State management
     const [replyContent, setReplyContent] = useState("");
@@ -166,7 +167,7 @@ export default function DetailPost() {
                 {replyTo === comment.id && (
                     <div className="my-2 ml-8 flex items-start gap-4 z-10">
                         <Input
-                            placeholder="Nhập bình luận..."
+                            placeholder={(t('comment'))}
                             className="h-auto resize-none overflow-hidden"
                             value={replyContent}
                             onChange={(e) => setReplyContent(e.target.value)}
@@ -192,7 +193,7 @@ export default function DetailPost() {
 
                 <div className="flex items-center gap-2 px-2 mt-4">
                     <Textarea
-                        placeholder="Nhập bình luận..."
+                        placeholder={(t('comment'))}
                         rows={1}
                         className="h-auto resize-none overflow-hidden"
                         value={replyContent}
@@ -200,7 +201,7 @@ export default function DetailPost() {
                     />
                     <Button size="icon" onClick={handleSendComment}>
                         <Send className="w-4 h-4" />
-                        <span className="sr-only">Send</span>
+                        <span className="sr-only">{(t('send'))}</span>
                     </Button>
                 </div>
 
@@ -224,7 +225,7 @@ export default function DetailPost() {
                             {replyTo === comment.id && (
                                 <div className="my-2 ml-8 flex items-start gap-4 z-10">
                                     <Input
-                                        placeholder="Nhập bình luận..."
+                                        placeholder={(t('comment'))}
                                         className="h-auto resize-none overflow-hidden"
                                         value={replyContent}
                                         onChange={(e) => setReplyContent(e.target.value)}

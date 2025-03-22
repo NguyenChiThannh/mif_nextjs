@@ -29,9 +29,9 @@ export default function SettingsPage() {
                         <AccountSection />
                     )}
 
-                    {activeTab === "notifications" && (
+                    {/* {activeTab === "notifications" && (
                         <NotificationsSection />
-                    )}
+                    )} */}
 
                     {activeTab === "appearance" && (
                         <AppearanceSection />

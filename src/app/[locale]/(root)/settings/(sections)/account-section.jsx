@@ -7,14 +7,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
 
-function AccountSection({ t }) {
+function AccountSection() {
+    const t = useTranslations('Settings.Account')
     return (
         <div className="space-y-6">
             <Card>
                 <CardHeader>
-                    <CardTitle>Profile</CardTitle>
+                    <CardTitle>{t("profile")}</CardTitle>
                     <CardDescription>
-                        Update your personal information and how others see you on the platform.
+                    {t("profile_description")}
                     </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -24,24 +25,24 @@ function AccountSection({ t }) {
                             <AvatarFallback>JD</AvatarFallback>
                         </Avatar>
                         <div className="space-y-2">
-                            <Button size="sm">Upload new photo</Button>
-                            <p className="text-xs text-muted-foreground">JPG, GIF or PNG. 1MB max.</p>
+                            <Button size="sm">{t("upload_photo_button")}</Button>
+                            <p className="text-xs text-muted-foreground">{t("format_file_updload_photo")}</p>
                         </div>
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-2">
-                            <Label htmlFor="firstName">First name</Label>
+                            <Label htmlFor="firstName">{t("first_name")}</Label>
                             <Input id="firstName" placeholder="John" defaultValue="John" />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="lastName">Last name</Label>
+                            <Label htmlFor="lastName">{t("last_name")}</Label>
                             <Input id="lastName" placeholder="Doe" defaultValue="Doe" />
                         </div>
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="email">Email</Label>
+                        <Label htmlFor="email">{t("email")}</Label>
                         <Input
                             id="email"
                             type="email"
@@ -51,21 +52,17 @@ function AccountSection({ t }) {
                     </div>
 
                     <div className="grid gap-2">
-                        <Label htmlFor="bio">Bio</Label>
+                        <Label htmlFor="bio">{t("bio")}</Label>
                         <Textarea
                             id="bio"
                             placeholder="Tell us about yourself"
                             defaultValue="I'm a software developer with a passion for building great user experiences."
                             className="min-h-[100px]"
                         />
-                        <p className="text-xs text-muted-foreground">
-                            Brief description for your profile. URLs are hyperlinked.
-                        </p>
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                    <Button variant="outline">Cancel</Button>
-                    <Button >Save changes</Button>
+                    <Button >{t("save_button")}</Button>
                 </CardFooter>
             </Card>
 

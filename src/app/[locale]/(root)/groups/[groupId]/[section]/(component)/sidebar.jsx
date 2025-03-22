@@ -3,7 +3,8 @@ import { InfoIcon, Users } from "lucide-react"
 import Link from "next/link"
 import { GROUP_STATUS } from "@/hooks/useGroupStatus"
 
-export default function SideBar({ isOwner, groupId, pendingInvitations, t, section, status, group }) {
+export default function SideBar({ isOwner, groupId, pendingInvitations, section, status, group }) {
+    const t = useTranslations('Groups.NavbarGroup')
     const getNavItems = () => status === GROUP_STATUS.JOINED || isOwner
         ? navGroupConfig.member(t) : group.isPublic
             ? navGroupConfig.public_group(t) : navGroupConfig.always_visible(t)

@@ -4,7 +4,7 @@ import CardEvent, { CardEventSkeleton } from '@/components/card-event'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import { eventApi } from '@/services/eventApi'
 import { useParams } from 'next/navigation'
-import React, { useMemo } from 'react'
+import React from 'react'
 
 export default function EventsSection() {
     const { groupId } = useParams()

@@ -3,13 +3,13 @@ import Title from '@/components/title'
 import { groupsApi } from '@/services/groupsApi'
 import React from 'react'
 
-export default function SectionExploreGroup({ movieCategories }) {
+export default function SectionExploreGroup({ movieCategories, t }) {
     const { isLoading, data: groupNotJoin } = groupsApi.query.useFindGroupUserNotJoin(4)
 
     return (
         <>
             <div className="mt-4">
-                <Title title="Có thể bạn quan tâm" isMore={false} />
+                <Title title={t("you_might_be_interested")} isMore={false} />
             </div>
 
             <div className="flex-1 mt-4 mb-8">
