@@ -6,9 +6,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import useUserId from "@/hooks/useUserId";
 import { useGroupStatus } from "@/hooks/useGroupStatus";
+import { useTranslations } from "next-intl";
 
 export default function CardGroups({ group, categories }) {
-  const t = useTranslations('Group');
+  const t = useTranslations('Groups');
   const userId = useUserId();
   const { status, handleJoinGroup, handleRemovePendingGroup } = useGroupStatus(group.id, userId);
   const router = useRouter();

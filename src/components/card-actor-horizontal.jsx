@@ -52,7 +52,7 @@ export default function CardActorHorizontal({ actor, isTopRanked }) {
 
     return (
         <div className="flex p-1 rounded border-b-2 items-center">
-            <ActorInfo actor={actor} isTopRanked={isTopRanked} />
+            <ActorInfo actor={actor} isTopRanked={isTopRanked} t={t} />
             <LikeButton
                 isLiked={isLiked}
                 onLike={handleAddFavoriteActor}
@@ -62,7 +62,7 @@ export default function CardActorHorizontal({ actor, isTopRanked }) {
     );
 }
 
-function ActorInfo({ actor, isTopRanked }) {
+function ActorInfo({ actor, isTopRanked, t }) {
     return (
         <div className="flex items-center gap-2">
             <Avatar className="border w-10 h-10">

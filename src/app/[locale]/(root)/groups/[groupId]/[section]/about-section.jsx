@@ -13,19 +13,19 @@ export default function AboutSection({ group, members , t  }) {
     return (
         <>
             {/* Information Group */}
-            <CardInformationGroup group={group} />
+            <CardInformationGroup group={group} t={t}/>
 
             {/* Member Group */}
-            <CardMemberGroup group={group} members={members} />
+            <CardMemberGroup group={group} members={members} t={t}/>
 
             {/* Activity Group */}
-            <CardActivityGroup group={group} />
+            <CardActivityGroup group={group} t={t}/>
 
         </>
     )
 }
 
-function CardInformationGroup({ group }) {
+function CardInformationGroup({ group, t }) {
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>
@@ -68,7 +68,7 @@ function CardInformationGroup({ group }) {
     )
 }
 
-function CardMemberGroup({ group, members }) {
+function CardMemberGroup({ group, members, t }) {
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>
@@ -92,7 +92,7 @@ function CardMemberGroup({ group, members }) {
     )
 }
 
-function CardActivityGroup({ group }) {
+function CardActivityGroup({ group, t }) {
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>

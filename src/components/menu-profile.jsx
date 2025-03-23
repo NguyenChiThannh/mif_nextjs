@@ -26,6 +26,7 @@ import Link from "next/link";
 import { userApi } from "@/services/userApi";
 import { useGetRole } from "@/hooks/useGetRole";
 import { Badge } from "@/components/ui/badge";
+import { useTranslations } from "next-intl";
 
 export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
     const t = useTranslations('Header.MenuProfile')
@@ -112,7 +113,7 @@ export function MenuProfile({ id, admin = false, goToAdmin, goToHome }) {
                                 </DropdownMenuItem> */}
                                 <DropdownMenuItem>
                                     <Link
-                                        href={`/setting`}
+                                        href={`/settings`}
                                         className="w-full h-full flex"
                                     >
                                         <Settings className="mr-2 h-4 w-4" />

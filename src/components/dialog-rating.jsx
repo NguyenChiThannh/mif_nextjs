@@ -7,6 +7,7 @@ import { movieRatingsApi } from "@/services/movieRatingsApi";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 
 export default function DialogRating({ movieId }) {
     const t = useTranslations('Movie.Review');

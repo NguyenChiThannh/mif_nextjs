@@ -41,10 +41,10 @@ export default function middleware(req) {
 
     // Public paths accessible to unauthenticated users
     const publicPaths = [
-        '/',
-        '/home',
-        '/movies',
-        '/actors',
+        // '/',
+        // '/home',
+        // '/movies',
+        // '/actors',
         '/sign-in',
         '/sign-up',
         '/admin/sign-in'

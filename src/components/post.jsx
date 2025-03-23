@@ -160,7 +160,7 @@ export default function Post({ className, post, isGroup }) {
                     </div>
                 </div>
                 <p className='text-lg font-bold'>{post?.title}</p>
-                <ContentWithReadMore content={post.content} maxLength={200} />
+                <ContentWithReadMore content={post.content} maxLength={200} t={t}/>
             </div>
             {
                 post?.mediaUrls.length !== 0
@@ -215,7 +215,7 @@ export default function Post({ className, post, isGroup }) {
     )
 }
 
-function ContentWithReadMore({ content, hashtags, maxLength = 200 }) {
+function ContentWithReadMore({ content, hashtags, maxLength = 200, t }) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     const isContentLong = content.length > maxLength;
