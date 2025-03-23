@@ -1,3 +1,4 @@
+import { useLocale } from "next-intl";
 
 export const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -22,27 +23,36 @@ export const formatToVietnameseDateTime = (isoString) => {
 
 
 export const calculateTimeAgo = (isoString) => {
+    const locale = useLocale();
     const now = new Date();
     const timestamp = new Date(isoString).getTime();
     const secondsPast = (now.getTime() - timestamp) / 1000;
 
+    const translations = {
+        vi: ["giây trước", "phút trước", "giờ trước", "ngày trước", "tháng trước", "năm trước"],
+        en: ["seconds ago", "minutes ago", "hours ago", "days ago", "months ago", "years ago"]
+    };
+
+    const t = translations[locale] || translations.vi;
+
     if (secondsPast < 60) {
-        return `${Math.floor(secondsPast)} giây trước`;
+        return `${Math.floor(secondsPast)} ${t[0]}`;
     }
     if (secondsPast < 3600) {
-        return `${Math.floor(secondsPast / 60)} phút trước`;
+        return `${Math.floor(secondsPast / 60)} ${t[1]}`;
     }
     if (secondsPast < 86400) {
-        return `${Math.floor(secondsPast / 3600)} giờ trước`;
+        return `${Math.floor(secondsPast / 3600)} ${t[2]}`;
     }
     if (secondsPast < 2592000) {
-        return `${Math.floor(secondsPast / 86400)} ngày trước`;
+        return `${Math.floor(secondsPast / 86400)} ${t[3]}`;
     }
     if (secondsPast < 31536000) {
-        return `${Math.floor(secondsPast / 2592000)} tháng trước`;
+        return `${Math.floor(secondsPast / 2592000)} ${t[4]}`;
     }
-    return `${Math.floor(secondsPast / 31536000)} năm trước`;
+    return `${Math.floor(secondsPast / 31536000)} ${t[5]}`;
 };
+
 
 export const formatDateOrTimeAgo = (isoString) => {
     const date = new Date(isoString);

@@ -7,6 +7,7 @@ import { calculateTimeAgo } from '@/lib/formatter'
 import { groupsApi } from '@/services/groupsApi'
 import { useMutation } from '@tanstack/react-query'
 import { Check, EllipsisVertical, LogOut, Plus, User, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import React from 'react'
 
@@ -88,7 +89,7 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
                             (!cardOwner && isOwner) ?
                                 <DropdownMenuItem onClick={() => handleRemoveMemberFromGroup()}>
                                     <LogOut className="h-4 w-4 mr-2" />
-                                    t({"leave_group"})
+                                    {t("leave_group")}
                                 </DropdownMenuItem>
                                 : ''
                         }

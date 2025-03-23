@@ -4,7 +4,7 @@ import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 
-export default function SearchHeader() {
+export default function SearchHeader({t}) {
     const [search, setSearch] = useState('')
 
     const router = useRouter()
@@ -20,7 +20,7 @@ export default function SearchHeader() {
         <div className="hidden md:block relative">
             <Input
                 type="text"
-                placeholder="Tìm kiếm..."
+                placeholder={t("search_placeholder")}
                 className="pr-10"
                 onChange={(e) => { setSearch(e.target.value) }}
                 value={search}

@@ -4,6 +4,7 @@ import { categoryApi } from '@/services/movieCategoriesApi'
 import useUserId from '@/hooks/useUserId'
 import { SectionGroup } from '@/app/[locale]/(root)/groups/(sections)/section-group'
 import SectionExploreGroup from '@/app/[locale]/(root)/groups/(sections)/section-explore-group'
+import { useTranslations } from 'next-intl'
 
 export default function Groups() {
     const t = useTranslations('Groups')

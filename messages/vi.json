@@ -5,7 +5,19 @@
         "actor_link": "Diễn viên",
         "groups_link": "Nhóm",
         "input_placeholder": "Tìm kiếm...",
-        "login": "Đăng nhập"
+        "login": "Đăng nhập",
+        "search_placeholder": "Tìm kiếm...",
+        "notifications":"Thông báo",
+        "no_have_notifications":"Không có thông báo nào",
+        "MenuProfile": {
+            "account": "Tài khoản",
+            "admin_page":"Trang admin",
+            "home_page":"Trang chủ",
+            "my_profile": "Trang cá nhân",
+            "settings": "Cài đặt",
+            "help": "Trợ giúp",
+            "logout": "Đăng xuất"
+        }
     },
     "Schema": {
         "auth": {
@@ -75,6 +87,10 @@
             "category": "Thể loại"
         },
         "Review":{
+            "rating":"Đánh giá phim",
+            "rating_score":"Điểm đánh giá",
+            "rating_input":"Nội dung đánh giá",
+            "button_rating":"Đánh giá",
             "movie_review":"Đánh giá của phim",
             "no_review":"Không có đánh giá nào cho bộ phim này."
         }
@@ -202,11 +218,24 @@
         },
         "Post":{
             "comment_placeholder":"Nhập bình luận...",
-            "send":"Gửi"
+            "send":"Gửi",
+            "report_post":"Báo cáo bài viết",
+            "edit_post":"Chỉnh sửa bài viết",
+            "delete_post":"Xóa bài viết",
+            "comment":"Bình luận",
+            "save":"Lưu",
+            "saved":"Đã lưu",
+            "more":"See more"
         }
     },
     "Actor": {
-        "title": "Top 100 diễn viên nổi bật"
+        "title": "Top 100 diễn viên nổi bật",
+        "actor": "Diễn viên"
+    },
+    "Event": {
+        "participate": "tham gia",
+        "cancel_participate_event": "Hủy tham gia sự kiện",
+        "participate_event": "Tham gia sự kiện"
     },
     "Profile": {
         "User": {

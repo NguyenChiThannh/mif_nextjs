@@ -55,7 +55,7 @@ export default function GroupPage() {
                     canCreate={canCreatePost(status, isOwner)}
                 />
             case 'about':
-                return <AboutSection group={group} members={members} />
+                return <AboutSection group={group} members={members} t={t}/>
             case 'feed':
                 return <FeedSection
                     group={group}
@@ -68,6 +68,7 @@ export default function GroupPage() {
                     group={group}
                     pendingInvitations={pendingInvitations}
                     isOwner={isOwner}
+                    t={t}
                 />
             case 'events':
                 return <EventsSection />
