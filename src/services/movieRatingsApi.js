@@ -32,7 +32,13 @@ export const movieRatingsApi = {
                 queryKey: QUERY_KEY.movieRatings(page, size, movieId),
                 queryFn: getAllRatingsByMovieId,
             })
-        }
+        },
+        useGetRatingsByMovieId(movieId) {
+            return useQuery({
+                queryKey: QUERY_KEY.movieRatings(0, 100, movieId),
+                queryFn: getAllRatingsByMovieId,
+            })
+        },
     },
     mutation: {
         useCreateRating(movieId) {
