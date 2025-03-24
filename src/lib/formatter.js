@@ -1,4 +1,3 @@
-import { useLocale } from "next-intl";
 
 export const formatDate = (isoString) => {
     const date = new Date(isoString);
@@ -22,8 +21,7 @@ export const formatToVietnameseDateTime = (isoString) => {
 };
 
 
-export const calculateTimeAgo = (isoString) => {
-    const locale = useLocale();
+export const calculateTimeAgo = (isoString, locale) => {  
     const now = new Date();
     const timestamp = new Date(isoString).getTime();
     const secondsPast = (now.getTime() - timestamp) / 1000;
