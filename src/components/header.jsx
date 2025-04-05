@@ -1,7 +1,7 @@
 'use client'
 import { memo, useEffect, useRef, useState } from "react"
 import Link from "next/link"
-import { Film, MessageCircle, AlignJustify } from "lucide-react"
+import { MessageCircle, AlignJustify } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import BadgeIcon from "@/components/badge-icon"
@@ -16,8 +16,8 @@ import SearchHeader from "@/components/search-header"
 import { headerMenuConfig } from "@/lib/navigationConfig"
 import { useTranslations } from "next-intl"
 import Image from "next/image"
+import { LanguageToggle } from "@/components/language-toggle"
 
-// export default function Header() {
 const Header = memo(() => {
     const [open, setOpen] = useState(false)
     const t = useTranslations('Header')
@@ -115,12 +115,12 @@ const Header = memo(() => {
                     !isLogin
                         ?
                         <Link href='/sign-in'>
-                            <Button>Đăng nhập</Button>
+                            <Button>{t("login")}</Button>
                         </Link>
                         :
                         <div className="flex items-center gap-4">
-                            <SearchHeader />
-                            <NotificationPopover />
+                            <SearchHeader t={t}/>
+                            <NotificationPopover t={t}/>
                             <Link href='/chat'>
                                 <Button variant="ghost" size="icon">
                                     {/* <BadgeIcon icon={MessageCircle} badgeContent={' '} /> */}
@@ -129,7 +129,8 @@ const Header = memo(() => {
                                 </Button>
                             </Link>
                             <ModeToggle />
-                            <MenuProfile id={userId} />
+                            <LanguageToggle />
+                            <MenuProfile id={userId} goToAdmin />
                         </div>
                 }
             </div>

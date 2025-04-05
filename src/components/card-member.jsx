@@ -5,12 +5,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Skeleton } from '@/components/ui/skeleton'
 import { calculateTimeAgo } from '@/lib/formatter'
 import { groupsApi } from '@/services/groupsApi'
-import { useMutation } from '@tanstack/react-query'
 import { Check, EllipsisVertical, LogOut, Plus, User, X } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 import React from 'react'
 
 export default function CardMember({ member, groupId, type, isOwner, cardOwner }) {
+    const t = useTranslations('Groups')
+    const locale = useLocale();
     const date = new Date(member?.joinedAt)
     const acceptInvitationMutation = groupsApi.mutation.useAcceptInvitation(groupId)
     const rejectInvationMutation = groupsApi.mutation.useRejectInvitation(groupId)
@@ -51,7 +53,7 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
                     </Link>
                     {type === 'invitation' ||
                         cardOwner ||
-                        <p className="text-muted-foreground text-xs font-bold">Tham gia cách đây {calculateTimeAgo(date)}</p>}
+                        <p className="text-muted-foreground text-xs font-bold">{t("joined_a_while_ago")} {calculateTimeAgo(date, locale)}</p>}
                 </div>
             </div>
             {type === 'invitation'
@@ -80,14 +82,14 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
                             <Link className='flex'
                                 href={`/user/${member?.id}`}>
                                 <User className="h-4 w-4 mr-2" />
-                                Xem trang cá nhân
+                                {t("view_profile")}
                             </Link>
                         </DropdownMenuItem>
                         {
                             (!cardOwner && isOwner) ?
                                 <DropdownMenuItem onClick={() => handleRemoveMemberFromGroup()}>
                                     <LogOut className="h-4 w-4 mr-2" />
-                                    Rời nhóm
+                                    {t("leave_group")}
                                 </DropdownMenuItem>
                                 : ''
                         }

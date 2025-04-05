@@ -6,8 +6,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import useUserId from "@/hooks/useUserId";
 import { useGroupStatus } from "@/hooks/useGroupStatus";
+import { useTranslations } from "next-intl";
 
 export default function CardGroups({ group, categories }) {
+  const t = useTranslations('Groups');
   const userId = useUserId();
   const { status, handleJoinGroup, handleRemovePendingGroup } = useGroupStatus(group.id, userId);
   const router = useRouter();
@@ -36,13 +38,13 @@ export default function CardGroups({ group, categories }) {
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               <span className="text-sm text-muted-foreground">
-                {group?.memberCount} thành viên
+                {group?.memberCount} {t("members")}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <CalendarDays className="w-4 h-4" />
               <span className="text-sm text-muted-foreground">
-                {group?.weeklyPostCount} bài viết tuần này
+                {group?.weeklyPostCount} {t("week_this_post")}
               </span>
             </div>
           </div>
@@ -53,7 +55,7 @@ export default function CardGroups({ group, categories }) {
               variant="outline"
               className="w-full hover:bg-primary hover:text-primary-foreground transition-all duration-200"
             >
-              Tham gia nhóm
+              {t("join_group")}
             </Button>
           )}
           {status === "PENDING" && (
@@ -62,7 +64,7 @@ export default function CardGroups({ group, categories }) {
               variant="outline"
               className="w-full"
             >
-              Đang chờ duyệt
+              {t("cancel_join_group")}
             </Button>
           )}
           {status === "JOINED" && (
@@ -70,7 +72,7 @@ export default function CardGroups({ group, categories }) {
               onClick={handleDetailGroup}
               className="w-full hover:bg-primary hover:text-primary-foreground transition-all duration-200"
             >
-              Xem Nhóm
+              {t("view_group")}
             </Button>
           )}
         </div>

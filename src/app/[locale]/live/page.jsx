@@ -2,9 +2,10 @@
 
 import useUserId from '@/hooks/useUserId'
 import { userApi } from '@/services/userApi'
-import { useParams, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 import Script from 'next/script'
+import Loading from '@/components/loading'
 
 export default function LiveStreamPage() {
     const searchParams = useSearchParams()
@@ -83,7 +84,7 @@ export default function LiveStreamPage() {
         };
     }, []);
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <Loading />
 
     return (
         <>

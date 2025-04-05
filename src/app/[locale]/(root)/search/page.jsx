@@ -7,10 +7,10 @@ import { useState } from 'react';
 import { categoryApi } from '@/services/movieCategoriesApi';
 import { useTranslations } from 'next-intl';
 import Loading from '@/components/loading';
-import { Tabs } from '@/app/[locale]/(root)/search/(component)/tabs';
-import { MovieResults } from '@/app/[locale]/(root)/search/(component)/movie-results';
-import { GroupResults } from '@/app/[locale]/(root)/search/(component)/group-results';
-import { ActorDirectorResults } from '@/app/[locale]/(root)/search/(component)/actor-director-results';
+import { Tabs } from '@/app/[locale]/(root)/search/(components)/tabs';
+import { MovieResults } from '@/app/[locale]/(root)/search/(components)/movie-results';
+import { GroupResults } from '@/app/[locale]/(root)/search/(components)/group-results';
+import { ActorDirectorResults } from '@/app/[locale]/(root)/search/(components)/actor-director-results';
 import { actorApi } from '@/services/actorApi';
 
 export default function SearchPage() {
@@ -23,6 +23,7 @@ export default function SearchPage() {
         isLoading: isLoadingMovies,
         data: movies
     } = movieApi.query.useSearchMoviesByTitle(0, 10, search);
+
     const {
         isLoading: isLoadingGroup,
         data: groups
@@ -34,7 +35,10 @@ export default function SearchPage() {
         data: actors,
     } = actorApi.query.useSearchActorsByTitle(search)
 
-    const noResults = groups?.content?.length === 0 && movies?.content?.length === 0 && actors?.content?.length === 0;
+    const noResults = 
+            groups?.content?.length === 0 && 
+            movies?.content?.length === 0 && 
+            actors?.content?.length === 0;
 
     if (isLoadingMovies || isLoadingGroup || isLoadingActor) return <Loading />
 
@@ -59,15 +63,18 @@ export default function SearchPage() {
                     <MovieResults
                         activeTab={activeTab}
                         movies={movies}
+                        t={t}
                     />
                     <GroupResults
                         activeTab={activeTab}
                         groups={groups}
                         movieCategories={movieCategories}
+                        t={t}
                     />
                     <ActorDirectorResults
                         activeTab={activeTab}
                         actors={actors}
+                        t={t}
                     />
                 </div>
             )}

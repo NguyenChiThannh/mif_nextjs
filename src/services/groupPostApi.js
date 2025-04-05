@@ -43,6 +43,19 @@ const getAllPosts = async ({ pageParam = 0, queryKey }) => {
     return res.data
 }
 
+const getAllPostsTable = async ({ queryKey }) => {
+    const [_key, { page, size }] = queryKey;
+    const res = await privateApi.get('/group-posts', {
+        params: {
+            page,
+            size,
+            pageView: true,
+        }
+    })
+    return res.data
+}
+
+
 
 const getPostById = async (postId) => {
     const res = await privateApi.get(`/group-posts/${postId}`)
@@ -75,6 +88,12 @@ export const groupPostApi = {
                     const nextPage = allPages.length;
                     return lastPage.last ? undefined : nextPage;
                 },
+            })
+        },
+        useGetAllPostsTable(page, size) {
+            return useQuery({
+                queryKey: QUERY_KEY.allPostsTable(page, size),
+                queryFn: getAllPostsTable,
             })
         }
     },

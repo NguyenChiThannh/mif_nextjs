@@ -2,8 +2,10 @@ import { navGroupConfig } from "@/lib/navigationConfig"
 import { InfoIcon, Users } from "lucide-react"
 import Link from "next/link"
 import { GROUP_STATUS } from "@/hooks/useGroupStatus"
+import { useTranslations } from "next-intl"
 
-export default function SideBar({ isOwner, groupId, pendingInvitations, t, section, status, group }) {
+export default function SideBar({ isOwner, groupId, pendingInvitations, section, status, group }) {
+    const t = useTranslations('Groups.NavbarGroup')
     const getNavItems = () => status === GROUP_STATUS.JOINED || isOwner
         ? navGroupConfig.member(t) : group.isPublic
             ? navGroupConfig.public_group(t) : navGroupConfig.always_visible(t)

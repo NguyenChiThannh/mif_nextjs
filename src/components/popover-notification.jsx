@@ -8,9 +8,9 @@ import { useWebSocket } from "@/hooks/useWebSocket";
 import { useAppSelector } from "@/redux/store";
 import { notificationApi } from "@/services/notificationApi";
 import { Bell } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 
-export function NotificationPopover() {
+export function NotificationPopover({t}) {
     const authState = useAppSelector((state) => state.auth.authState);
     const [liveNotifications, setLiveNotifications] = useState([]);
     const [localUnreadCount, setLocalUnreadCount] = useState(0);
@@ -92,11 +92,11 @@ export function NotificationPopover() {
             <PopoverContent className="w-[400px] pr-0">
                 <div className="grid gap-4 divide-y overflow-y-scroll max-h-[600px]">
                     <div>
-                        <h4 className="text-xl font-medium">Thông báo</h4>
+                        <h4 className="text-xl font-medium">{t("notifications")}</h4>
                     </div>
                     <div className="pt-3 grid space-y-1 pr-2">
                         {combinedNotifications.length === 0 && !isLoadingNotifications && (
-                            <p>Không có thông báo nào</p>
+                            <p>{t("no_have_notifications")}</p>
                         )}
                         {isLoadingNotifications && (
                             <>

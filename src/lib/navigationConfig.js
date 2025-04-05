@@ -1,4 +1,4 @@
-import { BookIcon, CalendarCheckIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
+import { BookIcon, BookOpenIcon, CalendarCheckIcon, CircleUserIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
 
 export const headerMenuConfig = (t) => [
     {
@@ -31,51 +31,82 @@ export const headerMenuConfig = (t) => [
     },
 ]
 
-export const navDashboardMenuConfig = (t) => [
-    {
-        title: t('home'),
-        href: '/dashboard',
-        icon: HouseIcon,
-        active: (pathname) => pathname.replace(/^\/[a-z]{2}/, '') === '/dashboard',
+export const navDashboardMenuConfig = {
+    adminMenu(t) {
+        return [
+            {
+                title: t('home'),
+                href: '/admin/dashboard/home',
+                icon: HouseIcon,
+                active: (pathname) => pathname.includes('/dashboard/home'),
+            },
+            // {
+            //     title: t('news'),
+            //     href: '/admin/dashboard/news',
+            //     icon: NewspaperIcon,
+            //     active: (pathname) => pathname.includes('/dashboard/news'),
+            // },
+            {
+                title: t('user'),
+                href: '/admin/dashboard/users',
+                icon: CircleUserIcon,
+                active: (pathname) => pathname.includes('/dashboard/users'),
+            },
+            {
+                title: t('group'),
+                href: '/admin/dashboard/groups',
+                icon: UsersIcon,
+                active: (pathname) => pathname.includes('/dashboard/groups'),
+            },
+            {
+                title: t('post'),
+                href: '/admin/dashboard/posts',
+                icon: BookOpenIcon,
+                active: (pathname) => pathname.includes('/dashboard/posts'),
+            },
+            // {
+            //     title: t('event'),
+            //     href: '/admin/dashboard/events',
+            //     icon: CalendarCheckIcon,
+            //     active: (pathname) => pathname.includes('/dashboard/events'),
+            // },
+            // {
+            //     title: t('analytics'),
+            //     href: '/admin/dashboard/analytics',
+            //     icon: LineChartIcon,
+            //     active: (pathname) => pathname.includes('/dashboard/analytics'),
+            // },
+        ];
     },
-    {
-        title: t('news'),
-        href: '/dashboard/news',
-        icon: NewspaperIcon,
-        active: (pathname) => pathname.includes('/dashboard/news'),
+    contentCreateMenu(t) {
+        return [
+            {
+                title: t('home'),
+                href: '/admin/dashboard/home',
+                icon: HouseIcon,
+                active: (pathname) => pathname.includes('/dashboard/home'),
+            },
+            {
+                title: t('movies'),
+                href: '/admin/dashboard/movies',
+                icon: ClapperboardIcon,
+                active: (pathname) => pathname.includes('/dashboard/movies'),
+            },
+            {
+                title: t('category'),
+                href: '/admin/dashboard/categories',
+                icon: LayoutListIcon,
+                active: (pathname) => pathname.includes('/dashboard/categories'),
+            },
+            {
+                title: t('actor'),
+                href: '/admin/dashboard/actors',
+                icon: UserRoundIcon,
+                active: (pathname) => pathname.includes('/dashboard/actors'),
+            },
+        ];
     },
-    {
-        title: t('movies'),
-        href: '/dashboard/movies',
-        icon: ClapperboardIcon,
-        active: (pathname) => pathname.includes('/dashboard/movies'),
-    },
-    {
-        title: t('category'),
-        href: '/dashboard/categories',
-        icon: LayoutListIcon,
-        active: (pathname) => pathname.includes('/dashboard/categories'),
-    },
-    {
-        title: t('actor'),
-        href: '/dashboard/actors',
-        icon: UserRoundIcon,
-        active: (pathname) => pathname.includes('/dashboard/actors'),
-    },
-    {
-        title: t('group'),
-        href: '/dashboard/groups',
-        icon: UsersIcon,
-        active: (pathname) => pathname.includes('/dashboard/groups'),
-    },
-    {
-        title: t('analytics'),
-        href: '/dashboard/analytics',
-        icon: LineChartIcon,
-        active: (pathname) => pathname.includes('/dashboard/analytics'),
-    },
-];
-
+}
 export const navProfileUserConfig = (t) => [
     {
         title: t('my_posts'),

@@ -24,6 +24,35 @@ const updateUserProfile = async (data) => {
     return res.data
 }
 
+const getAllUsersTable = async ({ queryKey }) => {
+    const [_key, { page, size }] = queryKey;
+    const res = await privateApi.get('/users', {
+        params: {
+            page,
+            size,
+        }
+    })
+    return res.data
+}
+
+const changeUserRole = async (data) => {
+    const res = await privateApi.patch(`/users/${data.userId}/role`, null, {
+        params: {
+            newRole: data.role
+        }
+    });
+    return res.data;
+};
+
+const setAccountStatus = async (data) => {
+    const res = await privateApi.patch(`/users/${data.userId}/status`, null, {
+        params: {
+            isLocked: data.isLocked
+        }
+    });
+    return res.data;
+}
+
 export const userApi = {
     query: {
         useGetUserInfoById(id) {
@@ -42,6 +71,12 @@ export const userApi = {
                 },
             });
         },
+        useGetAllUsersTable(page = 0, size = 10) {
+            return useQuery({
+                queryKey: QUERY_KEY.usersTable(page, size),
+                queryFn: getAllUsersTable,
+            })
+        },
     },
     mutation: {
         useUpdateUserProfile(id) {
@@ -52,6 +87,28 @@ export const userApi = {
                 onSuccess: () => {
                     toast.success(t('update_user_info_successful'))
                     queryClient.invalidateQueries(QUERY_KEY.userInfoById(id))
+                },
+            })
+        },
+        useChangeUserRole() {
+            const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: changeUserRole,
+                onSuccess: () => {
+                    toast.success(t('change_user_role_successful'))
+                    queryClient.invalidateQueries({ queryKey: ['users_table'] })
+                },
+            })
+        },
+        useSetAccountStatus() {
+            const t = useTranslations('Toast');
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: setAccountStatus,
+                onSuccess: () => {
+                    toast.success(t('block_user_successful'))
+                    queryClient.invalidateQueries({ queryKey: ['users_table'] })
                 },
             })
         }

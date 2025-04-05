@@ -2,12 +2,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Skeleton } from '@/components/ui/skeleton';
 import { calculateTimeAgo } from '@/lib/formatter';
 import { notificationApi } from '@/services/notificationApi';
+import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 
 export default function NotificationItem({ notification, onClick }) {
-  console.log('🚀 ~ NotificationItem ~ notification:', notification)
   const router = useRouter();
+  const locale = useLocale();
   const markAsReadMutation = notificationApi.mutation.useMarkAsRead();
 
   const handleReadNotification = () => {
@@ -44,7 +45,7 @@ export default function NotificationItem({ notification, onClick }) {
         <span className="text-sm gap-2 line-clamp-2">
           {notification.message}
         </span>
-        <span className="text-xs text-muted-foreground">{calculateTimeAgo(new Date(notification.createdAt))}</span>
+        <span className="text-xs text-muted-foreground">{calculateTimeAgo(new Date(notification.createdAt), locale)}</span>
       </div>
     </div>
   );

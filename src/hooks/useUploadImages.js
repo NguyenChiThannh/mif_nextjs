@@ -1,7 +1,6 @@
 import { uploadFileApi } from '@/services/uploadFileApi';
 import { useState } from 'react';
 
-
 const useUploadImages = () => {
     const [images, setImages] = useState([]);
     const getUploadedFileUrlMutation = uploadFileApi.mutation.useGetUploadedFileUrl();

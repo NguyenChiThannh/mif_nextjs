@@ -12,10 +12,9 @@ import { MoreHorizontal } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
 
-export default function RulesSection({ isOwner, group }) {
+export default function RulesSection({ isOwner, group, t  }) {
     const [isOpenAdd, setIsOpenAdd] = useState(false);
     const [rule, setRule] = useState('')
-    const t = useTranslations('Groups')
 
     const { data: rules, isLoading } = groupRulesApi.query.useGetRulesByGroupId(group.id)
     const deleteRuleMutation = groupRulesApi.mutation.useDeleteRuleFromGroup(group.id)
@@ -85,9 +84,9 @@ export default function RulesSection({ isOwner, group }) {
                                                                 </Button>
                                                             </DropdownMenuTrigger>
                                                             <DropdownMenuContent align="end">
-                                                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                                <DropdownMenuItem onClick={() => handleEditRule(rule)}>Edit</DropdownMenuItem>
-                                                                <DropdownMenuItem onClick={() => handleDeleteRule(rule)}>Delete</DropdownMenuItem>
+                                                                <DropdownMenuLabel>{t("actions")}</DropdownMenuLabel>
+                                                                <DropdownMenuItem onClick={() => handleEditRule(rule)}>{t("edit")}</DropdownMenuItem>
+                                                                <DropdownMenuItem onClick={() => handleDeleteRule(rule)}>{t("delete")}</DropdownMenuItem>
                                                             </DropdownMenuContent>
                                                         </DropdownMenu>
                                                     </div>

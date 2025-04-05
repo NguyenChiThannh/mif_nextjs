@@ -19,7 +19,7 @@ import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/even
 
 export default function GroupPage() {
     const { groupId, section } = useParams()
-    const t = useTranslations('Groups.NavbarGroup')
+    const t = useTranslations('Groups')
 
     const {
         data: group,
@@ -55,7 +55,7 @@ export default function GroupPage() {
                     canCreate={canCreatePost(status, isOwner)}
                 />
             case 'about':
-                return <AboutSection group={group} members={members} />
+                return <AboutSection group={group} members={members} t={t}/>
             case 'feed':
                 return <FeedSection
                     group={group}
@@ -68,11 +68,12 @@ export default function GroupPage() {
                     group={group}
                     pendingInvitations={pendingInvitations}
                     isOwner={isOwner}
+                    t={t}
                 />
             case 'events':
                 return <EventsSection />
             case 'rules':
-                return <RulesSection isOwner={isOwner} group={group} />
+                return <RulesSection isOwner={isOwner} group={group}  t={t}/>
             default:
                 return <FeedSection
                     group={group}
@@ -93,7 +94,6 @@ export default function GroupPage() {
                     section={section}
                     status={status}
                     group={group}
-                    t={t}
                 />
                 <div className="flex-1 p-4 md:p-6">
                     <HeaderGroup

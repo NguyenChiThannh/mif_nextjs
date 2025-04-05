@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import { movieApi } from '@/services/movieApi';
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function MainCarousel() {
+export function MainCarousel({t}) {
     const [saved, setSaved] = useState(false);
     const router = useRouter();
 
@@ -30,7 +30,7 @@ export function MainCarousel() {
     }
 
     return (
-        <div className="relative rounded-lg overflow-hidden">
+        <div className="relative rounded-lg">
             <Carousel
                 opts={{ align: 'start', loop: true }}
                 plugins={[Autoplay({ delay: 3000 })]}
@@ -84,7 +84,7 @@ export function MainCarousel() {
                                                 className="text-base font-bold"
                                                 onClick={() => handleDetailMovie(movie?.id)}
                                             >
-                                                Xem Trailer
+                                                {t("button_watch_trailer")}
                                             </Button>
                                         </div>
                                     </CardContent>

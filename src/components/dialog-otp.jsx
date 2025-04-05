@@ -1,3 +1,4 @@
+"use client"
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog';
 import { authApi } from '@/services/authApi';
@@ -11,6 +12,8 @@ export default function DialogOTP({ t }) {
     const [isDialogOpen, setIsDialogOpen] = useState(true);
 
     const verifyOTPmutation = authApi.mutation.useVerifyOTP();
+
+
     const router = useRouter();
 
     const handleChange = (value) => {
@@ -18,7 +21,8 @@ export default function DialogOTP({ t }) {
     };
 
     const handleSubmit = () => {
-        const data = { otp: otp.join('') };
+        const data = { otp: otp };
+        console.log(data)
         verifyOTPmutation.mutate(data, {
             onSuccess: () => {
                 setIsDialogOpen(false);

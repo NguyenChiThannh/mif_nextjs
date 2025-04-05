@@ -2,9 +2,11 @@
 import Post, { PostSkeleton } from '@/components/post';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { groupPostApi } from '@/services/groupPostApi';
+import { useTranslations } from 'next-intl';
 import React from 'react'
 
 export default function PostPublicSection() {
+    const t = useTranslations()
     const {
         data,
         fetchNextPage,
@@ -33,7 +35,7 @@ export default function PostPublicSection() {
             )}
             <div ref={observerElem}></div>
             {!hasNextPage && (
-                <div className="text-center my-4 text-sm text-muted-foreground">Bạn đã xem hết bài viết</div>
+                <div className="text-center my-4 text-sm text-muted-foreground">{t("you_have_read_the_entire_article")}</div>
             )}
         </div>
     )

@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
 
-export function FancyMultiSelect({ className, values, initialSelected = [], onSelectionChange }) {
+export function FancyMultiSelect({ className, values, initialSelected = [], onSelectionChange, placeholder }) {
     const inputRef = React.useRef(null);
     const [open, setOpen] = React.useState(false);
     const [selected, setSelected] = React.useState(initialSelected);
@@ -86,7 +86,7 @@ export function FancyMultiSelect({ className, values, initialSelected = [], onSe
                         onValueChange={setInputValue}
                         onBlur={() => setOpen(false)}
                         onFocus={() => setOpen(true)}
-                        placeholder="Chọn thể loại ..."
+                        placeholder={placeholder}
                         className="ml-2 flex-1 bg-transparent outline-none placeholder:text-muted-foreground"
                     />
                 </div>

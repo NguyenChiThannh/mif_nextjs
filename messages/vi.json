@@ -5,7 +5,19 @@
         "actor_link": "Diễn viên",
         "groups_link": "Nhóm",
         "input_placeholder": "Tìm kiếm...",
-        "login": "Đăng nhập"
+        "login": "Đăng nhập",
+        "search_placeholder": "Tìm kiếm...",
+        "notifications":"Thông báo",
+        "no_have_notifications":"Không có thông báo nào",
+        "MenuProfile": {
+            "account": "Tài khoản",
+            "admin_page":"Trang admin",
+            "home_page":"Trang chủ",
+            "my_profile": "Trang cá nhân",
+            "settings": "Cài đặt",
+            "help": "Trợ giúp",
+            "logout": "Đăng xuất"
+        }
     },
     "Schema": {
         "auth": {
@@ -73,10 +85,15 @@
             "saved_movie": "Đã lưu phim",
             "share": "Share",
             "category": "Thể loại"
+        },
+        "Review":{
+            "rating":"Đánh giá phim",
+            "rating_score":"Điểm đánh giá",
+            "rating_input":"Nội dung đánh giá",
+            "button_rating":"Đánh giá",
+            "movie_review":"Đánh giá của phim",
+            "no_review":"Không có đánh giá nào cho bộ phim này."
         }
-    },
-    "News": {
-        "title": "Tin tức"
     },
     "Dashboard": {
         "Navbar": {
@@ -86,6 +103,9 @@
             "category": "Thể loại",
             "actor": "Diễn viên",
             "group": "Nhóm",
+            "user": "Người dùng",
+            "post": "Bài viết",
+            "event": "Sự kiện",
             "analytics": "Phân tích"
         }
     },
@@ -124,6 +144,29 @@
         "rules": "Quy tắc",
         "rules_description": "Những quy định chung của nhóm",
         "add_rule": "Thêm quy tắc",
+        "title_about":"Giới thiệu về nhóm",
+        "public":"Công khai",
+        "private":"Riêng tư",
+        "public_description":" Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "private_description":"Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "display":"Hiển thị",
+        "display_description":"Ai cũng có thể tìm thấy nhóm này.",
+        "button_see_all_members":"Xem tất cả thành viên",
+        "activity":"Hoạt động",
+        "date_of_establishment":"Ngày thành lập",
+        "established_on":"Thành lập ngày",
+        "post":"Bài viết",
+        "week_this_post":"bài viết tuần này",
+        "request_to_join_group":"Yêu cầu tham gia nhóm",
+        "founder":"Người thành lập",
+        "recently_joined":"Tham gia gần đây",
+        "joined_a_while_ago":"Tham gia cách đây",
+        "view_profile":"Xem trang cá nhân",
+        "leave_group":"Rời nhóm",
+        "actions":"Hành động",
+        "delete":"Xóa",
+        "edit":"Chỉnh sửa",
+
         "NavbarGroup": {
             "feed": "Bảng tin",
             "message": "Nhắn tin",
@@ -172,10 +215,27 @@
             "public": "Công khai",
             "private": "Riêng tư",
             "button_submit": "Đăng"
+        },
+        "Post":{
+            "comment_placeholder":"Nhập bình luận...",
+            "send":"Gửi",
+            "report_post":"Báo cáo bài viết",
+            "edit_post":"Chỉnh sửa bài viết",
+            "delete_post":"Xóa bài viết",
+            "comment":"Bình luận",
+            "save":"Lưu",
+            "saved":"Đã lưu",
+            "more":"See more"
         }
     },
     "Actor": {
-        "title": "Top 100 diễn viên nổi bật"
+        "title": "Top 100 diễn viên nổi bật",
+        "actor": "Diễn viên"
+    },
+    "Event": {
+        "participate": "tham gia",
+        "cancel_participate_event": "Hủy tham gia sự kiện",
+        "participate_event": "Tham gia sự kiện"
     },
     "Profile": {
         "User": {
@@ -197,7 +257,8 @@
             "member_type": "Thành viên",
             "bio": "Về bản thân",
             "bio_placeholder": "Nhập thông tin về bản thân",
-            "button_submit_edit_profile": "Thay đổi"
+            "button_submit_edit_profile": "Thay đổi",
+            "no_permission": "Bạn không có quyền truy cập trang này"
         },
         "Actor": {
             "like_level": "Mức độ yêu thích",
@@ -225,11 +286,59 @@
         "director_actor": "Diễn viên",
         "no_matching_results_found": "Không có kế quả tìm kiếm phù hợp"
     },
+    "Settings": {
+        "title": "Cài đặt",
+        "title_description": "Quản lý cài đặt và tùy chọn tài khoản của bạn.",
+        "navbar": {
+            "account": "Tài khoản",
+            "notifications": "Thông báo",
+            "appearance": "Giao diện",
+            "security": "Bảo mật"
+        },
+        "Account": {
+            "profile": "Hồ sơ",
+            "profile_description": "Cập nhật thông tin cá nhân của bạn và cách người khác nhìn thấy bạn trên website.",
+            "upload_photo_button": "Tải ảnh mới",
+            "format_file_updload_photo": "JPG, GIF or PNG. 1MB max.",
+            "first_name": "Họ",
+            "last_name": "Tên",
+            "email": "Email",
+            "bio": "Giới thiệu",
+            "save_button": "Lưu"
+        },
+        "Appearance": {
+            "title": "Giao diện",
+            "title_description": "Tùy chỉnh giao diện của ứng dụng.",
+            "theme": "Chủ đề",
+            "light": "Sáng",
+            "dark": "Tối",
+            "system": "Hệ thống",
+            "save_button": "Lưu"
+        },
+        "Security": {
+            "password": "Mật khẩu",
+            "password_description": "Thay đổi mật khẩu và quản lý bảo mật tài khoản của bạn.",
+            "current_password": "Mật khẩu hiện tại",
+            "new_password": "Mật khẩu mới",
+            "confirm_password": "Xác nhận mật khẩu",
+            "save_button": "Lưu",
+            "two_factor_authentication": "Xác thực 2 bước",
+            "two_factor_authentication_description": "Bảo vệ tài khoản của bạn bằng lớp bảo mật bổ sung.",
+            "set_up_two_factor_authentication": "Cài đặt bảo mật 2 bước",
+            "sessions": "Phiên đăng nhập",
+            "sessions_description": "Quản lý các phiên và thiết bị đang hoạt động của bạn.",
+            "log_out_of_all_devices": "Đăng xuất tất cả thiết bị",
+            "delete_account": "Xóa tài khoản",
+            "delete_account_description": "Xóa vĩnh viễn tài khoản và toàn bộ nội dung của bạn. Không thể hoàn tác hành động này."
+        }
+    },
     "Toast": {
         "register_successful": "Mã OTP được gửi về Email. Vui lòng nhập để xác nhận tài khoản.",
         "login_successful": "Đăng nhập thành công",
         "verify_otp_successful": "Xác thực tài khoản thành công",
         "create_movie_successful": "Tạo phim thành công",
+        "delete_movie_successful": "Xóa phim thành công",
+        "update_movie_successful": "Cập nhật phim thành công",
         "create_group_successful": "Tạo nhóm thành công",
         "update_group_successful": "Cập nhật thông tin nhóm thành công",
         "add_pending_invitation_successful": "Gửi lời mời thành công",
@@ -240,13 +349,14 @@
         "remove_member_group_successful": "Xóa thành viên thành công",
         "add_member_group_successful": "Thêm thành viên thành công",
         "delete_actor_successful": "Xóa diễn viên thành công",
-        "delete_actor_failed": "Xóa diễn viên thất bại",
         "create_actor_successful": "Thêm diễn viên thành công",
         "create_category_successful": "Thêm category thành công",
         "delete_category_successful": "Xóa category thành công",
         "update_category_successful": "Cập nhật category thành công",
         "update_category_failed": "Cập nhật category thất bại",
         "update_user_info_successful": "Cập nhật thông tin người dùng thành công",
+        "change_user_role_successful": "Đổi role người dùng thành công",
+        "block_user_successful": "Cập nhật người dùng thành công",
         "create_post_successful": "Tạo bài viết thành công",
         "copy_link_successful": "Liên kết đã được sao chép!",
         "copy_link_failed": "Liên kết sao chép thất bại",
@@ -260,5 +370,6 @@
     "duration": "Thời lượng",
     "minutes": "phút",
     "release_day": "Ngày phát hành",
-    "is_more": "Xem thêm"
+    "is_more": "Xem thêm",
+    "you_have_read_the_entire_article": "Bạn đã xem hết bài viết"
 }

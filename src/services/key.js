@@ -5,6 +5,8 @@ export const QUERY_KEY = {
     allMovies: () => ['all_movies'],
     searchMoviesByTitle: (page, size, title) => ['search_movies_by_title', { page, size, title }],
     movieById: (id) => ['detail_movie', id],
+    moviesTable: (page, size) => ['movies_table', { page, size }],
+    movieImages: (movieId) => ['movie_images', movieId],
     //Group
     groupsByOwnerId: (page, size) => ['groups_owner', { page, size }],
     userGroups: (page, size, id) => ['user_groups', { page, size, id }],
@@ -13,10 +15,11 @@ export const QUERY_KEY = {
     memberGroup: (id) => ['member_group', id],
     pendingInvitations: (groupId) => ['pending_invitations', groupId],
     searchGroupByGroupName: (search) => ['search_group_by_group_name', search],
+    allGroups: (page, size) => ['all_groups', { page, size }],
     // Actor
     actorMovieography: (actorId) => ['actor_movieography', actorId],
     actorById: (actorId) => ['actor', actorId],
-    topActors: (page, size) => ['top_actor', { page, size }],
+    topActors: (page, size, pageView) => ['actors', { page, size, pageView }],
     topActorsInfinite: () => ['top_actor'],
     searchActorsByTitle: (name) => ['search_actors_by_title', name],
     // Category
@@ -27,10 +30,12 @@ export const QUERY_KEY = {
     // user
     userInfoById: (id) => ['user_info', id],
     profilePostByUserId: (id) => ['post_user', id],
+    usersTable: (page, size) => ['users_table', { page, size }],
     // group_posts
     groupPosts: (groupId) => ['group_posts', { groupId }],
     postById: (postId) => ['detail_post', postId],
     allPosts: () => ['all_posts'],
+    allPostsTable: (page, size) => ['all_posts_table', { page, size }],
     // group_rules
     groupRules: (groupId) => ['group_rules', groupId],
     // movie Rating
@@ -46,6 +51,8 @@ export const QUERY_KEY = {
     getSubscribedEvents: () => ['subscribed_events'],
     getEventsByGroupId: (groupId) => ['events_by_groupId', groupId],
     // comment
-    commentByPostId: (postId) => ['comments', postId]
+    commentByPostId: (postId) => ['comments', postId],
+    // ADMIN_Statistics
+    dashboardStatistics: () => ['statistics']
 
 }

@@ -8,30 +8,30 @@ import { CalendarDays, Clock5, Eye, Lock, SquareLibrary, Users } from 'lucide-re
 import Link from 'next/link'
 import React from 'react'
 
-export default function AboutSection({ group, members }) {
+export default function AboutSection({ group, members , t  }) {
 
     return (
         <>
             {/* Information Group */}
-            <CardInformationGroup group={group} />
+            <CardInformationGroup group={group} t={t}/>
 
             {/* Member Group */}
-            <CardMemberGroup group={group} members={members} />
+            <CardMemberGroup group={group} members={members} t={t}/>
 
             {/* Activity Group */}
-            <CardActivityGroup group={group} />
+            <CardActivityGroup group={group} t={t}/>
 
         </>
     )
 }
 
-function CardInformationGroup({ group }) {
+function CardInformationGroup({ group, t }) {
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>
                 <div className="grid gap-4 mt-6">
                     <div className='flex justify-between'>
-                        <p className="font-bold flex items-center">Giới thiệu về nhóm</p>
+                        <p className="font-bold flex items-center">{t("title_about")}</p>
                     </div>
                     <Separator />
                     <p className='text-sm'>{group.description}</p>
@@ -41,26 +41,26 @@ function CardInformationGroup({ group }) {
                             <div className='gird gap-4'>
                                 <p className="flex gap-2 font-bold items-center">
                                     <Users className="h-4 w-4" />
-                                    Công khai
+                                    {t("public")}
                                 </p>
-                                <p> &middot; Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng. </p>
+                                <p> &middot; {t("public_description")}</p>
                             </div>
                             :
                             <div className='gird gap-4'>
                                 <p className="flex gap-2 font-bold items-center">
                                     <Lock className="h-4 w-4" />
-                                    Riêng tư
+                                    {t("private")}
                                 </p>
-                                <p> &middot; Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng. </p>
+                                <p> &middot; {t("private_description")} </p>
                             </div>
                     }
                     <p className="flex gap-2 font-bold items-center">
                         <Eye className="h-4 w-4" />
-                        Hiển thị </p>
-                    <p>&middot; Ai cũng có thể tìm thấy nhóm này. </p>
+                        {t("display")} </p>
+                    <p>&middot; {t("display_description")} </p>
                     <p className="flex gap-2 font-bold items-center">
                         <SquareLibrary className="h-4 w-4" />
-                        Thể loại</p>
+                        {t("category")}</p>
                     <p>&middot; Phim hành động</p>
                 </div>
             </CardContent>
@@ -68,12 +68,12 @@ function CardInformationGroup({ group }) {
     )
 }
 
-function CardMemberGroup({ group, members }) {
+function CardMemberGroup({ group, members, t }) {
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>
                 <div className="grid gap-4 mt-6">
-                    <p className="font-bold flex items-center">Thành viên &middot; &nbsp;<p className='text-sm leading-3 text-muted-foreground'>{members?.numberOfElements}</p></p>
+                    <p className="font-bold flex items-center">{t("members")} &middot; &nbsp;<p className='text-sm leading-3 text-muted-foreground'>{members?.numberOfElements}</p></p>
                     <Separator />
                     <div className="flex items-center gap-2">
                         <GroupAvatar images={members?.content?.map((user) => user.avatar)} names={members?.content?.map((user) => user?.displayName)} size="w-12 h-12" />
@@ -83,7 +83,7 @@ function CardMemberGroup({ group, members }) {
                             href={`/groups/${group?.id}/members`}
                             className='w-full h-full'
                         >
-                            Xem tất cả thành viên
+                            {t("button_see_all_members")}
                         </Link>
                     </Button>
                 </div>
@@ -92,22 +92,23 @@ function CardMemberGroup({ group, members }) {
     )
 }
 
-function CardActivityGroup({ group }) {
+function CardActivityGroup({ group, t }) {
     return (
         <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
             <CardContent>
                 <div className="grid gap-4 mt-6">
-                    <p className="font-bold flex items-center">Hoạt động</p>
+                    <p className="font-bold flex items-center">{t("activity")}</p>
                     <Separator />
                     <p className="flex gap-2 font-bold items-center">
                         <Clock5 className="h-4 w-4" />
-                        Ngày thành lập </p>
-                    <p>&middot; Thành lập ngày: {formatDate(group?.createdAt)} </p>
+                        {t("date_of_establishment")} 
+                    </p>
+                    <p>&middot; {t("established_on")}: {formatDate(group?.createdAt)} </p>
 
                     <p className="flex gap-2 font-bold items-center">
                         <CalendarDays className="h-4 w-4" />
                         Bài viết </p>
-                    <p>&middot; {group?.weeklyPostCount || 0} bài viết tuần này </p>
+                    <p>&middot; {group?.weeklyPostCount || 0} {t("week_this_post")} </p>
                 </div>
             </CardContent>
         </Card>

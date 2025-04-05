@@ -18,7 +18,6 @@ import useUserId from "@/hooks/useUserId";
 import { userApi } from "@/services/userApi";
 import { useTranslations } from "next-intl";
 import useUploadImages from "@/hooks/useUploadImages";
-import { set } from "mongoose";
 import Loading from "@/components/loading";
 
 
@@ -45,7 +44,6 @@ export default function CreatePostDialog({ groupId }) {
     if (isLoading) return <Loading />
 
     const onSubmit = async (data) => {
-        console.log('Here')
         setIsLoading(true)
         const mediaUrls = await Promise.all(images.map((image) => uploadImage(image)));
 

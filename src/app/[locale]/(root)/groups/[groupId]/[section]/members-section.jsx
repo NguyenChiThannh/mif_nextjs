@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Search } from 'lucide-react'
 import { useCallback, useMemo } from 'react'
 
-export default function MembersSection({ members, group, pendingInvitations, isOwner }) {
+export default function MembersSection({ members, group, pendingInvitations, isOwner, t }) {
     // Render pending invitations section
     const renderPendingInvitations = useCallback(() => {
         if (!isOwner || !pendingInvitations?.numberOfElements) return null;
@@ -15,7 +15,7 @@ export default function MembersSection({ members, group, pendingInvitations, isO
             <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
                 <CardContent>
                     <div className='grid gap-4 mt-4'>
-                        <p className='font-bold'>Yêu cầu tham gia nhóm</p>
+                        <p className='font-bold'>{t("request_to_join_group")}</p>
                         {pendingInvitations?.content?.map((invitation) => (
                             <CardMember
                                 key={invitation.id}
@@ -33,7 +33,7 @@ export default function MembersSection({ members, group, pendingInvitations, isO
     // Render group owner section
     const renderOwnerSection = useMemo(() => (
         <div className='grid gap-4 mt-4'>
-            <p className='font-bold'>Người thành lập</p>
+            <p className='font-bold'>{t("founder")}</p>
             <CardMember
                 member={group?.owner}
                 cardOwner={true}
@@ -44,7 +44,7 @@ export default function MembersSection({ members, group, pendingInvitations, isO
     // Render members section
     const renderMembersSection = useMemo(() => (
         <div className="grid grid-cols-1 gap-4 mt-4">
-            <p className='font-bold'>Tham gia gần đây</p>
+            <p className='font-bold'>{t("recently_joined")}</p>
             {members?.content?.map((member) => {
                 if (member.id !== group?.owner.id) {
                     return (
@@ -65,7 +65,7 @@ export default function MembersSection({ members, group, pendingInvitations, isO
     const renderHeader = useMemo(() => (
         <div className="mt-6">
             <p className="font-bold flex items-center">
-                Thành viên &middot; &nbsp;
+                {t("members")} &middot; &nbsp;
                 <span className='text-xs leading-3 text-muted-foreground'>
                     {group?.memberCount}
                 </span>
