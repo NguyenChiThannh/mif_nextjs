@@ -59,7 +59,6 @@
   }
 }
 
-
 @layer base {
   * {
     @apply border-border;
@@ -69,7 +68,6 @@
     @apply bg-background text-foreground;
   }
 }
-
 
 .ql-align-center {
   display: flex;
