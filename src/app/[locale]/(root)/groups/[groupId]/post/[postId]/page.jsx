@@ -15,13 +15,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Send } from "lucide-react";
 import useUserId from "@/hooks/useUserId";
+import { useTranslations } from "next-intl";
 
 export default function DetailPost() {
     const { postId } = useParams();
     const userId = useUserId();
     const authState = useAppSelector((state) => state.auth.authState);
     const queryClient = useQueryClient();
-    const t = useTranslations("Group.Post");
+    const t = useTranslations("Groups.Post");
 
     // State management
     const [replyContent, setReplyContent] = useState("");
@@ -167,7 +168,7 @@ export default function DetailPost() {
                 {replyTo === comment.id && (
                     <div className="my-2 ml-8 flex items-start gap-4 z-10">
                         <Input
-                            placeholder={(t('comment'))}
+                            placeholder={t('comment')}
                             className="h-auto resize-none overflow-hidden"
                             value={replyContent}
                             onChange={(e) => setReplyContent(e.target.value)}
@@ -193,7 +194,7 @@ export default function DetailPost() {
 
                 <div className="flex items-center gap-2 px-2 mt-4">
                     <Textarea
-                        placeholder={(t('comment'))}
+                        placeholder={t('comment')}
                         rows={1}
                         className="h-auto resize-none overflow-hidden"
                         value={replyContent}
