@@ -22,7 +22,6 @@ export default function DialogOTP({ t }) {
 
     const handleSubmit = () => {
         const data = { otp: otp };
-        console.log(data)
         verifyOTPmutation.mutate(data, {
             onSuccess: () => {
                 setIsDialogOpen(false);

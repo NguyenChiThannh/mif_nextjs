@@ -53,6 +53,7 @@ export const QUERY_KEY = {
     // comment
     commentByPostId: (postId) => ['comments', postId],
     // ADMIN_Statistics
-    dashboardStatistics: () => ['statistics']
+    dashboardStatistics: () => ['statistics'],
+    dashboardStatisticsSentimentStats: () => ['statistics_sentiment_stats'],
 
 }

@@ -234,7 +234,7 @@
     },
     "Event": {
         "participate": "tham gia",
-        "cancel_participate_event": "Hủy tham gia sự kiện",
+        "cancel_participate_event": "Hủy tham gia",
         "participate_event": "Tham gia sự kiện"
     },
     "Profile": {

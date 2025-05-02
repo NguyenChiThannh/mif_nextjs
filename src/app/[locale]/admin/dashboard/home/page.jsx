@@ -10,9 +10,10 @@ import SentimentAnalysis from '@/app/[locale]/admin/dashboard/home/(components)/
 
 export default function DashboardHome() {
     const { data, isLoading } = adminStatisticsApi.query.useGetStatistics()
+    const { data: sentimentData, isLoading: isLoadingSentiment } = adminStatisticsApi.query.useGetStatisticsSentimentStats()
 
 
-    if (isLoading) return <Loading />
+    if (isLoading || isLoadingSentiment) return <Loading />
 
     return (
         <div>
@@ -32,7 +33,7 @@ export default function DashboardHome() {
 
             <MonthlyChart />
 
-            <SentimentAnalysis />
+            <SentimentAnalysis sentimentData={sentimentData}/>
         </div>
     )
 }

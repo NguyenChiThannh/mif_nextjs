@@ -7,6 +7,11 @@ const getStatistics = async () => {
     return res.data
 }
 
+const getStatisticsSentimentStats = async () => {
+    const res = await privateApi.get('movies/sentiment-stats')
+    return res.data
+}
+
 export const adminStatisticsApi = {
     query: {
         useGetStatistics() {
@@ -14,6 +19,13 @@ export const adminStatisticsApi = {
                 queryKey: QUERY_KEY.dashboardStatistics(),
                 queryFn: getStatistics,
             })
+        },
+        useGetStatisticsSentimentStats() {
+            return useQuery({
+                queryKey: QUERY_KEY.dashboardStatisticsSentimentStats(),
+                queryFn: getStatisticsSentimentStats,
+            })
         }
     }
+    
 } 
