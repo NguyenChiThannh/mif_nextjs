@@ -26,11 +26,11 @@ export default function ChatList({ onSelectGroup }) {
 
   const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
 
-  const handleGroupSelect = (groupId) => {
+  const handleGroupSelect = (groupId, groupName, groupAvatar) => {
     if (groupId === activeGroupId) return; // Prevent reload if same group
     router.push(`/chat?groupId=${groupId}`);
     if (onSelectGroup) {
-      onSelectGroup(groupId);
+      onSelectGroup(groupId, groupName, groupAvatar);
     }
   };
 
@@ -69,7 +69,7 @@ export default function ChatList({ onSelectGroup }) {
                     "flex items-center gap-3 p-2 rounded-lg hover:bg-muted cursor-pointer",
                     activeGroupId === group.groupId && "bg-muted"
                   )}
-                  onClick={() => handleGroupSelect(group.groupId)}
+                  onClick={() => handleGroupSelect(group.groupId, group.groupName, group.avatarUrl)}
                 >
                   <Avatar className="w-10 h-10">
                     <AvatarImage src={group.avatarUrl} alt={group.groupName} />
