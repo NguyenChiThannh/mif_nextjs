@@ -335,6 +335,7 @@
         "register_successful": "OTP code sent to your Email. Please enter to confirm your account.",
         "login_successful": "Login successful",
         "verify_otp_successful": "Account verification successful",
+        "new_password_successful": "Password changed successfully",
         "create_movie_successful": "Movie created successfully",
         "delete_movie_successful": "Movie deleted successfully",
         "update_movie_successful": "Movie updated successfully",

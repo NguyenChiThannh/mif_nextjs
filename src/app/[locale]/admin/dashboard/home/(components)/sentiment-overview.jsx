@@ -12,6 +12,11 @@ import {
 } from 'recharts'
 
 export default function SentimentOverview({ sentimentData }) {
+    const sentimentPie = [
+        { name: 'Positive', value: sentimentData.positivePercentage, color: '#10b981' },
+        { name: 'Negative', value: sentimentData.negativePercentage, color: '#ef4444' },
+        { name: 'Neutral', value: sentimentData.neutralPercentage, color: '#6b7280' }
+    ];
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Enhanced Pie Chart */}
@@ -26,7 +31,7 @@ export default function SentimentOverview({ sentimentData }) {
                                 </filter>
                             </defs>
                             <Pie
-                                data={sentimentData}
+                                data={sentimentPie}
                                 cx="50%"
                                 cy="50%"
                                 innerRadius={60}
@@ -35,7 +40,7 @@ export default function SentimentOverview({ sentimentData }) {
                                 dataKey="value"
                                 filter="url(#shadow)"
                             >
-                                {sentimentData.map((entry, index) => (
+                                {sentimentPie.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
                                         fill={entry.color}
@@ -90,7 +95,7 @@ export default function SentimentOverview({ sentimentData }) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-green-600 font-medium">Tích cực</p>
-                                    <h4 className="text-2xl font-bold text-green-700">65%</h4>
+                                    <h4 className="text-2xl font-bold text-green-700">{sentimentData.positivePercentage} %</h4>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
                                     <Heart className="h-5 w-5 text-green-600" />
@@ -104,7 +109,7 @@ export default function SentimentOverview({ sentimentData }) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-red-600 font-medium">Tiêu cực</p>
-                                    <h4 className="text-2xl font-bold text-red-700">20%</h4>
+                                    <h4 className="text-2xl font-bold text-red-700">{sentimentData.negativePercentage} %</h4>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
                                     <FileText className="h-5 w-5 text-red-600" />
@@ -118,7 +123,7 @@ export default function SentimentOverview({ sentimentData }) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-gray-600 font-medium">Trung tính</p>
-                                    <h4 className="text-2xl font-bold text-gray-700">15%</h4>
+                                    <h4 className="text-2xl font-bold text-gray-700">{sentimentData.neutralPercentage} %</h4>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
                                     <Clock className="h-5 w-5 text-gray-600" />
@@ -133,20 +138,20 @@ export default function SentimentOverview({ sentimentData }) {
                     <ul className="space-y-2">
                         <li className="flex items-center justify-between">
                             <span className="text-sm">Tổng số bình luận phân tích:</span>
-                            <span className="font-medium">5,230</span>
+                            <span className="font-medium">{sentimentData.totalComments}</span>
                         </li>
                         <li className="flex items-center justify-between">
                             <span className="text-sm">Phim có cảm xúc tích cực nhất:</span>
-                            <span className="font-medium">The Godfather (85%)</span>
+                            <span className="font-medium">{sentimentData.mostPositiveMovie} ({sentimentData.mostPositivePercentage} %)</span>
                         </li>
                         <li className="flex items-center justify-between">
                             <span className="text-sm">Phim có cảm xúc tiêu cực nhất:</span>
-                            <span className="font-medium">Star Wars: The Last Jedi (40%)</span>
+                            <span className="font-medium">{sentimentData.mostNegativeMovie} ({sentimentData.mostNegativePercentage} %)</span>
                         </li>
-                        <li className="flex items-center justify-between">
+                        {/* <li className="flex items-center justify-between">
                             <span className="text-sm">Thời gian cập nhật gần nhất:</span>
                             <span className="font-medium">Hôm nay, 15:30</span>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>

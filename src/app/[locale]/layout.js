@@ -33,7 +33,7 @@ export default async function RootLayout({ children, params }) {
               </NextIntlClientProvider>
               <CustomToastContainer />
             </ThemeProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
+            <ReactQueryDevtools buttonPosition="bottom-left" initialIsOpen={false} />
           </ReactQueryProvider>
         </ReduxProvider>
       </body>

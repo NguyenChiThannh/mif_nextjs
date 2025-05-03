@@ -10,7 +10,10 @@ const useInfiniteScroll = (hasNextPage, fetchNextPage) => {
                     fetchNextPage();
                 }
             },
-            { threshold: 1.0 }
+            {
+                threshold: 0.1, // Lower threshold to trigger earlier
+                rootMargin: '150px 0px 0px 0px' // Add margin to the top to detect scroll near top
+            }
         );
 
         if (observerElem.current) observer.observe(observerElem.current);

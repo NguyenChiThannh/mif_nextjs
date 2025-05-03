@@ -9,11 +9,10 @@ import SentimentOverview from './sentiment-overview'
 import MovieComparison from './movie-comparison'
 import MovieDetail from './movie-detail'
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { sentimentData, movieSentimentData } from '@/app/[locale]/admin/dashboard/home/sentiment-data'
 import Loading from '@/components/loading'
 import { movieApi } from '@/services/movieApi'
 
-export default function SentimentAnalysis() {
+export default function SentimentAnalysis({sentimentData}) {
     const [selectedSentimentView, setSentimentView] = useState('overview')
     const [selectedMovie, setSelectedMovie] = useState(null)
     const [currentPage, setCurrentPage] = useState(0);
@@ -26,6 +25,7 @@ export default function SentimentAnalysis() {
     }
 
     if (isLoading) return <Loading />
+
     // Export functions for sentiment data
     // const handleExportSentimentCSV = () => {
     //     let csvContent = `data:text/csv;charset=utf-8,`

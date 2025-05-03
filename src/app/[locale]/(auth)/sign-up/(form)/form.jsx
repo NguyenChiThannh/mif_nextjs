@@ -48,7 +48,7 @@ export default function SignUpForm({ t }) {
             {registerMutation.isPending && <Loading />}
 
             {/* Display DialogOTP when register success */}
-            {isRegistered && <DialogOTP t={t} />}
+            {isRegistered && <DialogOTP t={t} type={"verify"}/>}
 
             {/* Full Name */}
             <div className="grid gap-2">

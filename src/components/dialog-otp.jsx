@@ -7,11 +7,12 @@ import { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { OTPInput } from "input-otp";
 
-export default function DialogOTP({ t }) {
+export default function DialogOTP({ t, type, setIsNewPasswordOpen }) {
     const [otp, setOtp] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(true);
 
     const verifyOTPmutation = authApi.mutation.useVerifyOTP();
+    const verifyRequestPassOTPMutation = authApi.mutation.useVerifyRequestPassOTP();
 
 
     const router = useRouter();
@@ -22,13 +23,23 @@ export default function DialogOTP({ t }) {
 
     const handleSubmit = () => {
         const data = { otp: otp };
-        console.log(data)
-        verifyOTPmutation.mutate(data, {
-            onSuccess: () => {
-                setIsDialogOpen(false);
-                router.push('/sign-in');
-            },
-        });
+        if (type === "reset") {
+            verifyRequestPassOTPMutation.mutate(data, {
+                onSuccess: () => {
+                    setIsDialogOpen(false);
+                    setIsNewPasswordOpen(true);
+                },
+            });
+        } else if (type === "verify") {
+            verifyOTPmutation.mutate(data, {
+                onSuccess: () => {
+                    setIsDialogOpen(false);
+                    router.push('/sign-in');
+                },
+            });
+        }
+        
+
     };
 
     const handleClose = () => {

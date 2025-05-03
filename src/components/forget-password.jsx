@@ -14,19 +14,20 @@ import { Label } from "@/components/ui/label"
 import { resetPasswordApi } from "@/services/resetPassword";
 import { useState } from "react"
 import DialogOTP from "@/components/dialog-otp";
+import DialogNewPassword from "@/components/dialog-new-password"
 
 export function ForgetPassword({ t }) {
   const [email, setEmail] = useState("");
   const [isOTPOpen, setIsOTPOpen] = useState(false);
+  const [isNewPasswordOpen, setIsNewPasswordOpen] = useState(false);
   const requestPasswordResetMutation = resetPasswordApi.mutation.useRequestPasswordReset();
 
   const handleSendEmail = async () => {
-    try {
-      await requestPasswordResetMutation.mutateAsync({ email });
-      setIsOTPOpen(true);
-    } catch (error) {
-      console.error("Error sending email:", error);
-    }
+    await requestPasswordResetMutation.mutateAsync({ email }, {
+      onSuccess: () => {
+        setIsOTPOpen(true);
+      },
+    });
   };
 
   return (
@@ -66,7 +67,8 @@ export function ForgetPassword({ t }) {
         </DialogContent>
       </Dialog>
 
-      {isOTPOpen && <DialogOTP t={t} onClose={() => setIsOTPOpen(false)} />}
+      {isOTPOpen && <DialogOTP t={t} onClose={() => setIsOTPOpen(false)} type={"reset"} setIsNewPasswordOpen={setIsNewPasswordOpen}/>}
+      {isNewPasswordOpen && <DialogNewPassword t={t} onClose={() => setIsNewPasswordOpen(false)} />}
     </>
   )
 }
