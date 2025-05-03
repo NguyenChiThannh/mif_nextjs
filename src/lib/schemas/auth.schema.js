@@ -34,3 +34,20 @@ export const schemaRegister = (t) => z.object({
     path: ["repeatPassword"],
     message: t('passwordMismatch'),
 });
+
+export const schemaNewPassword = (t) => z.object({
+  newPassword: z
+  .string()
+  .min(6, t('passwordMin'))
+  .regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+      t('passwordComplexity')
+  ),
+  confirmPassword:  z
+        .string()
+        .min(6, t('passwordMin')),
+        }).refine((data) => data.password === data.repeatPassword, {
+        path: ["confirmPassword"],
+        message: t('passwordMismatch'),
+
+})

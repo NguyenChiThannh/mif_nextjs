@@ -336,6 +336,7 @@
         "register_successful": "Mã OTP được gửi về Email. Vui lòng nhập để xác nhận tài khoản.",
         "login_successful": "Đăng nhập thành công",
         "verify_otp_successful": "Xác thực tài khoản thành công",
+        "new_password_successful": "Đổi mật khẩu mới thành công",
         "create_movie_successful": "Tạo phim thành công",
         "delete_movie_successful": "Xóa phim thành công",
         "update_movie_successful": "Cập nhật phim thành công",

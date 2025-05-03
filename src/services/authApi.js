@@ -13,6 +13,16 @@ const verifyOTP = async (data) => {
     return res.data
 }
 
+const verifyRequestPassOTP = async (data) => {
+    const res = await publicApi.post('auth/reset-password/OTP/verify', data)
+    return res.data
+}
+
+const newPassword = async (data) => {
+    const res = await publicApi.post('auth/reset-password', data)
+    return res.data
+}
+
 const login = async (data) => {
     const res = await publicApi.post('auth/login', data)
     return res.data
@@ -46,6 +56,25 @@ export const authApi = {
                     toast.success(t('verify_otp_successful'))
                 }
             })
-        }
+        },
+        useVerifyRequestPassOTP() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: verifyRequestPassOTP,
+                onSuccess: () => {
+                    toast.success(t('verify_otp_successful'))
+                }
+            })
+        },
+        useNewPassword() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: newPassword,
+                onSuccess: () => {
+                    toast.success(t('new_password_successful'))
+                }
+            })
+        },
+
     }
 }

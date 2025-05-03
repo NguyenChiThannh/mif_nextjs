@@ -12,7 +12,7 @@ export default function ChatPage() {
   );
 
   const handleGroupSelect = (groupId) => {
-    setSelectedGroupId(groupId);
+    setSelectedGroupId(groupId);  
   };
 
   return (
