@@ -78,3 +78,44 @@ This is a web application built with [Next.js](https://nextjs.org/), a React fra
 
 ## API Reference
 The frontend utilizes data from the backend API, which can be found in the API documentation [Here](https://documenter.getpostman.com/view/21875363/2sAXqp83yy#93b88b25-cf2c-444c-8f38-ed74c47524f1)
+
+## Telegram Bot Reporting Feature
+
+The application includes an automated reporting system that integrates with Telegram Bot API and Google Gemini API to generate and deliver reports directly to users via Telegram.
+
+### Setup Instructions
+
+1. **Create a Telegram Bot**:
+   - Use [@BotFather](https://t.me/botfather) on Telegram to create a new bot and obtain the bot token.
+
+2. **Get Google Gemini API Key**:
+   - Visit [Google AI Studio](https://ai.google.dev/) to create a Gemini API key.
+
+3. **Environment Variables**:
+   - Create a `.env.local` file in the root directory with the following variables:
+     ```
+     # Application URL (important for webhook callback)
+     NEXT_PUBLIC_APP_URL=https://your-domain.com
+
+     # Telegram Bot Configuration
+     NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
+
+     # Google Gemini API Key
+     NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
+     ```
+
+4. **Set up Telegram Webhook**:
+   - Once your application is deployed, register your webhook with Telegram by visiting:
+     ```
+     https://api.telegram.org/bot{NEXT_PUBLIC_TELEGRAM_BOT_TOKEN}/setWebhook?url={NEXT_PUBLIC_APP_URL}/api/telegram-webhook
+     ```
+
+### Using the Bot
+
+Users can interact with the bot through the following commands:
+
+- `/report` - Shows help on available report types
+- `/report pdf` - Generates and sends a PDF report
+- `/report excel` - Generates and sends an Excel report with data analysis
+
+The report includes analysis of user activity, posts, groups, movies, ratings, and actors based on available data.
