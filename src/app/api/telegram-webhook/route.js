@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import TelegramBot from "node-telegram-bot-api";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from '@google/genai';
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -12,6 +13,7 @@ const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
 // Initialize Gemini with API version 1 (not beta)
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 const LOG_PREFIX = {
     TELEGRAM: "TELEGRAM_WEBHOOK",
     PDF: "PDF_REPORT",
@@ -142,27 +144,13 @@ async function handleGeminiResponse(bot, chatId, text) {
     );
 
     try {
-        // Use the gemini-1.0-pro model instead of gemini-pro
-        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
-
-        // Add safety settings and proper generation config
-        const generationConfig = {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 1024,
-        };
-
-        const result = await model.generateContent({
-            contents: [{ parts: [{ text }] }],
-            generationConfig,
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.0-flash-001',
+            contents: text,
         });
-
-        const response = await result.response;
-        const responseText = response.text();
+        const responseText = response.text;
 
         await bot.sendMessage(chatId, responseText);
-        console.log(`${LOG_PREFIX.GEMINI} - Response sent to user successfully`);
         return NextResponse.json({ status: "Processed with Gemini" });
     } catch (error) {
         console.error(`${LOG_PREFIX.GEMINI} - Error generating response:`, error);
@@ -203,7 +191,6 @@ async function sendDocumentToUser(bot, chatId, filePath, reportType) {
         await bot.sendDocument(chatId, filePath, {
             caption: `📊 Báo cáo ${reportType} tổng kết năm 2025 của bạn đã sẵn sàng!`
         });
-        console.log(`${logPrefix} - ${reportType} file sent successfully`);
         return NextResponse.json({ status: `Processing ${reportType} report request` });
     } catch (error) {
         throw error;
@@ -256,7 +243,6 @@ function getSampleData() {
 
 async function generateReportWithGemini(data) {
     try {
-        console.log(`${LOG_PREFIX.PDF} - Preparing Gemini prompt`);
         const prompt = `
 Dưới đây là dữ liệu thống kê hoạt động trong năm 2025, bao gồm số lượng người dùng, bài viết, nhóm, phim, đánh giá và diễn viên theo từng tháng.
 
@@ -272,25 +258,12 @@ Dữ liệu:
 
         const fullPrompt = prompt + JSON.stringify(data, null, 2);
 
-        console.log(`${LOG_PREFIX.PDF} - Calling Gemini API`);
         // Use the updated gemini-1.0-pro model
-        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
-
-        // Update the API call format
-        const result = await model.generateContent({
-            contents: [{ parts: [{ text: fullPrompt }] }],
-            generationConfig: {
-                temperature: 0.4,
-                topK: 32,
-                topP: 0.8,
-                maxOutputTokens: 4096,
-            },
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.0-flash-001',
+            contents: fullPrompt,
         });
-
-        console.log(`${LOG_PREFIX.PDF} - Received response from Gemini`);
-        const response = await result.response;
-        const text = response.text();
-        console.log(`${LOG_PREFIX.PDF} - Report text generated`);
+        const text = response.text;
 
         return text;
     } catch (error) {
@@ -302,12 +275,10 @@ Dữ liệu:
 async function createPDF(reportText) {
     return new Promise((resolve, reject) => {
         try {
-            console.log(`${LOG_PREFIX.PDF} - Starting PDF creation`);
 
             // Create a temporary file path
             const tempDir = os.tmpdir();
             const filePath = path.join(tempDir, `report-${Date.now()}.pdf`);
-            console.log(`${LOG_PREFIX.PDF} - PDF will be saved to:`, filePath);
 
             // Create and setup PDF document
             const doc = new PDFDocument({ margin: 50 });
@@ -319,10 +290,8 @@ async function createPDF(reportText) {
 
             // Finalize the PDF
             doc.end();
-            console.log(`${LOG_PREFIX.PDF} - PDF creation completed, waiting for file to be written`);
 
             writeStream.on("finish", () => {
-                console.log(`${LOG_PREFIX.PDF} - PDF file write completed`);
                 resolve(filePath);
             });
 
@@ -368,12 +337,10 @@ function addPdfContent(doc, reportText) {
 async function createExcelReport(reportText, data) {
     return new Promise((resolve, reject) => {
         try {
-            console.log(`${LOG_PREFIX.EXCEL} - Starting Excel creation`);
 
             // Create a temporary file path
             const tempDir = os.tmpdir();
             const filePath = path.join(tempDir, `report-${Date.now()}.xlsx`);
-            console.log(`${LOG_PREFIX.EXCEL} - Excel will be saved to:`, filePath);
 
             // Create a new Excel workbook
             const workbook = new ExcelJS.Workbook();
@@ -383,11 +350,9 @@ async function createExcelReport(reportText, data) {
             createDataWorksheet(workbook, data);
             createChartWorksheet(workbook, data);
 
-            console.log(`${LOG_PREFIX.EXCEL} - Saving Excel workbook`);
             // Save the workbook
             workbook.xlsx.writeFile(filePath)
                 .then(() => {
-                    console.log(`${LOG_PREFIX.EXCEL} - Excel file write completed`);
                     resolve(filePath);
                 })
                 .catch(error => {
@@ -402,7 +367,6 @@ async function createExcelReport(reportText, data) {
 }
 
 function createSummaryWorksheet(workbook, reportText) {
-    console.log(`${LOG_PREFIX.EXCEL} - Creating summary worksheet`);
     const summarySheet = workbook.addWorksheet("Báo Cáo Tổng Kết");
 
     // Add title
@@ -425,7 +389,6 @@ function createSummaryWorksheet(workbook, reportText) {
 }
 
 function createDataWorksheet(workbook, data) {
-    console.log(`${LOG_PREFIX.EXCEL} - Creating data worksheet`);
     const dataSheet = workbook.addWorksheet("Dữ Liệu Chi Tiết");
     const months = ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6",
         "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"];
@@ -475,7 +438,6 @@ function createDataWorksheet(workbook, data) {
 }
 
 function createChartWorksheet(workbook, data) {
-    console.log(`${LOG_PREFIX.EXCEL} - Creating chart worksheet`);
     const chartSheet = workbook.addWorksheet("Biểu Đồ");
 
     // Add title
