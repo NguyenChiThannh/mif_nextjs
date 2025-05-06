@@ -275,13 +275,16 @@ Dữ liệu:
 async function createPDF(reportText) {
     return new Promise((resolve, reject) => {
         try {
-
             // Create a temporary file path
             const tempDir = os.tmpdir();
             const filePath = path.join(tempDir, `report-${Date.now()}.pdf`);
 
-            // Create and setup PDF document
-            const doc = new PDFDocument({ margin: 50 });
+            // Create and setup PDF document with built-in font
+            const doc = new PDFDocument({
+                margin: 50,
+                font: 'Courier' // Use built-in Courier font
+            });
+
             const writeStream = fs.createWriteStream(filePath);
             doc.pipe(writeStream);
 
@@ -308,30 +311,36 @@ async function createPDF(reportText) {
 
 function addPdfContent(doc, reportText) {
     // Add title
-    doc.fontSize(25).text("Báo Cáo Tổng Kết Năm 2025", {
-        align: "center"
-    });
+    doc.fontSize(25)
+        .font('Courier-Bold') // Use bold variant of Courier
+        .text("Báo Cáo Tổng Kết Năm 2025", {
+            align: "center"
+        });
 
     // Add date
-    doc.fontSize(12).text(`Ngày tạo: ${new Date().toLocaleDateString("vi-VN")}`, {
-        align: "center"
-    });
+    doc.fontSize(12)
+        .font('Courier') // Switch back to regular Courier
+        .text(`Ngày tạo: ${new Date().toLocaleDateString("vi-VN")}`, {
+            align: "center"
+        });
 
     doc.moveDown(2);
 
     // Add report content
-    doc.fontSize(12).text(reportText, {
-        align: "left",
-        paragraphGap: 10,
-        lineGap: 5
-    });
+    doc.fontSize(12)
+        .text(reportText, {
+            align: "left",
+            paragraphGap: 10,
+            lineGap: 5
+        });
 
     doc.moveDown();
 
     // Add footer
-    doc.fontSize(10).text("© 2025 - Báo cáo được tạo tự động bởi hệ thống", {
-        align: "center"
-    });
+    doc.fontSize(10)
+        .text("© 2025 - Báo cáo được tạo tự động bởi hệ thống", {
+            align: "center"
+        });
 }
 
 async function createExcelReport(reportText, data) {
