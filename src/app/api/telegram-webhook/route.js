@@ -10,6 +10,7 @@ import ExcelJS from "exceljs";
 // Constants
 const TELEGRAM_BOT_TOKEN = process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN;
 const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+// Initialize Gemini with API version 1 (not beta)
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const LOG_PREFIX = {
     TELEGRAM: "TELEGRAM_WEBHOOK",
@@ -141,8 +142,22 @@ async function handleGeminiResponse(bot, chatId, text) {
     );
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const result = await model.generateContent(text);
+        // Use the gemini-1.0-pro model instead of gemini-pro
+        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+
+        // Add safety settings and proper generation config
+        const generationConfig = {
+            temperature: 0.7,
+            topK: 40,
+            topP: 0.95,
+            maxOutputTokens: 1024,
+        };
+
+        const result = await model.generateContent({
+            contents: [{ parts: [{ text }] }],
+            generationConfig,
+        });
+
         const response = await result.response;
         const responseText = response.text();
 
@@ -258,8 +273,20 @@ Dữ liệu:
         const fullPrompt = prompt + JSON.stringify(data, null, 2);
 
         console.log(`${LOG_PREFIX.PDF} - Calling Gemini API`);
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-        const result = await model.generateContent(fullPrompt);
+        // Use the updated gemini-1.0-pro model
+        const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+
+        // Update the API call format
+        const result = await model.generateContent({
+            contents: [{ parts: [{ text: fullPrompt }] }],
+            generationConfig: {
+                temperature: 0.4,
+                topK: 32,
+                topP: 0.8,
+                maxOutputTokens: 4096,
+            },
+        });
+
         console.log(`${LOG_PREFIX.PDF} - Received response from Gemini`);
         const response = await result.response;
         const text = response.text();
