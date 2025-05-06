@@ -128,6 +128,9 @@ const nextConfig = {
             },
         ],
     },
+    experimental: {
+        serverComponentsExternalPackages: ["pdfkit"],
+    },
     crossOrigin: 'anonymous',
     reactStrictMode: false
 };

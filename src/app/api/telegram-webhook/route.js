@@ -21,9 +21,6 @@ const LOG_PREFIX = {
     GEMINI: "GEMINI"
 };
 
-// Đường dẫn đến font trong thư mục public
-const fontPath = path.resolve(__dirname, 'public', 'fonts', 'Roboto.ttf');
-
 // For Telegram webhook verification
 export async function GET() {
     console.log(`${LOG_PREFIX.TELEGRAM} - GET request received for verification`);
@@ -106,6 +103,7 @@ async function handlePdfReportCommand(bot, chatId) {
     } catch (error) {
         return await handleReportError(bot, chatId, "PDF", "sending", error);
     }
+    return NextResponse.json({ status: "Start message sent" });
 }
 
 async function handleExcelReportCommand(bot, chatId) {
@@ -289,11 +287,11 @@ async function createPDF(reportText) {
                 size: 'A4'
             });
 
+            const fontPath = path.join(process.cwd(), 'src', 'app', 'api', 'telegram-webhook', 'fonts', 'Roboto.ttf');
+            doc.font(fontPath);
+
             const writeStream = fs.createWriteStream(filePath);
             doc.pipe(writeStream);
-
-            // Register the font from public/fonts/Roboto-Regular.ttf
-            doc.registerFont('Roboto', fontPath);
 
             // Add content
             addPdfContent(doc, reportText);
@@ -317,8 +315,6 @@ async function createPDF(reportText) {
 }
 
 function addPdfContent(doc, reportText) {
-    // Set the font to the registered 'Roboto' font
-    doc.font('Roboto');
     // Add title
     doc.fontSize(25)
         .text("Báo Cáo Tổng Kết Năm 2025", {
