@@ -71,6 +71,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "react-markdown": "^10.1.0",
     "react-mentions": "^4.4.10",
     "react-quill": "^2.0.0",
     "react-redux": "^9.1.2",

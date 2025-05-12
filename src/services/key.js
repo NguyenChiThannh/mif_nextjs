@@ -55,5 +55,6 @@ export const QUERY_KEY = {
     // ADMIN_Statistics
     dashboardStatistics: () => ['statistics'],
     dashboardStatisticsSentimentStats: () => ['statistics_sentiment_stats'],
-
+    // ChatBot
+    historyChatBot: () => ['history_chat_bot'],
 }
