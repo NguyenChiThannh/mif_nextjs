@@ -1,14 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef } from "react"
-import { cn } from "@/lib/utils"
 import Image from "next/image"
-import { Trash2, X, ChevronDown, Clock, Send, MessageSquare } from "lucide-react"
+import { Trash2, X, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { chatBotApi } from "@/services/chatBotApi"
 import Link from "next/link"
-import { toast } from "react-toastify"
-import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import DialogConfirmDelete, { confirmDelete } from "@/components/dialog-confirm-delete"
 import Loading from "@/components/loading"
 import ReactMarkdown from 'react-markdown';
@@ -18,7 +15,6 @@ export default function ChatBotBubble() {
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [currentChat, setCurrentChat] = useState(null)
-  const chatContainerRef = useRef(null)
   const historyContainerRef = useRef(null)
   const observerRef = useRef(null)
 

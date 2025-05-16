@@ -7,6 +7,7 @@ import Title from '@/components/title';
 import { Pagination } from '@/components/ui/pagination';
 import { movieApi } from '@/services/movieApi';
 import { movieRatingsApi } from '@/services/movieRatingsApi';
+import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
@@ -15,7 +16,7 @@ export default function MovieReviewsPage() {
     const { id: movieId } = useParams();
 
     const { isLoading: isLoadingMovie, data: movie } = movieApi.query.useGetMovieById(movieId)
-    const { data: review, isLoading: isLoadingReview, isError: isErrorReview } = movieRatingsApi.query.useGetAllRatingsByMovieId(movieId)
+    const { data: review, isLoading: isLoadingReview, isError: isErrorReview } = movieRatingsApi.query.useGetAllRatingsByMovieId(movieId, 0, 100);
 
     if (isLoadingMovie) {
         return <Loading />

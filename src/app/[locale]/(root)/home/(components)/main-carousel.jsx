@@ -12,6 +12,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { movieApi } from '@/services/movieApi';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getYouTubeThumbnail } from '@/lib/formatter';
 
 export function MainCarousel({t}) {
     const [saved, setSaved] = useState(false);
@@ -47,7 +48,7 @@ export function MainCarousel({t}) {
                                     >
                                         <div className="absolute inset-0">
                                             <Image
-                                                src={movie?.posterUrl}
+                                                src={getYouTubeThumbnail(movie?.trailerUrl) || movie?.posterUrl}
                                                 alt={movie?.title}
                                                 layout="fill"
                                                 objectFit="cover"
