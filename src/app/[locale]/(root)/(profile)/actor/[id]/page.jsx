@@ -85,7 +85,7 @@ export default function Actor() {
       <div>
         <Title title={t("images")} isMore={false} />
         <div className="mt-4">
-          <DynamicImageGallery />
+          <DynamicImageGallery type="actor" />
         </div>
       </div>
 

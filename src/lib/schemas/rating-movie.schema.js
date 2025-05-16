@@ -4,5 +4,5 @@ export const schemaRatingMovie = z.object({
         .min(1, { message: "Bạn phải chọn ít nhất 1 sao" })
         .max(5, { message: "Điểm đánh giá tối đa là 5" }),
     movieId: z.string(),
-    comment: z.string().min(10, 'Tối thiểu 10 ký tự'),
+    comment: z.string().min(10, 'Tối thiểu 20 ký tự'),
 })  

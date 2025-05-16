@@ -116,7 +116,7 @@ export default function DetailMovie() {
                         <div className="grid gap-4">
 
                             <Title title={t("image")} isMore={false} />
-                            <DynamicImageGallery />
+                            <DynamicImageGallery type="movie" />
                         </div>
 
                         <div className="grid gap-4 mt-6">
@@ -128,7 +128,7 @@ export default function DetailMovie() {
 
                         <div className="grid gap-6 mt-6">
                             <Title title={t("actor")} isMore={true} />
-                            <SectionActorMovie actors={movie.director} />
+                            <SectionActorMovie actors={movie?.cast || movie.director || []} />
                         </div>
                     </div>
                     <div className="col-span-3 ">

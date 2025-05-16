@@ -72,3 +72,12 @@ export const formateTimestampToIso = (timestamp) => {
     let date = new Date(timestamp * 1000);
     return date.toISOString();
 }
+
+export const getYouTubeThumbnail = (url) => {
+    try {
+        const id = new URL(url).searchParams.get("v");
+        return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+    } catch {
+        return null;
+    }
+};
