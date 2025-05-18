@@ -1,5 +1,4 @@
 "use client";
-import BadgeIcon from "@/components/badge-icon";
 import NotificationItem, {
   NotificationItemSkeleton,
 } from "@/components/notification-item";
@@ -17,6 +16,7 @@ import { Bell } from "lucide-react";
 import { useState, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDateOrTimeAgo } from "@/lib/formatter";
+import BadgeIconNotification from "@/components/badge-icon-notification";
 
 export function NotificationPopover({ t }) {
   const authState = useAppSelector((state) => state.auth.authState);
@@ -95,7 +95,7 @@ export function NotificationPopover({ t }) {
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon">
-          <BadgeIcon
+          <BadgeIconNotification
             icon={Bell}
             {...(totalUnreadNotificationCount !== 0 && {
               badgeContent: totalUnreadNotificationCount,

@@ -11,28 +11,20 @@ import React from 'react'
 export const BADGE_THRESHOLDS = [
   {
     level: "PLATINUM",
-    points: 2000,
     color:
       "bg-gradient-to-r from-blue-200 via-slate-100 to-purple-200 text-slate-800 border-2 border-slate-300 shadow-inner",
-    vietnameseName: "Huy hiệu Bạch Kim",
   },
   {
     level: "GOLD",
-    points: 1000,
     color: "bg-gradient-to-r from-yellow-300 to-amber-400 text-amber-900 border-2 border-yellow-500 shadow-inner",
-    vietnameseName: "Huy hiệu Vàng",
   },
   {
     level: "SILVER",
-    points: 500,
     color: "bg-gradient-to-r from-gray-200 to-slate-300 text-slate-700 border-2 border-gray-400 shadow-inner",
-    vietnameseName: "Huy hiệu Bạc",
   },
   {
     level: "BRONZE",
-    points: 100,
     color: "bg-gradient-to-r from-amber-600 to-amber-800 text-amber-100 border-2 border-amber-900 shadow-inner",
-    vietnameseName: "Huy hiệu Đồng",
   },
 ]
 
@@ -78,7 +70,7 @@ export function BadgeIcon({
       <div
         className={cn(
           "rounded-full flex items-center justify-center",
-          badgeInfo.color,
+          badgeInfo.color, 
           sizeClasses[size],
           animationClass,
           "relative overflow-hidden"
@@ -123,7 +115,7 @@ export default function NotificationItem({ notification, onClick }) {
       case 'ACCEPT_REQUEST':
       case 'JOIN_REQUEST':
       case 'BADGE_EARNED':
-        router.push(`/groups/${notification.groupId}`)
+        router.push(`/badge?level=${badgeLevel}&groupId=${notification.groupId}`)
         break
       default:
         break

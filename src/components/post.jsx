@@ -27,6 +27,7 @@ import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { BadgeIcon } from "@/components/badge-icon"
 
 export default function Post({ className, post, isGroup }) {
   const t = useTranslations("Groups.Post");
@@ -43,8 +44,7 @@ export default function Post({ className, post, isGroup }) {
 
   const savePostMutation = savedPostApi.mutation.useSavePost(userId);
   const unSavePostMutation = savedPostApi.mutation.useUnsavePost(userId);
-  const batchCheckSavedStatusMutation =
-    savedPostApi.mutation.useBatchCheckSavedStatus();
+  const batchCheckSavedStatusMutation = savedPostApi.mutation.useBatchCheckSavedStatus();
 
   const checkSavedStatus = () => {
     batchCheckSavedStatusMutation.mutate(
@@ -106,16 +106,23 @@ export default function Post({ className, post, isGroup }) {
       <div className="grid gap-3 p-2 pt-4">
         <div className="flex justify-between w-full">
           <div className="flex items-center gap-4">
-            {/* Avatar */}
-            <Avatar className="w-10 h-10 flex items-center justify-center object-cover rounded-full border border-border">
-              <AvatarImage
-                src={post.owner.profilePictureUrl}
-                alt={post.owner.displayName}
-              />
-              <AvatarFallback className="text-sm font-medium text-primary">
-                T
-              </AvatarFallback>
-            </Avatar>
+            {/* Avatar with Badge */}
+            <div className="relative">
+              <Avatar className="w-10 h-10 flex items-center justify-center object-cover rounded-full border border-border">
+                <AvatarImage
+                  src={post.owner.profilePictureUrl}
+                  alt={post.owner.displayName}
+                />
+                <AvatarFallback className="text-sm font-medium text-primary">
+                  T
+                </AvatarFallback>
+              </Avatar>
+              {post.owner.badgeMap && post.owner.badgeMap[post.groupId] && (
+                <div className="absolute -bottom-1 -right-1">
+                  <BadgeIcon level={post.owner.badgeMap[post.groupId]} size="sm" showAnimation />
+                </div>
+              )}
+            </div>
 
             {/* User Info */}
             <div className="flex flex-col">
@@ -174,11 +181,11 @@ export default function Post({ className, post, isGroup }) {
                 </DropdownMenuItem>
                 {post.owner.id === userId && (
                   <>
-                    <DropdownMenuItem onClick={() => {}}>
+                    <DropdownMenuItem onClick={() => { }}>
                       <PencilLine className="h-4 w-4 mr-2" />
                       {t("edit_post")}
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => {}}>
+                    <DropdownMenuItem onClick={() => { }}>
                       <Trash2 className="h-4 w-4 mr-2" />
                       {t("delete_post")}
                     </DropdownMenuItem>
@@ -211,9 +218,8 @@ export default function Post({ className, post, isGroup }) {
             onClick={() => handleUpvote(post.id)}
           >
             <Play
-              className={`-rotate-90 font-bold h-5 w-5 ${
-                vote === "UPVOTE" ? "text-green-500 fill-green-500" : ""
-              }`}
+              className={`-rotate-90 font-bold h-5 w-5 ${vote === "UPVOTE" ? "text-green-500 fill-green-500" : ""
+                }`}
             />
           </Button>
           <span>{voteNumber || 0}</span>
@@ -222,9 +228,8 @@ export default function Post({ className, post, isGroup }) {
             onClick={() => handleDownvote(post.id)}
           >
             <Play
-              className={`rotate-90 font-bold h-5 w-5 ${
-                vote === "DOWNVOTE" ? "text-blue-500 fill-blue-500" : ""
-              }`}
+              className={`rotate-90 font-bold h-5 w-5 ${vote === "DOWNVOTE" ? "text-blue-500 fill-blue-500" : ""
+                }`}
             />
           </Button>
         </div>
@@ -236,9 +241,8 @@ export default function Post({ className, post, isGroup }) {
         </Link>
         <Button
           variant="ghost"
-          className={`flex items-center gap-1 rounded-full ${
-            saved ? "text-yellow-500 hover:text-yellow-500" : ""
-          }`}
+          className={`flex items-center gap-1 rounded-full ${saved ? "text-yellow-500 hover:text-yellow-500" : ""
+            }`}
           onClick={() => handleSaveStatusChange(saved ? "unsave" : "save")}
         >
           <Bookmark
