@@ -4,6 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { formatDateOrTimeAgo, formateTimestampToIso, formatToVietnameseDateTime } from '@/lib/formatter';
 import { MessageCircle, Play } from 'lucide-react'
 import React from 'react'
+import { BadgeIcon } from '@/components/badge-icon'
 
 export default function Comment({ comment, setReplyTo, replyTo, onVote, userId }) {
     const voteCount = (comment.upvotes?.length || 0) - (comment.downvotes?.length || 0);
@@ -12,10 +13,17 @@ export default function Comment({ comment, setReplyTo, replyTo, onVote, userId }
     return (
         <div className="grid gap-3">
             <div className="flex gap-3 items-center">
-                <Avatar className="w-8 h-8 flex items-center justify-center object-contain">
-                    <AvatarImage src={comment.userAvatar} alt="@shadcn" />
-                    <AvatarFallback className="flex items-center justify-center">T</AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                    <Avatar className="w-8 h-8 flex items-center justify-center object-contain">
+                        <AvatarImage src={comment.userAvatar} alt="@shadcn" />
+                        <AvatarFallback className="flex items-center justify-center">T</AvatarFallback>
+                    </Avatar>
+                    {comment.badge?.level && (
+                        <div className="absolute -bottom-1 -right-1">
+                            <BadgeIcon level={comment.badge.level} size="sm" showAnimation />
+                        </div>
+                    )}
+                </div>
                 <p className="font-bold">{comment.username} &middot;</p>
                 <p className="text-xs text-muted-foreground">{formatDateOrTimeAgo(comment.createAt)}</p>
             </div>
