@@ -109,6 +109,16 @@
             "analytics": "Phân tích"
         }
     },
+    "Badge": {
+        "title": "Huy hiệu thành tích",
+        "title_description": "Huy hiệu thể hiện sự đóng góp và tương tác của bạn trong cộng đồng",
+        "descrioption_1":"Bạn đang giữ vững chuỗi thành tích! 🎉",
+        "descrioption_2":"Bạn đã tương tác thường xuyên và giữ vững huy hiệu fan cứng của mình.",
+        "descrioption_3":"Huy hiệu fan cứng có thể giúp bạn được vinh danh nhờ sự ủng hộ của mình và sẽ được đánh giá lại hàng tuần.",
+        "descrioption_4": "Hãy không ngừng tương tác để giữ vững huy hiệu của mình nhé.",
+        "go_to_groups_button":"Đi đến nhóm",
+        "go_to_back_home_button":"Quay lại trang chủ"
+    },
     "Category": {
         "category": "Thể loại",
         "category_not_found": "Không tìm thấy category"

@@ -43,8 +43,7 @@ export default function Post({ className, post, isGroup }) {
 
   const savePostMutation = savedPostApi.mutation.useSavePost(userId);
   const unSavePostMutation = savedPostApi.mutation.useUnsavePost(userId);
-  const batchCheckSavedStatusMutation =
-    savedPostApi.mutation.useBatchCheckSavedStatus();
+  const batchCheckSavedStatusMutation = savedPostApi.mutation.useBatchCheckSavedStatus();
 
   const checkSavedStatus = () => {
     batchCheckSavedStatusMutation.mutate(
