@@ -22,6 +22,11 @@ const getGroupMessages = async ({ groupId, page = 0, size = 8 }) => {
   return res.data;
 };
 
+const joinGroupChat = async (groupId) => {
+  const res = await privateApi.post(`/joined-group-chat?groupId=${groupId}`);
+  return res.data;
+}
+
 export const chatApi = {
   query: {
     useGetGroupChats() {
@@ -42,6 +47,17 @@ export const chatApi = {
         getNextPageParam: (lastPage) => {
           if (!lastPage || lastPage.last) return undefined;
           return lastPage.number + 1;
+        },
+      });
+    },
+  },
+  mutation: {
+    useJoinGroupChat() {
+      const queryClient = useQueryClient();
+      return useMutation({
+        mutationFn: joinGroupChat,
+        onSuccess: () => {
+          queryClient.invalidateQueries(QUERY_KEY.groupChats());
         },
       });
     },

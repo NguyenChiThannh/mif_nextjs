@@ -3,22 +3,39 @@ import { InfoIcon, OctagonAlert, Users } from "lucide-react"
 import Link from "next/link"
 import { GROUP_STATUS } from "@/hooks/useGroupStatus"
 import { useTranslations } from "next-intl"
+import { chatApi } from "@/services/chatApi"
+import { useRouter } from "next/navigation"
 
 export default function SideBar({ isOwner, groupId, pendingInvitations, section, status, group }) {
     const t = useTranslations('Groups.NavbarGroup')
+    const joinGroupChatMutation = chatApi.mutation.useJoinGroupChat()
+    const router = useRouter()
+
     const getNavItems = () => status === GROUP_STATUS.JOINED || isOwner
         ? navGroupConfig.member(t) : group.isPublic
             ? navGroupConfig.public_group(t) : navGroupConfig.always_visible(t)
+
+    const handleChatClick = (e, href) => {
+        e.preventDefault()
+        joinGroupChatMutation.mutate(groupId, {
+            onSuccess: () => {
+                router.push(href)
+            }
+        })
+    }
+
     return (
         <div className="h-full border-r bg-background">
             <div className="flex flex-col gap-2 p-4">
                 {getNavItems().map((item, index) => {
                     const { icon: Icon } = item
+                    const href = item.href(groupId)
                     return (
                         <Link
                             key={index}
-                            href={item.href(groupId)}
+                            href={href}
                             prefetch={false}
+                            onClick={(e) => item.title === t('message') ? handleChatClick(e, href) : undefined}
                             className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors 
                                 ${item.active(section) ? 'bg-accent text-primary' : 'text-muted-foreground hover:bg-accent hover:text-primary'}`}
                         >
