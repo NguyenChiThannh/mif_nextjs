@@ -184,7 +184,8 @@
             "about": "Giới thiệu",
             "members": "Thành viên",
             "events": "Sự kiện",
-            "statistical": "Thống kê"
+            "statistical": "Thống kê",
+            "report": "Quản lý báo cáo"
         },
         "DialogAddOrEditRule": {
             "add": "Thêm quy tắc",

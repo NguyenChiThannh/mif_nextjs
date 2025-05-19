@@ -109,6 +109,16 @@
             "analytics": "Analytics"
         }
     },
+    "Badge": {
+        "title": "Achievement Badge",
+        "title_description": "Badges represent your contributions and engagement in the community",
+        "descrioption_1": "You're maintaining your achievement streak! 🎉",
+        "descrioption_2": "You've been actively engaging and have kept your Top Fan badge.",
+        "descrioption_3": "The Top Fan badge highlights your support and is reviewed weekly.",
+        "descrioption_4": "Keep interacting to maintain your badge.",
+        "go_to_groups_button": "Go to Groups",
+        "go_to_back_home_button": "Back to Home"
+    },
     "Category": {
         "category": "Category",
         "category_not_found": "Category not found"
@@ -173,7 +183,8 @@
             "about": "About",
             "members": "Members",
             "events": "Events",
-            "statistical": "Statistics"
+            "statistical": "Statistics",
+            "report": "Report"
         },
         "DialogAddOrEditRule": {
             "add": "Add rule",

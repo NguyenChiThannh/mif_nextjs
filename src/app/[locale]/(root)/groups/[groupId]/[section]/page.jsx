@@ -16,9 +16,11 @@ import Background from "@/app/[locale]/(root)/groups/[groupId]/[section]/(compon
 import { useGroupStatus } from "@/hooks/useGroupStatus"
 import { canCreatePost, checkSectionAccess } from "@/middleware/groupAccess"
 import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/events-section"
+import ReportSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/report-section"
 
 export default function GroupPage() {
     const { groupId, section } = useParams()
+    console.log('🚀 ~ GroupPage ~ section:', section)
     const t = useTranslations('Groups')
 
     const {
@@ -74,6 +76,8 @@ export default function GroupPage() {
                 return <EventsSection />
             case 'rules':
                 return <RulesSection isOwner={isOwner} group={group}  t={t}/>
+            case 'report':
+                return <ReportSection />
             default:
                 return <FeedSection
                     group={group}
