@@ -5,11 +5,13 @@ import Loading from '@/components/loading'
 import { SectionExploreMovies } from '@/components/section-explore-movies'
 import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import { movieApi } from '@/services/movieApi'
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslations } from 'use-intl'
 
 export default function MoviePage() {
     const t = useTranslations('Movie')
+    const observerRef = useRef(null)
+    const isFetchingRef = useRef(false)
 
     const {
         data,
@@ -19,7 +21,34 @@ export default function MoviePage() {
         isLoading,
     } = movieApi.query.useGetAllMoviesInfinity()
 
-    const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const target = entries[0]
+                if (target.isIntersecting && hasNextPage && !isFetchingRef.current) {
+                    isFetchingRef.current = true
+                    fetchNextPage().finally(() => {
+                        isFetchingRef.current = false
+                    })
+                }
+            },
+            {
+                root: null,
+                rootMargin: '100px',
+                threshold: 0.1,
+            }
+        )
+
+        if (observerRef.current) {
+            observer.observe(observerRef.current)
+        }
+
+        return () => {
+            if (observerRef.current) {
+                observer.unobserve(observerRef.current)
+            }
+        }
+    }, [hasNextPage, fetchNextPage])
 
     if (isLoading) return (<Loading />)
 
@@ -53,7 +82,7 @@ export default function MoviePage() {
                     {isFetchingNextPage && (
                         <CardMovieSmallSkeleton />
                     )}
-                    <div ref={observerElem}></div>
+                    <div ref={observerRef} className="h-4" />
                 </div>
             </div>
             <SectionExploreMovies />
