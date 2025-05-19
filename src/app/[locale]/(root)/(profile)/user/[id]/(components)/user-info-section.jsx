@@ -1,9 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { Camera } from 'lucide-react'
+import { BadgeIcon } from '@/components/badge-icon'
 
 export function UserInfoSection({ user, avatar, isOwnProfile, onAvatarChange }) {
     if (!user) return null
+
+    // Count badges by level
+    const badgeCounts = Object.values(user.badgeMap || {}).reduce((acc, level) => {
+        acc[level] = (acc[level] || 0) + 1
+        return acc
+    }, {})
 
     return (
         <div className="flex flex-col items-center gap-4">
@@ -39,6 +46,27 @@ export function UserInfoSection({ user, avatar, isOwnProfile, onAvatarChange }) 
             <div className="text-lg font-bold text-center">
                 {user.displayName}
             </div>
+
+            {/* Badge Counts */}
+            {Object.keys(badgeCounts).length > 0 && (
+                <div className="flex flex-wrap justify-center gap-6 mt-2">
+                    {Object.entries(badgeCounts).map(([level, count]) => (
+                        <div key={level} className="flex flex-col items-center gap-1">
+                            <div className="relative">
+                                <BadgeIcon level={level} size="md" showAnimation />
+                                {count > 0 && (
+                                    <div className="absolute -bottom-1 -right-1 bg-primary text-primary-foreground text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                        {count}
+                                    </div>
+                                )}
+                            </div>
+                            {/* <span className="text-sm font-medium text-muted-foreground mt-2">
+                                {level}
+                            </span> */}
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     )
 } 

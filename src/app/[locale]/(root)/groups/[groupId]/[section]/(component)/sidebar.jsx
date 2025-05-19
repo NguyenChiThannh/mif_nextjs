@@ -1,5 +1,5 @@
 import { navGroupConfig } from "@/lib/navigationConfig"
-import { InfoIcon, Users } from "lucide-react"
+import { InfoIcon, OctagonAlert, Users } from "lucide-react"
 import Link from "next/link"
 import { GROUP_STATUS } from "@/hooks/useGroupStatus"
 import { useTranslations } from "next-intl"
@@ -37,6 +37,22 @@ export default function SideBar({ isOwner, groupId, pendingInvitations, section,
                     >
                         <Users className="h-4 w-4" />
                         {t('members')}
+                        {isOwner && pendingInvitations?.numberOfElements > 0 && (
+                            <div className="flex items-center justify-center bg-primary text-primary-foreground h-5 w-5 rounded-full">
+                                {pendingInvitations.numberOfElements}
+                            </div>
+                        )}
+                    </Link>
+                )}
+                {(isOwner) && (
+                    <Link
+                        href={`/groups/${groupId}/report`}
+                        prefetch={false}
+                        className={`flex items-center gap-2 rounded-md px-6 py-2 text-sm font-medium transition-colors 
+                            ${section === 'report' ? 'bg-accent text-primary' : 'text-muted-foreground hover:bg-accent hover:text-primary'}`}
+                    >
+                        <OctagonAlert className="h-4 w-4" />
+                        {t('report')}
                         {isOwner && pendingInvitations?.numberOfElements > 0 && (
                             <div className="flex items-center justify-center bg-primary text-primary-foreground h-5 w-5 rounded-full">
                                 {pendingInvitations.numberOfElements}

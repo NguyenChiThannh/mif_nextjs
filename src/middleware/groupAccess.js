@@ -20,7 +20,7 @@ export const checkSectionAccess = (section = 'feed', status, isOwner, isPublic) 
         return status === GROUP_STATUS.JOINED || isOwner;
     }
 
-    return isOwner && section === 'settings';
+    return isOwner;
 };
 
 export const canCreatePost = (status, isOwner) => {

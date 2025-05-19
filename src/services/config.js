@@ -70,7 +70,6 @@ privateApi.interceptors.response.use(
         const { response, config } = error;
         console.log('🚀 ~ error:', error)
         const status = response?.status;
-        console.log(response)
         if (status === 401 || status === 403) {
             console.log('🚀 ~ status === 403:')
             // Chúng ta sẽ Thực hiện kịch bản refresh token tại đây

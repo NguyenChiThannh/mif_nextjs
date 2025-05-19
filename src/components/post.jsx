@@ -28,6 +28,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BadgeIcon } from "@/components/badge-icon"
+import DialogReportPost from "@/components/dialog-report-post";
 
 export default function Post({ className, post, isGroup }) {
   const t = useTranslations("Groups.Post");
@@ -175,9 +176,12 @@ export default function Post({ className, post, isGroup }) {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <MessageSquareWarning className="h-4 w-4 mr-2" />
-                  {t("report_post")}
+                <DropdownMenuItem asChild>
+                  <DialogReportPost
+                    groupId={post.groupId}
+                    postId={post.id}
+                    t={t}
+                  />
                 </DropdownMenuItem>
                 {post.owner.id === userId && (
                   <>
