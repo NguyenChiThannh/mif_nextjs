@@ -57,4 +57,8 @@ export const QUERY_KEY = {
     dashboardStatisticsSentimentStats: () => ['statistics_sentiment_stats'],
     // ChatBot
     historyChatBot: () => ['history_chat_bot'],
+    // Report
+    groupReports: (groupId) => ['group_reports', groupId],
+    postReportCounts: (postId) => ['post_report_counts', postId],
+    reportAnalysis: (reportId) => ['report_analysis', reportId],
 }

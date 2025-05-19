@@ -20,7 +20,6 @@ import ReportSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/repo
 
 export default function GroupPage() {
     const { groupId, section } = useParams()
-    console.log('🚀 ~ GroupPage ~ section:', section)
     const t = useTranslations('Groups')
 
     const {
@@ -57,7 +56,7 @@ export default function GroupPage() {
                     canCreate={canCreatePost(status, isOwner)}
                 />
             case 'about':
-                return <AboutSection group={group} members={members} t={t}/>
+                return <AboutSection group={group} members={members} t={t} />
             case 'feed':
                 return <FeedSection
                     group={group}
@@ -75,9 +74,9 @@ export default function GroupPage() {
             case 'events':
                 return <EventsSection />
             case 'rules':
-                return <RulesSection isOwner={isOwner} group={group}  t={t}/>
+                return <RulesSection isOwner={isOwner} group={group} t={t} />
             case 'report':
-                return <ReportSection />
+                return <ReportSection groupId={groupId} />
             default:
                 return <FeedSection
                     group={group}

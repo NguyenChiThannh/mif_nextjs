@@ -376,7 +376,11 @@
         "delete_rule_successful": "Rule deleted successfully",
         "create_rating_movie_successful": "Movie rating successful",
         "delete_rating_movie_successful": "Rating deleted successfully",
-        "delete_group_successful": "Group deleted successfully"
+        "delete_group_successful": "Group deleted successfully",
+        "report_post_successful": "Report post successful",
+        "report_post_failed": "Report post failed",
+        "block_post_successful": "Block post successful",
+        "block_post_failed": "Block post failed"
     },
     "duration": "Duration",
     "minutes": "minutes",

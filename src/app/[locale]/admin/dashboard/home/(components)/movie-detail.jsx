@@ -7,8 +7,6 @@ import { movieRatingsApi } from '@/services/movieRatingsApi'
 export default function MovieDetail({ selectedMovie, setSelectedMovie }) {
     const { isLoading: isLoadingReview, data: review } = movieRatingsApi.query.useGetRatingsByMovieId(selectedMovie.id)
 
-    console.log(review)
-
     if (isLoadingReview) return <div>Loading...</div>
     return (
         <div className="mt-8">
