@@ -28,6 +28,11 @@ const login = async (data) => {
     return res.data
 }
 
+const loginWithGoogle = async (data) => {
+    const res = await publicApi.post('auth/google-login', data)
+    return res.data
+}
+
 export const authApi = {
     mutation: {
         useLogin() {
@@ -75,6 +80,14 @@ export const authApi = {
                 }
             })
         },
-
+        useLoginWithGoogle() {
+            const t = useTranslations('Toast');
+            return useMutation({
+                mutationFn: loginWithGoogle,
+                onSuccess: () => {
+                    toast.success(t('login_successful'))
+                }
+            })
+        }
     }
 }
