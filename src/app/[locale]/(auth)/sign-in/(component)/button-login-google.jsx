@@ -14,7 +14,6 @@ import { useRouter } from 'next/navigation';
 export default function ButtonLoginWithGoogle({ t }) {
   const tToast = useTranslations('Toast');
   const locale = useLocale();
-  console.log('🚀 ~ ButtonLoginWithGoogle ~ locale:', locale)
   const dispatch = useAppDispatch();
   const router = useRouter();
   const loginWithGoogleMutation = authApi.mutation.useLoginWithGoogle();
@@ -81,6 +80,8 @@ export default function ButtonLoginWithGoogle({ t }) {
           shape="rectangular"
           logo_alignment="center"
           width="100%"
+          ux_mode="popup"
+          useOneTap={false}
         />
       </GoogleOAuthProvider>
     </div>
