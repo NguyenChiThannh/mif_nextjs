@@ -24,6 +24,8 @@ export default function ButtonLoginWithGoogle({ t }) {
           onError={handleGoogleError}
           theme="outline"
           size="large"
+          ux_mode="popup" // Quan trọng để không hiện auto One Tap
+          useOneTap={false}
           text="signin_with"
           shape="rectangular"
           logo_alignment="center"
