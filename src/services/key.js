@@ -55,6 +55,9 @@ export const QUERY_KEY = {
     // ADMIN_Statistics
     dashboardStatistics: () => ['statistics'],
     dashboardStatisticsSentimentStats: () => ['statistics_sentiment_stats'],
+    userStatisticsByYear: (year) => ['user_statistics_by_year', year],
+    postStatisticsByYear: (year) => ['post_statistics_by_year', year],
+    ratingStatisticsByYear: (year) => ['rating_statistics_by_year', year],
     // ChatBot
     historyChatBot: () => ['history_chat_bot'],
     // Report
