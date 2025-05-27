@@ -61,7 +61,13 @@ export default function ButtonLoginWithGoogle({ t }) {
   };
 
   useEffect(() => {
-    window.google?.accounts.id.disableAutoSelect?.();
+    const interval = setInterval(() => {
+      if (window.google?.accounts?.id) {
+        window.google.accounts.id.disableAutoSelect();
+        clearInterval(interval);
+      }
+    }, 100);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -82,6 +88,7 @@ export default function ButtonLoginWithGoogle({ t }) {
           width="100%"
           ux_mode="popup"
           useOneTap={false}
+          auto_select={false}
         />
       </GoogleOAuthProvider>
     </div>
