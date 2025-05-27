@@ -60,16 +60,6 @@ export default function ButtonLoginWithGoogle({ t }) {
     // toast.error(tToast('login_google_error'));
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (window.google?.accounts?.id) {
-        window.google.accounts.id.disableAutoSelect();
-        clearInterval(interval);
-      }
-    }, 100);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div>
       <GoogleOAuthProvider 
