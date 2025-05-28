@@ -24,26 +24,62 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import * as XLSX from 'xlsx'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { dataTypeOptions, monthlyData } from '@/app/[locale]/admin/dashboard/home/mock-data'
+import { adminStatisticsApi } from '@/services/adminStatisticsApi'
+import { dataTypeOptions } from '@/lib/constant'
 
 export default function MonthlyChart() {
     const [chartType, setChartType] = useState('line')
     const [selectedDataType, setSelectedDataType] = useState('users')
-    const [selectedYear, setSelectedYear] = useState('2024')
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear().toString())
+    const [showAllMonths, setShowAllMonths] = useState(false)
+    const { data: userStatsData, isLoading: isLoadingUserStatsData } = adminStatisticsApi.query.useGetUserStatisticsByYear(selectedYear)
+    const { data: postStatsData, isLoading: isLoadingPostStatsData } = adminStatisticsApi.query.useGetPostStatisticsByYear(selectedYear)
+    const { data: ratingStatsData, isLoading: isLoadingRatingStatsData } = adminStatisticsApi.query.useGetRatingStatisticsByYear(selectedYear)
+
+    // Get current date
+    const currentDate = new Date()
+    const currentYear = currentDate.getFullYear()
+    const currentMonth = currentDate.getMonth() + 1 // JavaScript months are 0-based
 
     // Danh sách các năm để chọn
     const yearOptions = [
-        { value: '2021', label: '2021' },
-        { value: '2022', label: '2022' },
-        { value: '2023', label: '2023' },
         { value: '2024', label: '2024' },
         { value: '2025', label: '2025' },
+        { value: '2026', label: '2026' },
+        { value: '2027', label: '2027' },
+        { value: '2028', label: '2028' },
     ]
 
     // Lọc dữ liệu theo năm đã chọn
     const getFilteredData = () => {
-        // Trong thực tế, bạn sẽ lọc dữ liệu theo năm từ API
-        return monthlyData[selectedDataType]
+        let data;
+        switch (selectedDataType) {
+            case 'users':
+                data = userStatsData;
+                break;
+            case 'posts':
+                data = postStatsData;
+                break;
+            case 'ratings':
+                data = ratingStatsData;
+                break;
+            default:
+                return []
+        }
+
+        if (!data) return []
+
+        // Transform API response into chart data format and filter out future months if needed
+        return Object.entries(data)
+            .filter(([month]) => {
+                const monthNum = parseInt(month);
+                const yearNum = parseInt(selectedYear);
+                return showAllMonths || yearNum < currentYear || (yearNum === currentYear && monthNum <= currentMonth);
+            })
+            .map(([month, count]) => ({
+                month: `Tháng ${month}`,
+                count: count
+            }));
     }
 
     const handleExportCSV = () => {
@@ -84,9 +120,9 @@ export default function MonthlyChart() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+                    <div className="grid grid-cols-1  md:[grid-template-columns:repeat(20,_minmax(0,_1fr))] gap-4 mt-4">
                         {/* Data filter */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 col-span-3">
                             <label className="text-sm font-medium">Loại dữ liệu</label>
                             <Select value={selectedDataType} onValueChange={setSelectedDataType}>
                                 <SelectTrigger className="w-full">
@@ -103,7 +139,7 @@ export default function MonthlyChart() {
                         </div>
 
                         {/* Select Year */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 col-span-2">
                             <label className="text-sm font-medium">Năm</label>
                             <Select value={selectedYear} onValueChange={setSelectedYear}>
                                 <SelectTrigger className="w-full">
@@ -120,7 +156,7 @@ export default function MonthlyChart() {
                         </div>
 
                         {/* Chart Type */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 col-span-4">
                             <label className="text-sm font-medium">Kiểu biểu đồ</label>
                             <Tabs defaultValue="line" className="w-full" onValueChange={setChartType}>
                                 <TabsList className="w-full grid grid-cols-2">
@@ -140,8 +176,33 @@ export default function MonthlyChart() {
                             </Tabs>
                         </div>
 
+                        {/* Month View Toggle */}
+                        <div className="space-y-2 col-span-7">
+                            <label className="text-sm font-medium">Hiển thị tháng</label>
+                            <Tabs
+                                defaultValue="current"
+                                className="w-full"
+                                onValueChange={(value) => setShowAllMonths(value === 'all')}
+                            >
+                                <TabsList className="w-full grid grid-cols-2">
+                                    <TabsTrigger value="current">
+                                        <div className="flex items-center">
+                                            <TrendingUp className="h-4 w-4 mr-2" />
+                                            Tới tháng hiện tại
+                                        </div>
+                                    </TabsTrigger>
+                                    <TabsTrigger value="all">
+                                        <div className="flex items-center">
+                                            <Tag className="h-4 w-4 mr-2" />
+                                            Tất cả tháng
+                                        </div>
+                                    </TabsTrigger>
+                                </TabsList>
+                            </Tabs>
+                        </div>
+
                         {/* Export File */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 col-span-4">
                             <label className="text-sm font-medium">Xuất dữ liệu</label>
                             <div className="grid grid-cols-2 gap-2">
                                 <Button variant="outline" onClick={handleExportCSV}>
