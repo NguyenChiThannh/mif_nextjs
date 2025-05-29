@@ -61,7 +61,8 @@ export const QUERY_KEY = {
     // ChatBot
     historyChatBot: () => ['history_chat_bot'],
     // Report
-    groupReports: (groupId) => ['group_reports', groupId],
+    groupPendingReports: (groupId) => ['group_pending_reports', groupId],
+    groupBlockReports: (groupId) => ['group_block_reports', groupId],
     postReportCounts: (postId) => ['post_report_counts', postId],
     reportAnalysis: (reportId) => ['report_analysis', reportId],
 }
