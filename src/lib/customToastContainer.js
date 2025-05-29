@@ -18,6 +18,7 @@ const CustomToastContainer = () => {
       pauseOnHover
       theme={theme}
       transition={Bounce}
+      limit={3}
     />
   );
 };
