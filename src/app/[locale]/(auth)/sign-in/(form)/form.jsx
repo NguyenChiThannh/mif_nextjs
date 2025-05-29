@@ -124,7 +124,9 @@ export default function FormLogin({ t }) {
 
                 {/* Submit Button */}
                 <Button type="submit" className="w-full">{t('login_action')}</Button>
-                <ButtonLoginWithGoogle t={t} />
+                <div className="flex justify-center">
+                    <ButtonLoginWithGoogle t={t} />
+                </div>
                 {/* Social Login Buttons */}
                 <div className="grid gap-2">
                 </div>

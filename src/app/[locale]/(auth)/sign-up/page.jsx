@@ -32,7 +32,6 @@ export default function SignUp() {
                         {t('login_with_facebook')}
                     </Button> */}
                 </div>
-
                 {/* Login Redirect */}
                 <div className="text-center text-sm text-muted-foreground mt-4">
                     {t('you_have_account_yet')}{' '}
