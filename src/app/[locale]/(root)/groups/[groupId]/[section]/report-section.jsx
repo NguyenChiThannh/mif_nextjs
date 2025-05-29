@@ -3,46 +3,67 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Loading from '@/components/loading';
 import useInfiniteScroll from '@/hooks/useInfiniteScroll';
 import { reportPostApi } from '@/services/reportPostApi';
-import { formatDateOrTimeAgo } from '@/lib/formatter';
+import { formatDate, formatDateOrTimeAgo } from '@/lib/formatter';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle2, XCircle, Ban } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, XCircle, Ban, ShieldAlert, Flag, User } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Separator } from '@/components/ui/separator';
 
 export default function ReportSection({ groupId }) {
     const t = useTranslations('Groups.Report');
     const [selectedReport, setSelectedReport] = useState(null);
     const [showAnalysis, setShowAnalysis] = useState(false);
+    const [activeTab, setActiveTab] = useState("reports");
 
     const {
-        data,
-        fetchNextPage,
-        hasNextPage,
-        isFetchingNextPage,
-        isLoading,
+        data: reportsData,
+        fetchNextPage: fetchNextReports,
+        hasNextPage: hasNextReports,
+        isFetchingNextPage: isFetchingNextReports,
+        isLoading: isLoadingReports,
     } = reportPostApi.query.useGetUnresolvedReportsByGroup(groupId);
+
+    const {
+        data: blockedData,
+        fetchNextPage: fetchNextBlocked,
+        hasNextPage: hasNextBlocked,
+        isFetchingNextPage: isFetchingNextBlocked,
+        isLoading: isLoadingBlocked,
+    } = reportPostApi.query.useGetBlockedPostsByGroup(groupId);
 
     const { data: analysisData } = reportPostApi.query.useAnalyzeReport(
         selectedReport?.id, selectedReport, showAnalysis
     );
 
     const blockPostMutation = reportPostApi.mutation.useBlockPost(groupId);
+    const unBlockPostMutation = reportPostApi.mutation.useUnBlockPost(groupId);
 
-    const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
-
-    if (isLoading) return <Loading />;
+    const reportsObserverElem = useInfiniteScroll(hasNextReports, fetchNextReports);
+    const blockedObserverElem = useInfiniteScroll(hasNextBlocked, fetchNextBlocked);
 
     const handleViewAnalysis = (report) => {
         setSelectedReport(report);
         setShowAnalysis(true);
     };
 
-    const handleBlockPost = (postId) => {
+    const handleBlockPost = (reportId) => {
         confirmDelete('Bạn muốn chặn bài viết này không', (result) => {
             if (result) {
-                blockPostMutation.mutate(postId)
+                blockPostMutation.mutate(reportId)
+            }
+        });
+    };
+
+    const handleUnblockPost = (reportId) => {
+        confirmDelete('Bạn muốn bỏ chặn bài viết này không', (result) => {
+            if (result) {
+                unBlockPostMutation.mutate(reportId);
             }
         });
     };
@@ -90,29 +111,57 @@ export default function ReportSection({ groupId }) {
         );
     };
 
-    return (
-        <div className="space-y-4">
-            <div className="flex items-center gap-2 mt-4">
-                <h2 className="text-xl font-bold">Quản lý tố cáo</h2>
-                
-            </div>
+    const renderReportedPosts = () => {
+        if (isLoadingReports) return <Loading />;
+
+        return (
             <div className="grid gap-4">
-                {data?.pages?.map((page) =>
+                {reportsData?.pages?.map((page) =>
                     page.content.map((report) => (
                         <Card key={report.id}>
                             <CardHeader>
-                                <CardTitle className="text-base flex justify-between items-center">
-                                    <span>Báo cáo #{report.id.slice(-6)}</span>
-                                    <span className="text-sm text-muted-foreground">
-                                        {formatDateOrTimeAgo(report.reportedAt)}
-                                    </span>
-                                </CardTitle>
+                                <div className="flex justify-between items-center">
+                                    <div className="space-y-1">
+                                        <CardTitle className="text-base flex items-center gap-2">
+                                            <Flag className="h-4 w-4 text-red-500" />
+                                            <span>Báo cáo #{report.id.slice(-6)}</span>
+                                            <Badge variant={report.status === 'PENDING' ? 'warning' : 'destructive'}>
+                                                {report.status}
+                                            </Badge>
+                                        </CardTitle>
+                                        <div className="text-sm text-muted-foreground">
+                                            {formatDate(report.createdAt)}
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-sm">
+                                        {report.reportCount} báo cáo
+                                    </Badge>
+                                </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="space-y-2">
-                                    <p className="text-sm">
-                                        <span className="font-semibold">Lý do:</span> {report.reason}
-                                    </p>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <User className="h-4 w-4" />
+                                        <span>Người đăng: {report.ownerUsername}</span>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h4 className="font-semibold text-sm">Danh sách báo cáo:</h4>
+                                        {report.groupReports.map((groupReport, index) => (
+                                            <div key={index} className="space-y-2">
+                                                <div className="flex items-start gap-2 p-2 bg-muted rounded-md">
+                                                    <div className="flex-1 space-y-1">
+                                                        <div className="text-sm">
+                                                            <span className="font-medium">Lý do:</span> {groupReport.reason}
+                                                        </div>
+                                                        <div className="text-xs text-muted-foreground">
+                                                            {formatDateOrTimeAgo(groupReport.reportedAt)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {index < report.groupReports.length - 1 && <Separator />}
+                                            </div>
+                                        ))}
+                                    </div>
                                     <div className="flex gap-2">
                                         <Button
                                             variant="outline"
@@ -124,14 +173,14 @@ export default function ReportSection({ groupId }) {
                                         <Button
                                             variant="outline"
                                             size="sm"
-                                            onClick={() => window.open(`/groups/${groupId}/post/${report.groupPostId}`, '_blank')}
+                                            onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
                                         >
                                             Xem bài viết
                                         </Button>
                                         <Button
                                             variant="destructive"
                                             size="sm"
-                                            onClick={() => handleBlockPost(report.groupPostId)}
+                                            onClick={() => handleBlockPost(report.id)}
                                             disabled={blockPostMutation.isLoading}
                                         >
                                             <Ban className="h-4 w-4 mr-2" />
@@ -143,15 +192,119 @@ export default function ReportSection({ groupId }) {
                         </Card>
                     ))
                 )}
-                {isFetchingNextPage && <Loading />}
-                <div ref={observerElem} />
+                {isFetchingNextReports && <Loading />}
+                <div ref={reportsObserverElem} />
             </div>
+        );
+    };
+
+    const renderBlockedPosts = () => {
+        if (isLoadingBlocked) return <Loading />;
+
+        return (
+            <div className="grid gap-4">
+                {blockedData?.pages?.map((page) =>
+                    page.content.map((report) => (
+                        <Card key={report.id}>
+                            <CardHeader>
+                                <div className="flex justify-between items-center">
+                                    <div className="space-y-1">
+                                        <CardTitle className="text-base flex items-center gap-2">
+                                            <Ban className="h-4 w-4 text-red-500" />
+                                            <span>Bài cáo #{report.id.slice(-6)}</span>
+                                            <Badge variant="destructive">BLOCKED</Badge>
+                                        </CardTitle>
+                                        <div className="text-sm text-muted-foreground">
+                                            {formatDate(report.updatedAt)}
+                                        </div>
+                                    </div>
+                                    <Badge variant="outline" className="text-sm">
+                                        {report.reportCount} báo cáo
+                                    </Badge>
+                                </div>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <User className="h-4 w-4" />
+                                        <span>Người đăng: {report.ownerUsername}</span>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <h4 className="font-semibold text-sm">Lý do bị chặn:</h4>
+                                        {report.groupReports.map((groupReport, index) => (
+                                            <div key={index} className="space-y-2">
+                                                <div className="flex items-start gap-2 p-2 bg-muted rounded-md">
+                                                    <Avatar className="h-6 w-6">
+                                                        <AvatarFallback>
+                                                            {groupReport.reporterId.slice(-2)}
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                    <div className="flex-1 space-y-1">
+                                                        <div className="text-sm">
+                                                            <span className="font-medium">Lý do:</span> {groupReport.reason}
+                                                        </div>
+                                                        <div className="text-xs text-muted-foreground">
+                                                            {formatDateOrTimeAgo(groupReport.reportedAt)}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {index < report.groupReports.length - 1 && <Separator />}
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
+                                        >
+                                            Xem bài viết
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            onClick={() => handleUnblockPost(report.id)}
+                                            disabled={unBlockPostMutation.isLoading}
+                                        >
+                                            <ShieldAlert className="h-4 w-4 mr-2" />
+                                            {unBlockPostMutation.isLoading ? 'Đang bỏ chặn...' : 'Bỏ chặn bài viết'}
+                                        </Button>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ))
+                )}
+                {isFetchingNextBlocked && <Loading />}
+                <div ref={blockedObserverElem} />
+            </div>
+        );
+    };
+
+    return (
+        <div className="space-y-4">
+            <div className="flex items-center gap-2 mt-4">
+                <h2 className="text-xl font-bold">Quản lý tố cáo</h2>
+            </div>
+
+            <Tabs defaultValue="reports" className="w-full" onValueChange={setActiveTab}>
+                <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="reports">Bài viết bị tố cáo</TabsTrigger>
+                    <TabsTrigger value="blocked">Bài viết bị chặn</TabsTrigger>
+                </TabsList>
+                <TabsContent value="reports">
+                    {renderReportedPosts()}
+                </TabsContent>
+                <TabsContent value="blocked">
+                    {renderBlockedPosts()}
+                </TabsContent>
+            </Tabs>
+
             <DialogConfirmDelete />
             {renderAnalysisDialog()}
         </div>
     );
 }
-
 
 let setDialogState, onDialogResult;
 function confirmDelete(message, callback) {
@@ -185,17 +338,16 @@ function DialogConfirmDelete() {
         onDialogResult(result);
     };
 
-
     return (
         <Dialog open={dialogState.isOpen} onOpenChange={() => handleConfirm(false)}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Chặn bài viết</DialogTitle>
+                    <DialogTitle>Xác nhận</DialogTitle>
                 </DialogHeader>
                 <p>{dialogState.message || t('message_default')}</p>
                 <DialogFooter>
                     <Button variant="outline" onClick={() => handleConfirm(false)}>Hủy</Button>
-                    <Button variant="destructive" onClick={() => handleConfirm(true)}>Chặn</Button>
+                    <Button variant="destructive" onClick={() => handleConfirm(true)}>Xác nhận</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

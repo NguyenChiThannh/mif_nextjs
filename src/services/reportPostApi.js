@@ -15,6 +15,18 @@ const getUnresolvedReportsByGroup = async ({ pageParam = 0, queryKey }) => {
     const res = await privateApi.get(`/group-posts/${groupId}/reports`, {
         params: {
             page: pageParam,
+            status: 'PENDING'
+        }
+    });
+    return res.data;
+}
+
+const getBlockReportedPostsByGroup = async ({ pageParam = 0, queryKey }) => {
+    const [_key, groupId] = queryKey;
+    const res = await privateApi.get(`/group-posts/${groupId}/reports`, {
+        params: {
+            page: pageParam,
+            status: 'BLOCKED'
         }
     });
     return res.data;
@@ -25,8 +37,13 @@ const getReportCounts = async (postId) => {
     return res.data
 }
 
-const blockPost = async (postId) => {
-    const res = await privateApi.post(`/group-posts/${postId}/block`)
+const blockPost = async (reportId) => {
+    const res = await privateApi.post(`/group-posts/reports/${reportId}/handle?status=BLOCKED`)
+    return res.data
+}
+
+const unBlockPost = async (reportId) => {
+    const res = await privateApi.post(`/group-posts/reports/${reportId}/handle?status=PENDING`)
     return res.data
 }
 
@@ -39,8 +56,18 @@ export const reportPostApi = {
     query: {
         useGetUnresolvedReportsByGroup(groupId) {
             return useInfiniteQuery({
-                queryKey: QUERY_KEY.groupReports(groupId),
+                queryKey: QUERY_KEY.groupPendingReports(groupId),
                 queryFn: getUnresolvedReportsByGroup,
+                getNextPageParam: (lastPage, allPages) => {
+                    const nextPage = allPages.length;
+                    return lastPage.last ? undefined : nextPage;
+                },
+            });
+        },
+        useGetBlockedPostsByGroup(groupId) {
+            return useInfiniteQuery({
+                queryKey: QUERY_KEY.groupBlockReports(groupId),
+                queryFn: getBlockReportedPostsByGroup,
                 getNextPageParam: (lastPage, allPages) => {
                     const nextPage = allPages.length;
                     return lastPage.last ? undefined : nextPage;
@@ -69,7 +96,7 @@ export const reportPostApi = {
                 mutationFn: reportPost,
                 onSuccess: () => {
                     toast.success(t('report_post_successful'))
-                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupReports(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupBlockReports(groupId) })
                 },
             })
         },
@@ -80,7 +107,23 @@ export const reportPostApi = {
                 mutationFn: blockPost,
                 onSuccess: () => {
                     toast.success(t('block_post_successful'))
-                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupReports(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupBlockReports(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPendingReports(groupId) })
+                },
+                onError: () => {
+                    toast.error(t('block_post_failed'))
+                }
+            })
+        },
+        useUnBlockPost(groupId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: blockPost,
+                onSuccess: () => {
+                    toast.success(t('block_post_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupBlockReports(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPendingReports(groupId) })
                 },
                 onError: () => {
                     toast.error(t('block_post_failed'))

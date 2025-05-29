@@ -43,7 +43,7 @@ export default function CardMember({ member, groupId, type, isOwner, cardOwner }
         <div className="bg-background rounded-lg shadow-md p-4 flex items-center justify-between">
             <div className="flex items-center gap-4">
                 <Avatar>
-                    <AvatarImage src={member?.avatar} alt={member?.displayName} />
+                    <AvatarImage src={member?.avatar  || member?.profilePictureUrl} alt={member?.displayName} />
                     <AvatarFallback className='uppercase'>{member?.displayName && member?.displayName[0]}</AvatarFallback>
                 </Avatar>
                 <div>
