@@ -53,7 +53,8 @@
         "forget_password_action": "Nhận mã xác nhận",
         "otp_title": "Xác nhận OTP",
         "otp_description": "Xác nhận OTP",
-        "otp_action": "Xác nhận"
+        "otp_action": "Xác nhận",
+        "or": "Hoặc"
     },
     "Home": {
         "title_section_actor": "Diễn viên nổi bật",

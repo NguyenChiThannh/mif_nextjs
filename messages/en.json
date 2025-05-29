@@ -53,7 +53,8 @@
         "forget_password_action": "Get confirmation code",
         "otp_title": "OTP Confirmation",
         "otp_description": "Confirm OTP",
-        "otp_action": "Confirm"
+        "otp_action": "Confirm",
+        "or": "Or"
     },
     "Home": {
         "title_section_actor": "Featured Actors",
