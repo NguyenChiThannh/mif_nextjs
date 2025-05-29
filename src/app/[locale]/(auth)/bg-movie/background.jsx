@@ -1,7 +1,14 @@
 import Image from "next/image";
 import "./style.css"
 
-const images = [
+function shuffleArray(array) {
+    return array
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value);
+}
+
+const shuffledImages = shuffleArray([
     'https://facts.net/wp-content/uploads/2023/06/37-facts-about-the-movie-titanic-1687656865.jpg',
     'https://cdn.galaxycine.vn/media/2024/6/28/twisters-750_1719558114559.jpg',
     'https://live.staticflickr.com/4005/4686746190_31c292dc8c_b.jpg',
@@ -20,8 +27,7 @@ const images = [
     'https://i.pinimg.com/736x/1c/73/83/1c7383afce5c407c8e648d2e26f6932e.jpg',
     'https://i.pinimg.com/736x/2c/9c/ac/2c9cacdcc4a83caf7f62f966008ddd89.jpg',
     'https://i.pinimg.com/736x/45/05/56/45055630bed63d1a6e5415734c1990af.jpg',
-]
-
+]);
 
 export default function Background() {
     return (
@@ -30,8 +36,8 @@ export default function Background() {
                 {Array.from({ length: 6 }).map((_, rowIndex) => (
                     <div key={rowIndex} className="grid grid-cols-7">
                         {Array.from({ length: 7 }).map((_, colIndex) => {
-                            const imageIndex = rowIndex * 3 + colIndex;
-                            // imageIndex++;
+                            const flatIndex = rowIndex * 7 + colIndex;
+                            const image = shuffledImages[flatIndex % shuffledImages.length];
                             return (
                                 <div key={colIndex} className="movie-strip">
                                     <div className="strip-row">
@@ -42,8 +48,8 @@ export default function Background() {
                                     <div className="strip-main">
                                         <div className="strip-frame">
                                             <Image
-                                                src={images[imageIndex]}
-                                                alt={`Movie Frame ${imageIndex}`}
+                                                src={image}
+                                                alt={`Movie Frame ${flatIndex}`}
                                                 height={152}
                                                 width={400}
                                                 className="h-[152px]"
