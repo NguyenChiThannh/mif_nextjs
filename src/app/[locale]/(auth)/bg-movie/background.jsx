@@ -17,16 +17,21 @@ const images = [
     'https://i.pinimg.com/736x/0a/7b/6d/0a7b6dfba555c5f7d8e752e22d099d6f.jpg',
     'https://i.pinimg.com/736x/63/7b/72/637b7255eb38b716439c62ba7cce5368.jpg',
     'https://i.pinimg.com/736x/c9/91/f9/c991f95a00b97af42706b40f37052628.jpg',
+    'https://i.pinimg.com/736x/1c/73/83/1c7383afce5c407c8e648d2e26f6932e.jpg',
+    'https://i.pinimg.com/736x/2c/9c/ac/2c9cacdcc4a83caf7f62f966008ddd89.jpg',
+    'https://i.pinimg.com/736x/45/05/56/45055630bed63d1a6e5415734c1990af.jpg',
 ]
+
 
 export default function Background() {
     return (
         <div className="relative w-full h-screen overflow-hidden sm:block hidden">
             <div className="absolute gap-2 rotate-[30deg] scale-[1.6]">
-                {Array.from({ length: 4 }).map((_, rowIndex) => (
+                {Array.from({ length: 6 }).map((_, rowIndex) => (
                     <div key={rowIndex} className="grid grid-cols-7">
                         {Array.from({ length: 7 }).map((_, colIndex) => {
                             const imageIndex = rowIndex * 3 + colIndex;
+                            // imageIndex++;
                             return (
                                 <div key={colIndex} className="movie-strip">
                                     <div className="strip-row">
