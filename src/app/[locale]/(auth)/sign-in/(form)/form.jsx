@@ -124,6 +124,14 @@ export default function FormLogin({ t }) {
 
                 {/* Submit Button */}
                 <Button type="submit" className="w-full">{t('login_action')}</Button>
+
+                <div className="flex items-center">
+                    <div className="flex-grow h-px bg-border" />
+                    <span className="mx-2 text-sm text-muted-foreground">{t('or')}</span>
+                    <div className="flex-grow h-px bg-border" />
+                </div>
+
+
                 <ButtonLoginWithGoogle t={t} />
                 {/* Social Login Buttons */}
                 <div className="grid gap-2">

@@ -25,6 +25,13 @@ export default function SignUp() {
                 {/* SignUp Form */}
                 <SignUpForm t={t} />
 
+                {/* Divider */}
+                <div className="flex items-center">
+                    <div className="flex-grow h-px bg-border" />
+                    <span className="mx-2 text-sm text-muted-foreground">{t('or')}</span>
+                    <div className="flex-grow h-px bg-border" />
+                </div>
+
                 {/* Social Login */}
                 <div className="grid gap-2">
                     <ButtonLoginWithGoogle t={t} />
