@@ -19,7 +19,7 @@ function GoogleLoginButton({ t }) {
   const loginWithGoogleMutation = authApi.mutation.useLoginWithGoogle()
 
   return (
-    <div className="w-full">
+    <div className="w-full flex justify-center">
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           const idToken = credentialResponse.credential 
