@@ -63,6 +63,7 @@ export default function FormLogin({ t }) {
                     .then(responseData => {
                         console.log('Server response:', responseData);
                         router.push('/home');
+                        console.log('Login successful, redirecting to home page');
                     })
                     .catch(error => {
                         console.error('Error sending token to server:', error);
