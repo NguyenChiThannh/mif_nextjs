@@ -1,5 +1,5 @@
+import { Client } from "@stomp/stompjs";
 import TelegramBot from "node-telegram-bot-api";
-import { Client, GatewayIntentBits } from 'discord.js';
 
 // Platform-specific client initialization
 export const initializeTelegramBot = (token) => {
@@ -7,13 +7,7 @@ export const initializeTelegramBot = (token) => {
 };
 
 export const initializeDiscordBot = (token) => {
-    const client = new Client({
-        intents: [
-            GatewayIntentBits.Guilds,
-            GatewayIntentBits.GuildMessages,
-            GatewayIntentBits.MessageContent,
-        ],
-    });
+    const client = new Client({});
     return client;
 };
 
