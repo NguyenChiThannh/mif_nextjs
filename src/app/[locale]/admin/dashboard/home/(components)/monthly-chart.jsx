@@ -146,11 +146,15 @@ export default function MonthlyChart() {
                                     <SelectValue placeholder="Chọn năm" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {yearOptions.map(option => (
-                                        <SelectItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </SelectItem>
-                                    ))}
+                                    {yearOptions.map(option =>
+                                    {
+                                        if (parseInt(option.value) > currentYear) return null;
+                                        return (
+                                            <SelectItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </SelectItem>
+                                        )
+                                    })}
                                 </SelectContent>
                             </Select>
                         </div>

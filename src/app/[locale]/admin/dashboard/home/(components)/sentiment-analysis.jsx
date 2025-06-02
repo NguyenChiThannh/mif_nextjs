@@ -12,7 +12,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import Loading from '@/components/loading'
 import { movieApi } from '@/services/movieApi'
 
-export default function SentimentAnalysis({sentimentData}) {
+export default function SentimentAnalysis({ sentimentData }) {
     const [selectedSentimentView, setSentimentView] = useState('overview')
     const [selectedMovie, setSelectedMovie] = useState(null)
     const [currentPage, setCurrentPage] = useState(0);
@@ -26,90 +26,59 @@ export default function SentimentAnalysis({sentimentData}) {
 
     if (isLoading) return <Loading />
 
-    // Export functions for sentiment data
-    // const handleExportSentimentCSV = () => {
-    //     let csvContent = `data:text/csv;charset=utf-8,`
+    const handleExportSentimentCSV = () => {
+        const data = {
+            totalComments: sentimentData.totalComments,
+            positivePercentage: Number(sentimentData.positivePercentage.toFixed(2)),
+            negativePercentage: Number(sentimentData.negativePercentage.toFixed(2)),
+            neutralPercentage: Number(sentimentData.neutralPercentage.toFixed(2)),
+            mostPositiveMovie: sentimentData.mostPositiveMovie,
+            mostPositivePercentage: Number(sentimentData.mostPositivePercentage.toFixed(2)),
+            mostNegativeMovie: sentimentData.mostNegativeMovie,
+            mostNegativePercentage: Number(sentimentData.mostNegativePercentage.toFixed(2)),
+            lastUpdated: sentimentData.lastUpdated
+        };
 
-    //     if (selectedSentimentView === 'overview') {
-    //         // Export overall sentiment data
-    //         csvContent += `Loại cảm xúc,Tỷ lệ (%)\n`
-    //         sentimentData.forEach(item => {
-    //             csvContent += `${item.name},${item.value}\n`
-    //         })
-    //     } else if (selectedMovie) {
-    //         // Export detailed movie ratings
-    //         csvContent += `Người dùng,Đánh giá,Bình luận,Cảm xúc,Tích cực (%),Tiêu cực (%),Trung tính (%),Hỗn hợp (%),Ngày tạo\n`
-    //         getMovieRatings(selectedMovie).forEach(rating => {
-    //             const positiveScore = rating.positiveScore ? (rating.positiveScore * 100).toFixed(1) : 'N/A'
-    //             const negativeScore = rating.negativeScore ? (rating.negativeScore * 100).toFixed(1) : 'N/A'
-    //             const neutralScore = rating.neutralScore ? (rating.neutralScore * 100).toFixed(1) : 'N/A'
-    //             const mixedScore = rating.mixedScore ? (rating.mixedScore * 100).toFixed(1) : 'N/A'
+        // Convert data to CSV format
+        const headers = Object.keys(data);
+        const csvContent = [
+            headers.join(','),
+            headers.map(header => data[header]).join(',')
+        ].join('\n');
 
-    //             csvContent += `${rating.user.displayName},"${rating.ratingValue}","${rating.comment}",${rating.sentiment || 'Chưa phân tích'},${positiveScore},${negativeScore},${neutralScore},${mixedScore},${new Date(rating.createdAt).toLocaleDateString('vi-VN')}\n`
-    //         })
-    //     } else {
-    //         // Export movie comparison data
-    //         csvContent += `Tên phim,Tích cực (%),Tiêu cực (%),Trung tính (%),Tổng bình luận\n`
-    //         movieSentimentData.forEach(movie => {
-    //             csvContent += `${movie.name},${movie.positive},${movie.negative},${movie.neutral},${movie.totalComments}\n`
-    //         })
-    //     }
+        // Create and download CSV file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `sentiment_analysis_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
 
-    //     const encodedUri = encodeURI(csvContent)
-    //     const link = document.createElement("a")
-    //     link.setAttribute("href", encodedUri)
-    //     link.setAttribute("download", `phan_tich_cam_xuc_${selectedMovie || selectedSentimentView}.csv`)
-    //     document.body.appendChild(link)
-    //     link.click()
-    //     document.body.removeChild(link)
-    // }
+    const handleExportSentimentExcel = () => {
+        const data = {
+            totalComments: sentimentData.totalComments,
+            positivePercentage: Number(sentimentData.positivePercentage.toFixed(2)),
+            negativePercentage: Number(sentimentData.negativePercentage.toFixed(2)),
+            neutralPercentage: Number(sentimentData.neutralPercentage.toFixed(2)),
+            mostPositiveMovie: sentimentData.mostPositiveMovie,
+            mostPositivePercentage: Number(sentimentData.mostPositivePercentage.toFixed(2)),
+            mostNegativeMovie: sentimentData.mostNegativeMovie,
+            mostNegativePercentage: Number(sentimentData.mostNegativePercentage.toFixed(2)),
+            lastUpdated: sentimentData.lastUpdated
+        };
 
-    // const handleExportSentimentExcel = () => {
-    //     let data = []
-    //     let sheetName = ''
+        // Create worksheet
+        const ws = XLSX.utils.json_to_sheet([data]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Sentiment Analysis");
 
-    //     if (selectedSentimentView === 'overview') {
-    //         // Export overall sentiment data
-    //         data = sentimentData.map(item => ({
-    //             'Loại cảm xúc': item.name,
-    //             'Tỷ lệ (%)': item.value
-    //         }))
-    //         sheetName = 'Tổng quan cảm xúc'
-    //     } else if (selectedMovie) {
-    //         // Export detailed movie ratings
-    //         data = getMovieRatings(selectedMovie).map(rating => ({
-    //             'Người dùng': rating.user.displayName,
-    //             'Đánh giá': rating.ratingValue,
-    //             'Bình luận': rating.comment,
-    //             'Cảm xúc': rating.sentiment || 'Chưa phân tích',
-    //             'Tích cực (%)': rating.positiveScore ? (rating.positiveScore * 100).toFixed(1) : 'N/A',
-    //             'Tiêu cực (%)': rating.negativeScore ? (rating.negativeScore * 100).toFixed(1) : 'N/A',
-    //             'Trung tính (%)': rating.neutralScore ? (rating.neutralScore * 100).toFixed(1) : 'N/A',
-    //             'Hỗn hợp (%)': rating.mixedScore ? (rating.mixedScore * 100).toFixed(1) : 'N/A',
-    //             'Ngày tạo': new Date(rating.createdAt).toLocaleDateString('vi-VN')
-    //         }))
-    //         sheetName = `Chi tiết ${selectedMovie}`
-    //     } else {
-    //         // Export movie comparison data
-    //         data = movieSentimentData.map(movie => ({
-    //             'Tên phim': movie.name,
-    //             'Tích cực (%)': movie.positive,
-    //             'Tiêu cực (%)': movie.negative,
-    //             'Trung tính (%)': movie.neutral,
-    //             'Tổng bình luận': movie.totalComments
-    //         }))
-    //         sheetName = 'So sánh phim'
-    //     }
-
-    //     const worksheet = XLSX.utils.json_to_sheet(data)
-    //     const workbook = XLSX.utils.book_new()
-    //     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
-    //     XLSX.writeFile(workbook, `phan_tich_cam_xuc_${selectedMovie || selectedSentimentView}.xlsx`)
-    // }
-
-    const handleExportSentimentCSV = () => { }
-
-    const handleExportSentimentExcel = () => { }
+        // Generate and download Excel file
+        XLSX.writeFile(wb, `sentiment_analysis_${new Date().toISOString().split('T')[0]}.xlsx`);
+    }
 
     return (
         <div className="p-4 mt-4">
