@@ -1,121 +1,168 @@
-# MIF Nextjs
+# Movie Insight Forum (MIF)
 
-## 1. Introduction
+## Overview
 
-This is a web application built with [Next.js](https://nextjs.org/), a React framework that supports server-side rendering and static site generation.
+Movie Insight Forum (MIF) is a comprehensive web application built with Next.js that serves as a platform for movie enthusiasts to discuss, analyze, and share their thoughts about films. The application features a modern UI, real-time interactions, and advanced analytics capabilities.
 
-**Movie Insight Forum (MIF)**  is a forum for film enthusiasts. The application allowing users to join groups, post articles, engage with film content, and message within groups. It provides detailed information about movies and actors, along with features for rating and saving films, as well as favoriting artists.
+## Features
 
-### 1.1. Technology used:
+### Core Features
+- 🎬 Movie information and reviews
+- 👥 User groups and communities
+- 📝 Article posting and sharing
+- 💬 Real-time messaging within groups
+- ⭐ Movie rating and saving system
+- 🎭 Actor/Actress information and favorites
+- 📊 Sentiment analysis and user engagement metrics
+- 🌐 Multi-language support
+- 🔔 Real-time notifications
 
-- **Next.js**: Supports server-side rendering (SSR) and static site generation (SSG).
-- **React Hook Form**: Efficient form handling with React.
-- **Tailwind CSS**: A utility-first CSS framework for styling.
-- **Axios**: For making HTTP requests with custom instances.
-- **React Query**: Server-side state management, caching, and API interactions.
-- **Zod**: Schema validation for forms and data.
-- **QuillJS**: Rich text editor for managing formatted content.
-- **Redux**: A predictable state container for managing application-level state.
-- **Shadcn UI**: A component library for building modern UI with Next.js and Tailwind CSS.
+### Admin Dashboard
+- 📈 Sentiment analysis visualization
+- 📊 User engagement metrics
+- 📑 Content management
+- 📤 Data export capabilities (CSV/Excel)
+- 👥 User management
 
-## 2. Installation
+### Technical Features
+- 🔐 Authentication and authorization
+- 🌙 Dark/Light mode support
+- 📱 Responsive design
+- 🔄 Real-time updates using WebSocket
+- 📊 Data visualization with Chart.js
+- 📝 Rich text editing with QuillJS
+- 📄 PDF and Excel report generation
+- 🤖 Telegram bot integration for automated reporting
 
-### 2.1. System Requirements
+## Tech Stack
 
+### Core Framework & Libraries
+- **Next.js 14**: React framework with SSR and SSG support
+- **React 18**: UI library
+- **TypeScript**: Static type checking
+- **Tailwind CSS**: Utility-first CSS framework
+- **Shadcn UI**: Component library built on Radix UI
+- **Redux Toolkit**: State management
+- **React Query**: Server state management
+- **React Hook Form**: Form handling
+- **Zod**: Schema validation
+
+### Data Management & API
+- **Axios**: HTTP client
+- **React Query**: Data fetching and caching
+- **Redux Persist**: State persistence
+- **SockJS**: WebSocket client
+- **STOMP.js**: WebSocket protocol
+
+### Rich Content & Editing
+- **QuillJS**: Rich text editor
+- **React Markdown**: Markdown rendering
+- **HTML React Parser**: HTML parsing
+
+### Data Visualization
+- **Chart.js**: Charting library
+
+### File Handling & Export
+- **XLSX**: Excel file handling
+- **ExcelJS**: Advanced Excel operations
+- **PDFKit**: PDF generation
+
+### AI & Bot Integration
+- **Google Generative AI**: AI integration
+- **Node Telegram Bot API**: Telegram bot integration
+
+### Authentication & Security
+- **React OAuth Google**: Google authentication
+
+## Getting Started
+
+### Prerequisites
 - Node.js >= 16.x
 - NPM >= 7.x or Yarn >= 1.x
 
-### 2.2. Steps to Install
+### Installation
 
-**2.2.1. Install dependencies:** 
+1. Clone the repository:
+```bash
+git clone [repository-url]
+cd mif_nextjs
+```
 
-    Using npm:
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
 
-    ```bash
-    npm install
-    ```
+3. Set up environment variables:
+Create a `.env.local` file in the root directory with the following variables:
+```env
+NEXT_PUBLIC_APP_URL=your_app_url
+NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_telegram_bot_token
+NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
+```
 
-    Or using Yarn:
+4. Run the development server:
+```bash
+npm run dev
+# or
+yarn dev
+```
 
-    ```bash
-    yarn install
-    ```
-**2.2.2. Run the application:**
+The application will be available at `http://localhost:3000`
 
-    To run the app in development mode:
+### Building for Production
 
-    ```bash
-    npm run dev
-    ```
+```bash
+npm run build
+npm run start
+# or
+yarn build
+yarn start
+```
 
-    Or using Yarn:
+## Project Structure
 
-    ```bash
-    yarn dev
-    ```
+```
+src/
+├── app/                 # Next.js app directory
+├── components/         # Reusable UI components
+├── hooks/             # Custom React hooks
+├── lib/               # Utility libraries
+├── redux/             # Redux store and slices
+├── services/          # API services
+├── utils/             # Helper functions
+├── i18n/              # Internationalization
+└── middleware/        # Custom middleware
+```
 
-    The application will be available at `http://localhost:3000`.
+## API Documentation
 
-**2.2.3. Build for production:**
+The frontend integrates with a backend API. For detailed API documentation, visit:
+[API Documentation](https://documenter.getpostman.com/view/21875363/2sAXqp83yy#93b88b25-cf2c-444c-8f38-ed74c47524f1)
 
-    If you want to build the application for production:
+## Telegram Bot Integration
 
-    ```bash
-    npm run build
-    npm run start
-    ```
+The application includes an automated reporting system that integrates with Telegram Bot API and Google Gemini API.
 
-    Or using Yarn:
-
-    ```bash
-    yarn build
-    yarn start
-    ```
-
-## Usage
-
-- Visit `http://localhost:3000/home` to access the application.
-
-## API Reference
-The frontend utilizes data from the backend API, which can be found in the API documentation [Here](https://documenter.getpostman.com/view/21875363/2sAXqp83yy#93b88b25-cf2c-444c-8f38-ed74c47524f1)
-
-## Telegram Bot Reporting Feature
-
-The application includes an automated reporting system that integrates with Telegram Bot API and Google Gemini API to generate and deliver reports directly to users via Telegram.
-
-### Setup Instructions
-
-1. **Create a Telegram Bot**:
-   - Use [@BotFather](https://t.me/botfather) on Telegram to create a new bot and obtain the bot token.
-
-2. **Get Google Gemini API Key**:
-   - Visit [Google AI Studio](https://ai.google.dev/) to create a Gemini API key.
-
-3. **Environment Variables**:
-   - Create a `.env.local` file in the root directory with the following variables:
-     ```
-     # Application URL (important for webhook callback)
-     NEXT_PUBLIC_APP_URL=https://your-domain.com
-
-     # Telegram Bot Configuration
-     NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_telegram_bot_token_here
-
-     # Google Gemini API Key
-     NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key_here
-     ```
-
-4. **Set up Telegram Webhook**:
-   - Once your application is deployed, register your webhook with Telegram by visiting:
-     ```
-     https://api.telegram.org/bot{NEXT_PUBLIC_TELEGRAM_BOT_TOKEN}/setWebhook?url={NEXT_PUBLIC_APP_URL}/api/telegram-webhook
-     ```
-
-### Using the Bot
-
-Users can interact with the bot through the following commands:
-
-- `/report` - Shows help on available report types
+### Bot Commands
+- `/report` - Shows available report types
 - `/report pdf` - Generates and sends a PDF report
-- `/report excel` - Generates and sends an Excel report with data analysis
+- `/report excel` - Generates and sends an Excel report
 
-The report includes analysis of user activity, posts, groups, movies, ratings, and actors based on available data.
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please open an issue in the repository or contact the development team.
