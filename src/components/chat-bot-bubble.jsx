@@ -306,12 +306,12 @@ export default function ChatBotBubble() {
                           </div>
                         </div>
                       ) : (
-                        <div className="flex justify-start">
-                          <div className="bg-muted px-3 py-2 rounded-lg max-w-[85%] flex items-center gap-2">
-                            <div className="flex space-x-1">
-                              <div className="w-2 h-2 rounded-full bg-foreground animate-bounce"></div>
-                              <div className="w-2 h-2 rounded-full bg-foreground animate-bounce" style={{ animationDelay: "0.2s" }}></div>
-                              <div className="w-2 h-2 rounded-full bg-foreground animate-bounce" style={{ animationDelay: "0.4s" }}></div>
+                        <div className="flex justify-start px-1 py-1">
+                          <div className="bg-muted px-2.5 py-3 rounded-xl max-w-[75%] flex items-center">
+                            <div className="flex gap-1">
+                              <span className="w-1.5 h-1.5 rounded-full bg-foreground animate-bounce" style={{ animationDelay: "0s" }}></span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-foreground animate-bounce" style={{ animationDelay: "0.2s" }}></span>
+                              <span className="w-1.5 h-1.5 rounded-full bg-foreground animate-bounce" style={{ animationDelay: "0.4s" }}></span>
                             </div>
                           </div>
                         </div>

@@ -13,9 +13,9 @@ import {
 
 export default function SentimentOverview({ sentimentData }) {
     const sentimentPie = [
-        { name: 'Positive', value: sentimentData.positivePercentage, color: '#10b981' },
-        { name: 'Negative', value: sentimentData.negativePercentage, color: '#ef4444' },
-        { name: 'Neutral', value: sentimentData.neutralPercentage, color: '#6b7280' }
+        { name: 'Positive', value: Number(sentimentData.positivePercentage.toFixed(2)), color: '#10b981' },
+        { name: 'Negative', value: Number(sentimentData.negativePercentage.toFixed(2)), color: '#ef4444' },
+        { name: 'Neutral', value: Number(sentimentData.neutralPercentage.toFixed(2)), color: '#6b7280' }
     ];
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -95,7 +95,7 @@ export default function SentimentOverview({ sentimentData }) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-green-600 font-medium">Tích cực</p>
-                                    <h4 className="text-2xl font-bold text-green-700">{sentimentData.positivePercentage} %</h4>
+                                    <h4 className="text-2xl font-bold text-green-700">{Number(sentimentData.positivePercentage.toFixed(2))} %</h4>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
                                     <Heart className="h-5 w-5 text-green-600" />
@@ -109,7 +109,7 @@ export default function SentimentOverview({ sentimentData }) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-red-600 font-medium">Tiêu cực</p>
-                                    <h4 className="text-2xl font-bold text-red-700">{sentimentData.negativePercentage} %</h4>
+                                    <h4 className="text-2xl font-bold text-red-700">{Number(sentimentData.negativePercentage.toFixed(2))} %</h4>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
                                     <FileText className="h-5 w-5 text-red-600" />
@@ -123,7 +123,7 @@ export default function SentimentOverview({ sentimentData }) {
                             <div className="flex items-center justify-between">
                                 <div>
                                     <p className="text-sm text-gray-600 font-medium">Trung tính</p>
-                                    <h4 className="text-2xl font-bold text-gray-700">{sentimentData.neutralPercentage} %</h4>
+                                    <h4 className="text-2xl font-bold text-gray-700">{Number(sentimentData.neutralPercentage.toFixed(2))} %</h4>
                                 </div>
                                 <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
                                     <Clock className="h-5 w-5 text-gray-600" />
@@ -142,11 +142,11 @@ export default function SentimentOverview({ sentimentData }) {
                         </li>
                         <li className="flex items-center justify-between">
                             <span className="text-sm">Phim có cảm xúc tích cực nhất:</span>
-                            <span className="font-medium">{sentimentData.mostPositiveMovie} ({sentimentData.mostPositivePercentage} %)</span>
+                            <span className="font-medium">{sentimentData.mostPositiveMovie} ({Number(sentimentData.mostPositivePercentage.toFixed(2))} %)</span>
                         </li>
                         <li className="flex items-center justify-between">
                             <span className="text-sm">Phim có cảm xúc tiêu cực nhất:</span>
-                            <span className="font-medium">{sentimentData.mostNegativeMovie} ({sentimentData.mostNegativePercentage} %)</span>
+                            <span className="font-medium">{sentimentData.mostNegativeMovie} ({Number(sentimentData.mostNegativePercentage.toFixed(2))} %)</span>
                         </li>
                         {/* <li className="flex items-center justify-between">
                             <span className="text-sm">Thời gian cập nhật gần nhất:</span>
