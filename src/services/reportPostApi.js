@@ -119,7 +119,7 @@ export const reportPostApi = {
             const t = useTranslations('Toast')
             const queryClient = useQueryClient()
             return useMutation({
-                mutationFn: blockPost,
+                mutationFn: unBlockPost,
                 onSuccess: () => {
                     toast.success(t('block_post_successful'))
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupBlockReports(groupId) })
