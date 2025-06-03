@@ -82,6 +82,8 @@ export default function ReportSection({ groupId }) {
                     </DialogHeader>
                     <div className="space-y-4">
                         <div className="space-y-2">
+                            <h3 className="font-semibold">Tiêu đề bài viết:</h3>
+                            <p className="text-sm text-muted-foreground">{analysisData.post.title}</p>
                             <h3 className="font-semibold">Nội dung bài viết:</h3>
                             <p className="text-sm text-muted-foreground">{analysisData.post.content}</p>
                         </div>
