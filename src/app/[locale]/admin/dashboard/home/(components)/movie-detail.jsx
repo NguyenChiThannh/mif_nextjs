@@ -3,6 +3,7 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Star } from 'lucide-react'
 import { movieRatingsApi } from '@/services/movieRatingsApi'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 export default function MovieDetail({ selectedMovie, setSelectedMovie }) {
     const { isLoading: isLoadingReview, data: review } = movieRatingsApi.query.useGetRatingsByMovieId(selectedMovie.id)
@@ -66,9 +67,18 @@ export default function MovieDetail({ selectedMovie, setSelectedMovie }) {
                                     </div>
                                 </td>
                                 <td className="p-3 max-w-[250px]">
-                                    <div className="truncate" title={rating.comment}>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <div className="truncate cursor-default">
                                         {rating.comment}
-                                    </div>
+                                        </div>
+                                    </TooltipTrigger>
+                                    <TooltipContent side="top" className="max-w-xs break-words">
+                                        {rating.comment}
+                                    </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 </td>
                                 <td className="p-3 text-center">
                                     {!rating.sentiment ? (

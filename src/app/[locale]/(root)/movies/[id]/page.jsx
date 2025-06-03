@@ -100,6 +100,11 @@ export default function DetailMovie() {
                     </div>
                     <div className="col-span-7 flex justify-center">
                         <div className="overflow-hidden w-full aspect-video">
+                            {/* {
+                                movie?.trailerUrl
+                                    ? <iframe className="w-full h-full object-cover" src={movie.trailerUrl} allowFullScreen />
+                                    : <iframe className="w-full h-full object-cover" src="https://www.youtube.com/embed/zA3_Bs8xePE?si=e9oUenQ5nHPhpRJ3" allowFullScreen />
+                            } */}
                             <iframe className="w-full h-full object-cover" src="https://www.youtube.com/embed/zA3_Bs8xePE?si=e9oUenQ5nHPhpRJ3" allowFullScreen />
                         </div>
                     </div>
