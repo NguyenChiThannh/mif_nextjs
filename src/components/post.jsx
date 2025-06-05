@@ -262,12 +262,14 @@ export default function Post({ className, post, isGroup }) {
 function ContentWithReadMore({ content, maxLength = 200, t }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isContentLong = content.length > maxLength;
+  console.log('🚀 ~ ContentWithReadMore ~ isContentLong:', isContentLong)
+  console.log('🚀 ~ ContentWithReadMore ~ content.length:', content?.slice(0, maxLength))
 
   const toggleContent = () => {
     setIsExpanded(!isExpanded);
   };
 
-  const renderContent = () => {
+  const renderContent = (content) => {
     const parts = content.split(/(@\[.*?\]\(.*?\))/g);
     return parts.map((part, index) => {
       const match = part.match(/@\[(.*?)\]\((.*?)\)/);
@@ -291,8 +293,8 @@ function ContentWithReadMore({ content, maxLength = 200, t }) {
     <div>
       <p className="text-sm md:text-base lg:text-sm w-full inline">
         {isContentLong && !isExpanded
-          ? renderContent().slice(0, maxLength) + "..."
-          : renderContent()}
+          ? renderContent(content?.slice(0, maxLength))
+          : renderContent(content)}
       </p>
       {isContentLong && (
         <Button
@@ -300,7 +302,7 @@ function ContentWithReadMore({ content, maxLength = 200, t }) {
           onClick={() => toggleContent()}
           className="ml-2 text-blue-600 h-4"
         >
-          {isExpanded ? "" : t("more")}
+          {isExpanded ? t("hide") : t("more")}
         </Button>
       )}
     </div>

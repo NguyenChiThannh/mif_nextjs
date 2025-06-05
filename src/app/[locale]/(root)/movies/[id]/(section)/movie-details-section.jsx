@@ -20,7 +20,7 @@ export default function MovieDetailsSection({ movie, isSavedMovie, handleSaveSta
                         value={movie.genre?.map((category) => category?.categoryName).join(", ")}
                     />
                     <MovieInfoRow label={t("rating_score")} value={`${Number(movie.ratings?.averageRating) * 2 || '0.0'}/10`} />
-                    <MovieInfoRow label={t("director")} value="R" />
+                    <MovieInfoRow label={t("director")} value={movie?.director[0]?.name || "Alan"} />
                 </div>
             </div>
             {/* Right Info  */}
