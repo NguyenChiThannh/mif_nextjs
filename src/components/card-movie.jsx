@@ -42,7 +42,10 @@ export default function CardMovie({ direction = 'horizontal', movie }) {
                 {/* Movie Title */}
                 <Link href={`/movies/${movie.id}`}>
                     <motion.p
-                        className="text-lg md:text-xl lg:text-2xl font-bold line-clamp-2 hover:text-primary transition-colors duration-200"
+                        className={`font-bold hover:text-primary transition-colors duration-200 ${direction === 'vertical'
+                            ? 'text-lg md:text-xl lg:text-2xl line-clamp-1'
+                            : 'text-lg md:text-xl lg:text-2xl line-clamp-2'
+                            }`}
                         whileHover={{ x: 5 }}
                         transition={{ duration: 0.2 }}
                     >

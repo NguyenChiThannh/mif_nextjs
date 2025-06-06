@@ -25,10 +25,10 @@ export default function CardMovieSmall({ movie }) {
         >
             {/* Movie Details */}
             <div
-                className="flex items-stretch gap-4 cursor-pointer"
+                className="flex items-stretch gap-4 cursor-pointer w-full"
                 onClick={handleDetailMovie}
             >
-                <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-20">
+                <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-24 flex-shrink-0">
                     <Image
                         src={movie?.posterUrl}
                         alt={movie?.title || 'Movie Poster'}
@@ -36,8 +36,8 @@ export default function CardMovieSmall({ movie }) {
                         className="object-cover transition-transform duration-300 hover:scale-105"
                     />
                 </div>
-                <div className="grid gap-1 my-1">
-                    <h3 className="text-lg font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors duration-200">
+                <div className="grid gap-1 my-1 min-w-0 flex-1">
+                    <h3 className="text-base font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors duration-200">
                         {movie?.title}
                     </h3>
                     <div className="grid gap-0.5 text-sm text-muted-foreground">
@@ -53,11 +53,6 @@ export default function CardMovieSmall({ movie }) {
                     </div>
                 </div>
             </div>
-
-            {/* Bookmark Icon */}
-            {/* <div className="ml-auto flex items-center gap-1 cursor-pointer">
-                <Bookmark />
-            </div> */}
         </motion.div>
     );
 }
@@ -66,10 +61,10 @@ export function CardMovieSmallSkeleton() {
     return (
         <div className="flex items-center w-full p-4 border-b last:border-b-0">
             {/* Skeleton for Movie Poster */}
-            <div className="flex items-stretch gap-4">
-                <Skeleton className="rounded-lg w-20 aspect-[3/4]" />
-                <div className="grid gap-1 my-1">
-                    <Skeleton className="w-48 h-6" />
+            <div className="flex items-stretch gap-4 w-full">
+                <Skeleton className="rounded-lg w-24 aspect-[3/4] flex-shrink-0" />
+                <div className="grid gap-1 my-1 min-w-0 flex-1">
+                    <Skeleton className="w-full h-6" />
                     <div className="grid gap-0.5">
                         <Skeleton className="w-32 h-4" />
                         <Skeleton className="w-28 h-4" />

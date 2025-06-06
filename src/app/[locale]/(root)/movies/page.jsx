@@ -8,6 +8,7 @@ import { movieApi } from '@/services/movieApi'
 import React, { useEffect, useRef } from 'react'
 import { useTranslations } from 'use-intl'
 import { motion } from 'framer-motion'
+import Title from '@/components/title'
 
 export default function MoviePage() {
     const t = useTranslations('Movie')
@@ -66,12 +67,7 @@ export default function MoviePage() {
     return (
         <div className='grid grid-cols-3 gap-10 px-4 py-8'>
             <div className='grid col-span-2'>
-                <div className='flex items-center'>
-                    <div className='flex items-center'>
-                        <div className='w-1 bg-primary h-8 rounded'></div>
-                        <h1 className='text-xl md:text-xl lg:text-2xl font-bold pl-4 text-foreground'>{t("title")}</h1>
-                    </div>
-                </div>
+                <Title title={t('title')} isMore={false} />
                 <motion.div
                     className='grid mt-6 space-y-0.5 bg-background rounded-lg'
                     variants={containerVariants}
