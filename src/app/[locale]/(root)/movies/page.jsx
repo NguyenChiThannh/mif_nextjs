@@ -7,6 +7,7 @@ import useInfiniteScroll from '@/hooks/useInfiniteScroll'
 import { movieApi } from '@/services/movieApi'
 import React, { useEffect, useRef } from 'react'
 import { useTranslations } from 'use-intl'
+import { motion } from 'framer-motion'
 
 export default function MoviePage() {
     const t = useTranslations('Movie')
@@ -52,21 +53,31 @@ export default function MoviePage() {
 
     if (isLoading) return (<Loading />)
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    }
+
     return (
-        <div className='grid grid-cols-3 gap-10'>
+        <div className='grid grid-cols-3 gap-10 px-4 py-8'>
             <div className='grid col-span-2'>
-                <div className='flex'>
+                <div className='flex items-center'>
                     <div className='flex items-center'>
-                        <div className='w-2 bg-primary h-8 rounded'></div>
-                        <h1 className='text-xl md:text-xl lg:text-2xl font-bold pl-4'>{t("title")}</h1>
+                        <div className='w-1 bg-primary h-8 rounded'></div>
+                        <h1 className='text-xl md:text-xl lg:text-2xl font-bold pl-4 text-foreground'>{t("title")}</h1>
                     </div>
-                    {/* <div className='ml-auto mt-4 gap-2'>
-                        <div className='flex gap-2 items-center'>
-                            <ComboboxMovieCategory />
-                        </div>
-                    </div> */}
                 </div>
-                <div className='grid mt-4 gap-2'>
+                <motion.div
+                    className='grid mt-6 space-y-0.5 bg-background rounded-lg'
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                >
                     {isLoading && (
                         <>
                             {Array.from({ length: 10 }).map((_, index) => (
@@ -74,16 +85,26 @@ export default function MoviePage() {
                             ))}
                         </>
                     )}
-                    {data?.pages?.map((page) =>
-                        page.content.map((movie) => (
-                            <CardMovieSmall key={movie.id} movie={movie} />
+                    {data?.pages?.map((page, pageIndex) =>
+                        page.content.map((movie, movieIndex) => (
+                            <motion.div
+                                key={movie.id}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: (pageIndex * page.content.length + movieIndex) * 0.1
+                                }}
+                            >
+                                <CardMovieSmall key={movie.id} movie={movie} />
+                            </motion.div>
                         ))
                     )}
                     {isFetchingNextPage && (
                         <CardMovieSmallSkeleton />
                     )}
                     <div ref={observerRef} className="h-4" />
-                </div>
+                </motion.div>
             </div>
             <SectionExploreMovies />
         </div>
