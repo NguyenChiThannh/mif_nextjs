@@ -12,6 +12,7 @@ import { MovieResults } from '@/app/[locale]/(root)/search/(components)/movie-re
 import { GroupResults } from '@/app/[locale]/(root)/search/(components)/group-results';
 import { ActorDirectorResults } from '@/app/[locale]/(root)/search/(components)/actor-director-results';
 import { actorApi } from '@/services/actorApi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchPage() {
     const [activeTab, setActiveTab] = useState('all');
@@ -35,49 +36,157 @@ export default function SearchPage() {
         data: actors,
     } = actorApi.query.useSearchActorsByTitle(search)
 
-    const noResults = 
-            groups?.content?.length === 0 && 
-            movies?.content?.length === 0 && 
-            actors?.content?.length === 0;
+    const noResults =
+        groups?.content?.length === 0 &&
+        movies?.content?.length === 0 &&
+        actors?.content?.length === 0;
 
     if (isLoadingMovies || isLoadingGroup || isLoadingActor) return <Loading />
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                duration: 0.5,
+                ease: "easeOut"
+            }
+        }
+    };
+
+    const NoResultsMessage = ({ type }) => (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-lg font-medium mt-8 flex justify-center text-muted-foreground"
+        >
+            {t(`no_${type}_found`)}
+        </motion.div>
+    );
+
+    const renderResults = () => {
+        switch (activeTab) {
+            case 'movies':
+                return movies?.content?.length > 0 ? (
+                    <motion.div variants={itemVariants}>
+                        <MovieResults
+                            activeTab={activeTab}
+                            movies={movies}
+                            t={t}
+                            showTitle={false}
+                        />
+                    </motion.div>
+                ) : <NoResultsMessage type="movies" />;
+            case 'groups':
+                return groups?.content?.length > 0 ? (
+                    <motion.div variants={itemVariants}>
+                        <GroupResults
+                            activeTab={activeTab}
+                            groups={groups}
+                            movieCategories={movieCategories}
+                            t={t}
+                            showTitle={false}
+                        />
+                    </motion.div>
+                ) : <NoResultsMessage type="groups" />;
+            case 'actors':
+                return actors?.content?.length > 0 ? (
+                    <motion.div variants={itemVariants}>
+                        <ActorDirectorResults
+                            activeTab={activeTab}
+                            actors={actors}
+                            t={t}
+                            showTitle={false}
+                        />
+                    </motion.div>
+                ) : <NoResultsMessage type="actors" />;
+            case 'all':
+            default:
+                if (noResults) {
+                    return <NoResultsMessage type="matching_results" />;
+                }
+                return (
+                    <>
+                        {movies?.content?.length > 0 && (
+                            <motion.div variants={itemVariants}>
+                                <MovieResults
+                                    activeTab={activeTab}
+                                    movies={movies}
+                                    t={t}
+                                    showTitle={true}
+                                />
+                            </motion.div>
+                        )}
+                        {groups?.content?.length > 0 && (
+                            <motion.div variants={itemVariants}>
+                                <GroupResults
+                                    activeTab={activeTab}
+                                    groups={groups}
+                                    movieCategories={movieCategories}
+                                    t={t}
+                                    showTitle={true}
+                                />
+                            </motion.div>
+                        )}
+                        {actors?.content?.length > 0 && (
+                            <motion.div variants={itemVariants}>
+                                <ActorDirectorResults
+                                    activeTab={activeTab}
+                                    actors={actors}
+                                    t={t}
+                                    showTitle={true}
+                                />
+                            </motion.div>
+                        )}
+                    </>
+                );
+        }
+    };
+
     return (
-        <div className="max-w-4xl mx-auto">
-            <div className="text-2xl font-bold">
-                {t("search_keywords")}: {search}
-            </div>
+        <motion.div
+            className="max-w-4xl mx-auto px-4 py-8"
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+        >
+            <motion.div
+                className="text-2xl font-bold mb-6 text-foreground"
+                variants={itemVariants}
+            >
+                {t("search_keywords")}: <span className="text-primary">{search}</span>
+            </motion.div>
 
-            <Tabs
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                t={t}
-            />
+            <motion.div variants={itemVariants}>
+                <Tabs
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                    t={t}
+                />
+            </motion.div>
 
-            {noResults ? (
-                <div className="text-lg font-bold mt-8 flex justify-center">{
-                    t("no_matching_results_found")}
-                </div>
-            ) : (
-                <div>
-                    <MovieResults
-                        activeTab={activeTab}
-                        movies={movies}
-                        t={t}
-                    />
-                    <GroupResults
-                        activeTab={activeTab}
-                        groups={groups}
-                        movieCategories={movieCategories}
-                        t={t}
-                    />
-                    <ActorDirectorResults
-                        activeTab={activeTab}
-                        actors={actors}
-                        t={t}
-                    />
-                </div>
-            )}
-        </div>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key="results"
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="space-y-8 mt-6"
+                >
+                    {renderResults()}
+                </motion.div>
+            </AnimatePresence>
+        </motion.div>
     );
 }

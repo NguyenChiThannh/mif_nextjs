@@ -8,6 +8,7 @@ import { useEffect } from 'react'
 import { DatePickerPopover } from '@/components/date-picker-popover'
 import { schemaProfileUser } from '@/lib/schemas/profile-user.schema'
 import { userApi } from '@/services/userApi'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser, t }) {
     const { register, handleSubmit, control, reset } = useForm({
@@ -37,20 +38,25 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
 
     return (
         <Dialog open={openDialogEdit} onOpenChange={setOpenDialogEdit}>
-            <DialogContent>
+            <DialogContent className="sm:max-w-[425px] bg-background">
                 <DialogHeader>
-                    <DialogTitle>{t('edit_profile')}</DialogTitle>
+                    <DialogTitle className="text-xl font-semibold text-foreground">
+                        {t('edit_profile')}
+                    </DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
                     {/* Display Name */}
                     <div className="grid gap-2">
-                        <label className="text-sm font-semibold">{t('display_name')}</label>
-                        <Input {...register("displayName")} />
+                        <label className="text-sm font-medium text-foreground">{t('display_name')}</label>
+                        <Input
+                            {...register("displayName")}
+                            className="bg-card border-input focus-visible:ring-primary"
+                        />
                     </div>
 
                     {/* Date of Birth */}
                     <div className="grid gap-2">
-                        <label className="text-sm font-semibold">{t('dob')}</label>
+                        <label className="text-sm font-medium text-foreground">{t('dob')}</label>
                         <Controller
                             control={control}
                             name="dob"
@@ -62,23 +68,24 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                             )}
                         />
                     </div>
-                    {/* <div className="grid gap-2">
-                        <Input />
-                    </div>
-                    <span className="text-red-500 text-sm font-bold">Ngày sinh bị không đúng định dạng</span> */}
+
                     {/* Bio */}
                     <div className="grid gap-2">
-                        <label className="text-sm font-semibold">{t('bio')}</label>
+                        <label className="text-sm font-medium text-foreground">{t('bio')}</label>
                         <Textarea
                             {...register("bio")}
                             placeholder={t('bio_placeholder')}
                             rows={5}
+                            className="bg-card border-input focus-visible:ring-primary resize-none"
                         />
                     </div>
 
                     {/* Footer */}
                     <DialogFooter>
-                        <Button type="submit" className="w-full">
+                        <Button
+                            type="submit"
+                            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200"
+                        >
                             {t('button_submit_edit_profile')}
                         </Button>
                     </DialogFooter>
