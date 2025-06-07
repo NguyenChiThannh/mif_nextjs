@@ -262,8 +262,6 @@ export default function Post({ className, post, isGroup }) {
 function ContentWithReadMore({ content, maxLength = 200, t }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isContentLong = content.length > maxLength;
-  console.log('🚀 ~ ContentWithReadMore ~ isContentLong:', isContentLong)
-  console.log('🚀 ~ ContentWithReadMore ~ content.length:', content?.slice(0, maxLength))
 
   const toggleContent = () => {
     setIsExpanded(!isExpanded);
