@@ -10,6 +10,7 @@ import { useGroupStatus, GROUP_STATUS } from '@/hooks/useGroupStatus'
 import EditGroupDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-edit-group'
 import DialogAddMemberToGroup from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-add-member-to-group'
 import useUserId from '@/hooks/useUserId'
+import { motion } from 'framer-motion'
 
 export default function HeaderGroup({ group, members, t, isOwner }) {
     const router = useRouter();
@@ -33,17 +34,20 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
             return (
                 <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:underline transition-all">
+                        <Button variant="ghost" className="flex items-center gap-2 text-muted-foreground hover:text-primary hover:bg-muted/50 transition-all duration-200">
                             <PencilLine className="h-4 w-4" />
                             <span className="font-medium">Chỉnh sửa</span>
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="border rounded-lg shadow-lg p-2 w-48">
+                    <DropdownMenuContent align="start" className="bg-background border-border">
                         <DropdownMenuLabel className="text-sm font-bold text-muted-foreground mb-2">Thao tác</DropdownMenuLabel>
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="hover:bg-muted transition-colors duration-200">
                             <EditGroupDialog group={group} />
                         </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleDeleteGroup} className="flex items-center gap-2 p-2 rounded-md cursor-pointer font-medium">
+                        <DropdownMenuItem
+                            onClick={handleDeleteGroup}
+                            className="flex items-center gap-2 p-2 rounded-md cursor-pointer font-medium text-destructive hover:bg-destructive/10 transition-colors duration-200"
+                        >
                             <Trash className="h-4 w-4" />
                             Xóa nhóm
                         </DropdownMenuItem>
@@ -61,7 +65,11 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
 
         if (status === GROUP_STATUS.NOT_JOIN) {
             return (
-                <Button size="sm" onClick={handleJoinGroup} className="h-8 gap-1">
+                <Button
+                    size="sm"
+                    onClick={handleJoinGroup}
+                    className="h-8 gap-1 bg-primary hover:bg-primary/90 text-primary-foreground transition-colors duration-200"
+                >
                     <UserPlus className="h-4 w-4 mr-1" />
                     Tham gia
                 </Button>
@@ -70,7 +78,12 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
 
         if (status === GROUP_STATUS.PENDING) {
             return (
-                <Button variant="outline" size="sm" onClick={handleRemovePendingGroup} className="h-8">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRemovePendingGroup}
+                    className="h-8 border-border hover:bg-muted transition-colors duration-200"
+                >
                     Đang chờ duyệt
                 </Button>
             );
@@ -78,7 +91,12 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
 
         if (status === GROUP_STATUS.JOINED && !isOwner) {
             return (
-                <Button variant="outline" size="sm" onClick={handleLeaveGroup} className="h-8 gap-1">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleLeaveGroup}
+                    className="h-8 gap-1 border-border hover:bg-destructive/10 hover:text-destructive hover:border-destructive transition-colors duration-200"
+                >
                     <LogOut className="h-4 w-4 mr-1" />
                     Rời nhóm
                 </Button>
@@ -89,16 +107,34 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
     };
 
     return (
-        <>
-            <div className="mb-4 flex items-center justify-between">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-4"
+        >
+            <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.1 }}
+                className="flex items-center justify-between"
+            >
                 <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold">{group.groupName}</h2>
+                    <h2 className="text-xl font-bold text-foreground">{group.groupName}</h2>
                     {renderGroupActions()}
                 </div>
-            </div>
+            </motion.div>
 
-            <div className="mb-4 flex items-center justify-between">
-                <Link className="flex items-center gap-2" href={`/groups/${group.id}/members`}>
+            <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+                className="flex items-center justify-between"
+            >
+                <Link
+                    className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200"
+                    href={`/groups/${group.id}/members`}
+                >
                     <GroupAvatar
                         images={members.content.map(user => user.avatar)}
                         names={members.content.map(user => user.displayName)}
@@ -108,11 +144,16 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                         {group.memberCount} {t('members')}
                     </div>
                 </Link>
-                <div className="flex items-center gap-2">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex items-center gap-2"
+                >
                     {renderMembershipActions()}
-                </div>
-            </div>
+                </motion.div>
+            </motion.div>
             <DialogConfirmDelete />
-        </>
+        </motion.div>
     );
 }

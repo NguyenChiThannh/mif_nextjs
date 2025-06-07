@@ -14,6 +14,7 @@ import { AlertTriangle, CheckCircle2, XCircle, Ban, ShieldAlert, Flag, User } fr
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ReportSection({ groupId }) {
     const t = useTranslations('Groups.Report');
@@ -68,6 +69,21 @@ export default function ReportSection({ groupId }) {
         });
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    };
+
     const renderAnalysisDialog = () => {
         if (!analysisData) return null;
 
@@ -78,36 +94,46 @@ export default function ReportSection({ groupId }) {
             <Dialog open={showAnalysis} onOpenChange={setShowAnalysis}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle>Phân tích nội dung</DialogTitle>
+                        <DialogTitle className="text-xl font-semibold text-foreground">Phân tích nội dung</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-4">
-                        <div className="space-y-2">
-                            <h3 className="font-semibold">Tiêu đề bài viết:</h3>
-                            <p className="text-sm text-muted-foreground">{analysisData.post.title}</p>
-                            <h3 className="font-semibold">Nội dung bài viết:</h3>
-                            <p className="text-sm text-muted-foreground">{analysisData.post.content}</p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="space-y-6"
+                    >
+                        <div className="space-y-3">
+                            <h3 className="font-semibold text-foreground">Tiêu đề bài viết:</h3>
+                            <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">{analysisData.post.title}</p>
+                            <h3 className="font-semibold text-foreground">Nội dung bài viết:</h3>
+                            <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">{analysisData.post.content}</p>
                         </div>
-                        <div className="space-y-2">
-                            <h3 className="font-semibold">Kết quả phân tích:</h3>
-                            <div className="grid grid-cols-2 gap-2">
-                                {Object.entries(categories).map(([category, flagged]) => (
-                                    <div key={category} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                                        <span className="text-sm">{category}</span>
+                        <div className="space-y-3">
+                            <h3 className="font-semibold text-foreground">Kết quả phân tích:</h3>
+                            <div className="grid grid-cols-2 gap-3">
+                                {Object.entries(categories).map(([category, flagged], index) => (
+                                    <motion.div
+                                        key={category}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: index * 0.1 }}
+                                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                                    >
+                                        <span className="text-sm font-medium text-foreground">{category}</span>
                                         <div className="flex items-center gap-2">
                                             {flagged ? (
-                                                <XCircle className="h-4 w-4 text-red-500" />
+                                                <XCircle className="h-4 w-4 text-destructive" />
                                             ) : (
                                                 <CheckCircle2 className="h-4 w-4 text-green-500" />
                                             )}
-                                            <span className="text-sm">
+                                            <span className="text-sm font-medium">
                                                 {(scores[category] * 100).toFixed(1)}%
                                             </span>
                                         </div>
-                                    </div>
+                                    </motion.div>
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </DialogContent>
             </Dialog>
         );
@@ -117,86 +143,107 @@ export default function ReportSection({ groupId }) {
         if (isLoadingReports) return <Loading />;
 
         return (
-            <div className="grid gap-4">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid gap-4"
+            >
                 {reportsData?.pages?.map((page) =>
-                    page.content.map((report) => (
-                        <Card key={report.id}>
-                            <CardHeader>
-                                <div className="flex justify-between items-center">
-                                    <div className="space-y-1">
-                                        <CardTitle className="text-base flex items-center gap-2">
-                                            <Flag className="h-4 w-4 text-red-500" />
-                                            <span>Báo cáo #{report.id.slice(-6)}</span>
-                                            <Badge variant={report.status === 'PENDING' ? 'warning' : 'destructive'}>
-                                                {report.status}
-                                            </Badge>
-                                        </CardTitle>
-                                        <div className="text-sm text-muted-foreground">
-                                            {formatDate(report.createdAt)}
+                    page.content.map((report, index) => (
+                        <motion.div
+                            key={report.id}
+                            variants={itemVariants}
+                            whileHover={{ scale: 1.01 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <Card className="border-border bg-card hover:shadow-lg transition-all duration-300">
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                        <div className="space-y-1">
+                                            <CardTitle className="text-base flex items-center gap-2">
+                                                <Flag className="h-4 w-4 text-destructive" />
+                                                <span className="text-foreground">Báo cáo #{report.id.slice(-6)}</span>
+                                                <Badge variant={report.status === 'PENDING' ? 'warning' : 'destructive'}>
+                                                    {report.status}
+                                                </Badge>
+                                            </CardTitle>
+                                            <div className="text-sm text-muted-foreground">
+                                                {formatDate(report.createdAt)}
+                                            </div>
                                         </div>
+                                        <Badge variant="outline" className="text-sm">
+                                            {report.reportCount} báo cáo
+                                        </Badge>
                                     </div>
-                                    <Badge variant="outline" className="text-sm">
-                                        {report.reportCount} báo cáo
-                                    </Badge>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-2 text-sm">
-                                        <User className="h-4 w-4" />
-                                        <span>Người đăng: {report.ownerUsername}</span>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h4 className="font-semibold text-sm">Danh sách báo cáo:</h4>
-                                        {report.groupReports.map((groupReport, index) => (
-                                            <div key={index} className="space-y-2">
-                                                <div className="flex items-start gap-2 p-2 bg-muted rounded-md">
-                                                    <div className="flex-1 space-y-1">
-                                                        <div className="text-sm">
-                                                            <span className="font-medium">Lý do:</span> {groupReport.reason}
-                                                        </div>
-                                                        <div className="text-xs text-muted-foreground">
-                                                            {formatDateOrTimeAgo(groupReport.reportedAt)}
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                            <User className="h-4 w-4" />
+                                            <span>Người đăng: {report.ownerUsername}</span>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h4 className="font-semibold text-sm text-foreground">Danh sách báo cáo:</h4>
+                                            {report.groupReports.map((groupReport, index) => (
+                                                <motion.div
+                                                    key={index}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: index * 0.1 }}
+                                                    className="space-y-2"
+                                                >
+                                                    <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                                        <div className="flex-1 space-y-1">
+                                                            <div className="text-sm">
+                                                                <span className="font-medium text-foreground">Lý do:</span> {groupReport.reason}
+                                                            </div>
+                                                            <div className="text-xs text-muted-foreground">
+                                                                {formatDateOrTimeAgo(groupReport.reportedAt)}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                {index < report.groupReports.length - 1 && <Separator />}
-                                            </div>
-                                        ))}
+                                                    {index < report.groupReports.length - 1 && <Separator />}
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => handleViewAnalysis(report)}
+                                                className="hover:bg-muted"
+                                            >
+                                                Xem phân tích
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
+                                                className="hover:bg-muted"
+                                            >
+                                                Xem bài viết
+                                            </Button>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                onClick={() => handleBlockPost(report.id)}
+                                                disabled={blockPostMutation.isLoading}
+                                                className="hover:bg-destructive/90"
+                                            >
+                                                <Ban className="h-4 w-4 mr-2" />
+                                                {blockPostMutation.isLoading ? 'Đang chặn...' : 'Chặn bài viết'}
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => handleViewAnalysis(report)}
-                                        >
-                                            Xem phân tích
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
-                                        >
-                                            Xem bài viết
-                                        </Button>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => handleBlockPost(report.id)}
-                                            disabled={blockPostMutation.isLoading}
-                                        >
-                                            <Ban className="h-4 w-4 mr-2" />
-                                            {blockPostMutation.isLoading ? 'Đang chặn...' : 'Chặn bài viết'}
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     ))
                 )}
                 {isFetchingNextReports && <Loading />}
                 <div ref={reportsObserverElem} />
-            </div>
+            </motion.div>
         );
     };
 
@@ -204,95 +251,123 @@ export default function ReportSection({ groupId }) {
         if (isLoadingBlocked) return <Loading />;
 
         return (
-            <div className="grid gap-4">
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="grid gap-4"
+            >
                 {blockedData?.pages?.map((page) =>
-                    page.content.map((report) => (
-                        <Card key={report.id}>
-                            <CardHeader>
-                                <div className="flex justify-between items-center">
-                                    <div className="space-y-1">
-                                        <CardTitle className="text-base flex items-center gap-2">
-                                            <Ban className="h-4 w-4 text-red-500" />
-                                            <span>Bài cáo #{report.id.slice(-6)}</span>
-                                            <Badge variant="destructive">BLOCKED</Badge>
-                                        </CardTitle>
-                                        <div className="text-sm text-muted-foreground">
-                                            {formatDate(report.updatedAt)}
+                    page.content.map((report, index) => (
+                        <motion.div
+                            key={report.id}
+                            variants={itemVariants}
+                            whileHover={{ scale: 1.01 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <Card className="border-border bg-card hover:shadow-lg transition-all duration-300">
+                                <CardHeader>
+                                    <div className="flex justify-between items-center">
+                                        <div className="space-y-1">
+                                            <CardTitle className="text-base flex items-center gap-2">
+                                                <Ban className="h-4 w-4 text-destructive" />
+                                                <span className="text-foreground">Báo cáo #{report.id.slice(-6)}</span>
+                                                <Badge variant="destructive">BLOCKED</Badge>
+                                            </CardTitle>
+                                            <div className="text-sm text-muted-foreground">
+                                                {formatDate(report.updatedAt)}
+                                            </div>
                                         </div>
+                                        <Badge variant="outline" className="text-sm">
+                                            {report.reportCount} báo cáo
+                                        </Badge>
                                     </div>
-                                    <Badge variant="outline" className="text-sm">
-                                        {report.reportCount} báo cáo
-                                    </Badge>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
-                                    <div className="flex items-center gap-2 text-sm">
-                                        <User className="h-4 w-4" />
-                                        <span>Người đăng: {report.ownerUsername}</span>
-                                    </div>
-                                    <div className="space-y-2">
-                                        <h4 className="font-semibold text-sm">Lý do bị chặn:</h4>
-                                        {report.groupReports.map((groupReport, index) => (
-                                            <div key={index} className="space-y-2">
-                                                <div className="flex items-start gap-2 p-2 bg-muted rounded-md">
-                                                    <Avatar className="h-6 w-6">
-                                                        <AvatarFallback>
-                                                            {groupReport.reporterId.slice(-2)}
-                                                        </AvatarFallback>
-                                                    </Avatar>
-                                                    <div className="flex-1 space-y-1">
-                                                        <div className="text-sm">
-                                                            <span className="font-medium">Lý do:</span> {groupReport.reason}
-                                                        </div>
-                                                        <div className="text-xs text-muted-foreground">
-                                                            {formatDateOrTimeAgo(groupReport.reportedAt)}
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="space-y-4">
+                                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                            <User className="h-4 w-4" />
+                                            <span>Người đăng: {report.ownerUsername}</span>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h4 className="font-semibold text-sm text-foreground">Lý do bị chặn:</h4>
+                                            {report.groupReports.map((groupReport, index) => (
+                                                <motion.div
+                                                    key={index}
+                                                    initial={{ opacity: 0, x: -20 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    transition={{ delay: index * 0.1 }}
+                                                    className="space-y-2"
+                                                >
+                                                    <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
+                                                        <Avatar className="h-6 w-6">
+                                                            <AvatarFallback className="bg-primary/10 text-primary">
+                                                                {groupReport.reporterId.slice(-2)}
+                                                            </AvatarFallback>
+                                                        </Avatar>
+                                                        <div className="flex-1 space-y-1">
+                                                            <div className="text-sm">
+                                                                <span className="font-medium text-foreground">Lý do:</span> {groupReport.reason}
+                                                            </div>
+                                                            <div className="text-xs text-muted-foreground">
+                                                                {formatDateOrTimeAgo(groupReport.reportedAt)}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                {index < report.groupReports.length - 1 && <Separator />}
-                                            </div>
-                                        ))}
+                                                    {index < report.groupReports.length - 1 && <Separator />}
+                                                </motion.div>
+                                            ))}
+                                        </div>
+                                        <div className="flex gap-2">
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
+                                                className="hover:bg-muted"
+                                            >
+                                                Xem bài viết
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => handleUnblockPost(report.id)}
+                                                disabled={unBlockPostMutation.isLoading}
+                                                className="hover:bg-muted"
+                                            >
+                                                <ShieldAlert className="h-4 w-4 mr-2" />
+                                                {unBlockPostMutation.isLoading ? 'Đang bỏ chặn...' : 'Bỏ chặn bài viết'}
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className="flex gap-2">
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
-                                        >
-                                            Xem bài viết
-                                        </Button>
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            onClick={() => handleUnblockPost(report.id)}
-                                            disabled={unBlockPostMutation.isLoading}
-                                        >
-                                            <ShieldAlert className="h-4 w-4 mr-2" />
-                                            {unBlockPostMutation.isLoading ? 'Đang bỏ chặn...' : 'Bỏ chặn bài viết'}
-                                        </Button>
-                                    </div>
-                                </div>
-                            </CardContent>
-                        </Card>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
                     ))
                 )}
                 {isFetchingNextBlocked && <Loading />}
                 <div ref={blockedObserverElem} />
-            </div>
+            </motion.div>
         );
     };
 
     return (
-        <div className="space-y-4">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+        >
             <div className="flex items-center gap-2 mt-4">
-                <h2 className="text-xl font-bold">Quản lý tố cáo</h2>
+                <h2 className="text-2xl font-bold text-foreground">Quản lý tố cáo</h2>
             </div>
 
             <Tabs defaultValue="reports" className="w-full" onValueChange={setActiveTab}>
-                <TabsList className="grid w-full grid-cols-2">
-                    <TabsTrigger value="reports">Bài viết bị tố cáo</TabsTrigger>
-                    <TabsTrigger value="blocked">Bài viết bị chặn</TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+                    <TabsTrigger value="reports" className="data-[state=active]:bg-background">
+                        Bài viết bị tố cáo
+                    </TabsTrigger>
+                    <TabsTrigger value="blocked" className="data-[state=active]:bg-background">
+                        Bài viết bị chặn
+                    </TabsTrigger>
                 </TabsList>
                 <TabsContent value="reports">
                     {renderReportedPosts()}
@@ -304,7 +379,7 @@ export default function ReportSection({ groupId }) {
 
             <DialogConfirmDelete />
             {renderAnalysisDialog()}
-        </div>
+        </motion.div>
     );
 }
 
@@ -344,12 +419,24 @@ function DialogConfirmDelete() {
         <Dialog open={dialogState.isOpen} onOpenChange={() => handleConfirm(false)}>
             <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                    <DialogTitle>Xác nhận</DialogTitle>
+                    <DialogTitle className="text-xl font-semibold text-foreground">Xác nhận</DialogTitle>
                 </DialogHeader>
-                <p>{dialogState.message || t('message_default')}</p>
+                <p className="text-muted-foreground">{dialogState.message || t('message_default')}</p>
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => handleConfirm(false)}>Hủy</Button>
-                    <Button variant="destructive" onClick={() => handleConfirm(true)}>Xác nhận</Button>
+                    <Button
+                        variant="outline"
+                        onClick={() => handleConfirm(false)}
+                        className="hover:bg-muted"
+                    >
+                        Hủy
+                    </Button>
+                    <Button
+                        variant="destructive"
+                        onClick={() => handleConfirm(true)}
+                        className="hover:bg-destructive/90"
+                    >
+                        Xác nhận
+                    </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

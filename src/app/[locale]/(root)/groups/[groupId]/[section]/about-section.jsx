@@ -7,61 +7,93 @@ import { formatDate } from '@/lib/formatter'
 import { CalendarDays, Clock5, Eye, Lock, SquareLibrary, Users } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import { motion } from 'framer-motion'
 
-export default function AboutSection({ group, members , t  }) {
+export default function AboutSection({ group, members, t }) {
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.2
+            }
+        }
+    }
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    }
 
     return (
-        <>
+        <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+            className="space-y-8"
+        >
             {/* Information Group */}
-            <CardInformationGroup group={group} t={t}/>
+            <motion.div variants={itemVariants}>
+                <CardInformationGroup group={group} t={t} />
+            </motion.div>
 
             {/* Member Group */}
-            <CardMemberGroup group={group} members={members} t={t}/>
+            <motion.div variants={itemVariants}>
+                <CardMemberGroup group={group} members={members} t={t} />
+            </motion.div>
 
             {/* Activity Group */}
-            <CardActivityGroup group={group} t={t}/>
-
-        </>
+            <motion.div variants={itemVariants}>
+                <CardActivityGroup group={group} t={t} />
+            </motion.div>
+        </motion.div>
     )
 }
 
 function CardInformationGroup({ group, t }) {
     return (
-        <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
+        <Card className="w-full max-w-3xl mx-auto border-border bg-card mt-6">
             <CardContent>
-                <div className="grid gap-4 mt-6">
-                    <div className='flex justify-between'>
-                        <p className="font-bold flex items-center">{t("title_about")}</p>
+                <div className="grid gap-6 mt-6">
+                    <div className='flex justify-between items-center'>
+                        <p className="text-lg font-bold text-foreground flex items-center">{t("title_about")}</p>
                     </div>
-                    <Separator />
-                    <p className='text-sm'>{group.description}</p>
-                    {
-                        group.isPublic
-                            ?
-                            <div className='gird gap-4'>
-                                <p className="flex gap-2 font-bold items-center">
-                                    <Users className="h-4 w-4" />
+                    <Separator className="bg-border" />
+                    <p className='text-sm text-muted-foreground leading-relaxed'>{group.description}</p>
+                    <div className="space-y-4">
+                        {group.isPublic ? (
+                            <div className='space-y-2'>
+                                <p className="flex gap-2 font-medium text-foreground items-center">
+                                    <Users className="h-4 w-4 text-primary" />
                                     {t("public")}
                                 </p>
-                                <p> &middot; {t("public_description")}</p>
+                                <p className="text-sm text-muted-foreground pl-6">&middot; {t("public_description")}</p>
                             </div>
-                            :
-                            <div className='gird gap-4'>
-                                <p className="flex gap-2 font-bold items-center">
-                                    <Lock className="h-4 w-4" />
+                        ) : (
+                            <div className='space-y-2'>
+                                <p className="flex gap-2 font-medium text-foreground items-center">
+                                    <Lock className="h-4 w-4 text-primary" />
                                     {t("private")}
                                 </p>
-                                <p> &middot; {t("private_description")} </p>
+                                <p className="text-sm text-muted-foreground pl-6">&middot; {t("private_description")}</p>
                             </div>
-                    }
-                    <p className="flex gap-2 font-bold items-center">
-                        <Eye className="h-4 w-4" />
-                        {t("display")} </p>
-                    <p>&middot; {t("display_description")} </p>
-                    <p className="flex gap-2 font-bold items-center">
-                        <SquareLibrary className="h-4 w-4" />
-                        {t("category")}</p>
-                    <p>&middot; Phim hành động</p>
+                        )}
+                        <div className='space-y-2'>
+                            <p className="flex gap-2 font-medium text-foreground items-center">
+                                <Eye className="h-4 w-4 text-primary" />
+                                {t("display")}
+                            </p>
+                            <p className="text-sm text-muted-foreground pl-6">&middot; {t("display_description")}</p>
+                        </div>
+                        <div className='space-y-2'>
+                            <p className="flex gap-2 font-medium text-foreground items-center">
+                                <SquareLibrary className="h-4 w-4 text-primary" />
+                                {t("category")}
+                            </p>
+                            <p className="text-sm text-muted-foreground pl-6">&middot; Phim hành động</p>
+                        </div>
+                    </div>
                 </div>
             </CardContent>
         </Card>
@@ -70,22 +102,42 @@ function CardInformationGroup({ group, t }) {
 
 function CardMemberGroup({ group, members, t }) {
     return (
-        <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
+        <Card className="w-full max-w-3xl mx-auto border-border bg-card">
             <CardContent>
-                <div className="grid gap-4 mt-6">
-                    <p className="font-bold flex items-center">{t("members")} &middot; &nbsp;<p className='text-sm leading-3 text-muted-foreground'>{members?.numberOfElements}</p></p>
-                    <Separator />
+                <div className="grid gap-6 mt-6">
                     <div className="flex items-center gap-2">
-                        <GroupAvatar images={members?.content?.map((user) => user.avatar)} names={members?.content?.map((user) => user?.displayName)} size="w-12 h-12" />
+                        <p className="text-lg font-bold text-foreground">{t("members")}</p>
+                        <span className="text-sm text-muted-foreground">· {members?.numberOfElements}</span>
                     </div>
-                    <Button variant='secondary'>
-                        <Link
-                            href={`/groups/${group?.id}/members`}
-                            className='w-full h-full'
+                    <Separator className="bg-border" />
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="flex items-center gap-2"
+                    >
+                        <GroupAvatar
+                            images={members?.content?.map((user) => user.avatar)}
+                            names={members?.content?.map((user) => user?.displayName)}
+                            size="w-12 h-12"
+                        />
+                    </motion.div>
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                    >
+                        <Button
+                            variant='secondary'
+                            className="w-full bg-muted hover:bg-muted/80 text-muted-foreground transition-colors duration-200"
                         >
-                            {t("button_see_all_members")}
-                        </Link>
-                    </Button>
+                            <Link
+                                href={`/groups/${group?.id}/members`}
+                                className='w-full h-full'
+                            >
+                                {t("button_see_all_members")}
+                            </Link>
+                        </Button>
+                    </motion.div>
                 </div>
             </CardContent>
         </Card>
@@ -94,21 +146,31 @@ function CardMemberGroup({ group, members, t }) {
 
 function CardActivityGroup({ group, t }) {
     return (
-        <Card className="w-full max-w-3xl mx-auto my-8 drop-shadow-lg">
+        <Card className="w-full max-w-3xl mx-auto border-border bg-card">
             <CardContent>
-                <div className="grid gap-4 mt-6">
-                    <p className="font-bold flex items-center">{t("activity")}</p>
-                    <Separator />
-                    <p className="flex gap-2 font-bold items-center">
-                        <Clock5 className="h-4 w-4" />
-                        {t("date_of_establishment")} 
-                    </p>
-                    <p>&middot; {t("established_on")}: {formatDate(group?.createdAt)} </p>
-
-                    <p className="flex gap-2 font-bold items-center">
-                        <CalendarDays className="h-4 w-4" />
-                        Bài viết </p>
-                    <p>&middot; {group?.weeklyPostCount || 0} {t("week_this_post")} </p>
+                <div className="grid gap-6 mt-6">
+                    <p className="text-lg font-bold text-foreground">{t("activity")}</p>
+                    <Separator className="bg-border" />
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <p className="flex gap-2 font-medium text-foreground items-center">
+                                <Clock5 className="h-4 w-4 text-primary" />
+                                {t("date_of_establishment")}
+                            </p>
+                            <p className="text-sm text-muted-foreground pl-6">
+                                &middot; {t("established_on")}: {formatDate(group?.createdAt)}
+                            </p>
+                        </div>
+                        <div className="space-y-2">
+                            <p className="flex gap-2 font-medium text-foreground items-center">
+                                <CalendarDays className="h-4 w-4 text-primary" />
+                                Bài viết
+                            </p>
+                            <p className="text-sm text-muted-foreground pl-6">
+                                &middot; {group?.weeklyPostCount || 0} {t("week_this_post")}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </CardContent>
         </Card>
