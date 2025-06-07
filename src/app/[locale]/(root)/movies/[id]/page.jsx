@@ -12,12 +12,12 @@ import { Button } from "@/components/ui/button"
 import { movieApi } from "@/services/movieApi"
 import { savedMovieApi } from "@/services/savedMovie"
 import { Check, Heart } from "lucide-react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { useTranslations } from "use-intl"
-
 
 export default function DetailMovie() {
     const t = useTranslations('Movie.Detail')
@@ -46,7 +46,6 @@ export default function DetailMovie() {
 
     if (isLoadingMovie) return <Loading />;
 
-
     const handleSaveStatusChange = (action) => {
         const mutation = action === "save" ? saveMovieMutation : unSaveMovieMutation;
         action === "save" ? setIsSavedMovie(true) : setIsSavedMovie(false)
@@ -55,12 +54,38 @@ export default function DetailMovie() {
         });
     };
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    }
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+    }
+
     return (
-        <div className="w-full md:py-12">
-            <div className="grid gap-4">
-                <div className="">
-                    <p className="text-2xl md:text-3xl font-bold">{movie.title}</p>
-                    <div className="flex justify-between">
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="w-full md:py-12"
+        >
+            <div className="grid gap-6">
+                <motion.div variants={itemVariants} className="space-y-4">
+                    <motion.h1
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-2xl md:text-3xl font-bold text-foreground"
+                    >
+                        {movie.title}
+                    </motion.h1>
+                    <div className="flex justify-between items-center">
                         <Rating
                             value={movie.ratings?.averageRating || 0}
                             iconSize="l"
@@ -69,125 +94,121 @@ export default function DetailMovie() {
                         />
                         <div className="flex items-center gap-4">
                             <DialogRating movieId={id} />
-                            {
-                                isSavedMovie
-                                    ?
-                                    <Button size="lg" onClick={() => handleSaveStatusChange("unsave")}>
-                                        <Check className="w-5 h-5 mr-2 " />
-                                        {t("saved_movie")}
-                                    </Button>
-                                    :
-                                    <Button size="lg" onClick={() => handleSaveStatusChange("save")}>
-                                        <Heart className="w-5 h-5 mr-2 " />
-                                        {t("save_movie")}
-                                    </Button>
-                            }
-
+                            {isSavedMovie ? (
+                                <Button
+                                    size="lg"
+                                    onClick={() => handleSaveStatusChange("unsave")}
+                                    className="bg-primary hover:bg-primary/90 transition-colors duration-300"
+                                >
+                                    <Check className="w-5 h-5 mr-2" />
+                                    {t("saved_movie")}
+                                </Button>
+                            ) : (
+                                <Button
+                                    size="lg"
+                                    onClick={() => handleSaveStatusChange("save")}
+                                    className="bg-primary hover:bg-primary/90 transition-colors duration-300"
+                                >
+                                    <Heart className="w-5 h-5 mr-2" />
+                                    {t("save_movie")}
+                                </Button>
+                            )}
                         </div>
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Poster + Trailer */}
-                <div className="grid grid-cols-10 gap-1">
-                    <div className="col-span-3 flex justify-center">
+                <motion.div
+                    variants={itemVariants}
+                    className="grid grid-cols-10 gap-6"
+                >
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                        className="col-span-3 flex justify-center"
+                    >
                         <Image
                             src={movie?.posterUrl}
                             alt="Movie Poster"
                             width="300"
                             height="450"
-                            className="w-auto h-auto object-cover"
+                            className="w-auto h-auto object-cover rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
                         />
-                    </div>
-                    <div className="col-span-7 flex justify-center">
-                        <div className="overflow-hidden w-full aspect-video">
-                            {
-                                movie?.trailerUrl
-                                    ? <iframe className="w-full h-full object-cover" src={movie.trailerUrl} allowFullScreen />
-                                    : <iframe className="w-full h-full object-cover" src="https://www.youtube.com/embed/zA3_Bs8xePE?si=e9oUenQ5nHPhpRJ3" allowFullScreen />
-                            }
-                            {/* <iframe className="w-full h-full object-cover" src="https://www.youtube.com/embed/zA3_Bs8xePE?si=e9oUenQ5nHPhpRJ3" allowFullScreen /> */}
+                    </motion.div>
+                    <motion.div
+                        whileHover={{ scale: 1.02 }}
+                        transition={{ duration: 0.3 }}
+                        className="col-span-7 flex justify-center"
+                    >
+                        <div className="overflow-hidden w-full aspect-video rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                            {movie?.trailerUrl ? (
+                                <iframe
+                                    className="w-full h-full object-cover"
+                                    src={movie.trailerUrl}
+                                    allowFullScreen
+                                />
+                            ) : (
+                                <iframe
+                                    className="w-full h-full object-cover"
+                                    src="https://www.youtube.com/embed/zA3_Bs8xePE?si=e9oUenQ5nHPhpRJ3"
+                                    allowFullScreen
+                                />
+                            )}
                         </div>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
 
                 {/* Info film */}
-                <div className="grid gap-8 grid-cols-10">
-                    <MovieDetailsSection movie={movie} isSavedMovie={isSavedMovie} handleSaveStatusChange={handleSaveStatusChange} t={t} />
+                <motion.div
+                    variants={itemVariants}
+                    className="grid gap-8 grid-cols-10"
+                >
+                    <MovieDetailsSection
+                        movie={movie}
+                        isSavedMovie={isSavedMovie}
+                        handleSaveStatusChange={handleSaveStatusChange}
+                        t={t}
+                    />
+                </motion.div>
 
-                </div>
-
-                <div className="grid grid-cols-10 mt-4 gap-4">
-                    <div className="col-span-7 ">
-                        <div className="grid gap-4">
-
+                <motion.div
+                    variants={itemVariants}
+                    className="grid grid-cols-10 mt-4 gap-6"
+                >
+                    <div className="col-span-7 space-y-8">
+                        <motion.div
+                            variants={itemVariants}
+                            className="space-y-4"
+                        >
                             <Title title={t("image")} isMore={false} />
                             <DynamicImageGallery type="movie" />
-                        </div>
+                        </motion.div>
 
-                        <div className="grid gap-4 mt-6">
-
+                        <motion.div
+                            variants={itemVariants}
+                            className="space-y-4"
+                        >
                             <Title title={t("review")} isMore={true} redirect={`/movies/${id}/review`} />
                             <SectionReviewMovie movieId={id} />
-                        </div>
+                        </motion.div>
 
-
-                        <div className="grid gap-6 mt-6">
+                        <motion.div
+                            variants={itemVariants}
+                            className="space-y-6"
+                        >
                             <Title title={t("actor")} isMore={true} />
                             <SectionActorMovie actors={movie?.cast || movie.director || []} />
-                        </div>
+                        </motion.div>
                     </div>
-                    <div className="col-span-3 ">
+                    <motion.div
+                        variants={itemVariants}
+                        className="col-span-3"
+                    >
                         <SectionExploreMovies />
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
             </div>
-        </div>
+        </motion.div>
     )
 }
 
-
-// const handleSaveStatusChange = (action, id) => {
-//     let mutation
-//     if (action === "save") {
-//         mutation = useMutation({
-//             mutationFn: async (movieId) => {
-//                 try {
-//                     const res = await privateApi.post(`saved-movies/${movieId}`)
-//                     return res.data
-//                 } catch (error) {
-//                     throw error
-//                 }
-//             },
-//         })
-//         setIsSavedMovie(true)
-//     }
-//     else if (action === "saved") {
-//         mutation = useMutation({
-//             mutationFn: async (movieId) => {
-//                 try {
-//                     const res = await privateApi.delete(`saved-movies/${movieId}`)
-//                     return res.data
-//                 } catch (error) {
-//                     throw error
-//                 }
-//             },
-//         })
-//         setIsSavedMovie(false)
-//     }
-//     else{
-//         toast.error('Hành động không hợp lệ')
-//     }
-//     mutation.mutate(id, {
-//         onSuccess: ()=> {
-//             checkSavedStatus(),
-//         },
-//         onError: () => {
-//             if (action === "save"){
-//                 setIsSavedMovie(false)
-//             }
-//             else{
-//                 setIsSavedMovie(true)
-//             }
-//         }
-//     });
-// };
