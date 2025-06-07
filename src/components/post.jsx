@@ -104,7 +104,7 @@ export default function Post({ className, post, isGroup }) {
     <div
       className={`grid w-full bg-card rounded-lg drop-shadow-2xl ${className}`}
     >
-      <div className="grid gap-3 p-2 pt-4">
+      <div className="grid gap-4 p-4">
         <div className="flex justify-between w-full">
           <div className="flex items-center gap-4">
             {/* Avatar with Badge */}
@@ -126,7 +126,7 @@ export default function Post({ className, post, isGroup }) {
             </div>
 
             {/* User Info */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <Link
                 className="text-base font-semibold hover:underline"
                 href={`/user/${post.owner.id}`}
@@ -150,23 +150,6 @@ export default function Post({ className, post, isGroup }) {
 
           {/* Right Section */}
           <div className="flex items-center gap-2">
-            {/* Join Button */}
-            {/* {joinStatus === "NOT_JOIN" && (
-                            <div
-                                className="px-2 py-1 text-sm font-medium cursor-pointer text-center transition-all bg-primary text-primary-foreground rounded-2xl shadow-md active:scale-95"
-                            >
-                                Tham gia
-                            </div>
-                        )}
-
-                        {joinStatus === "PENDING" && (
-                            <div
-                                className="px-2 py-1 text-sm font-medium cursor-pointer border text-center transition-all rounded-2xl active:scale-95"
-                            >
-                                Hủy tham gia
-                            </div>
-                        )} */}
-
             {/* Dropdown Menu */}
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
@@ -199,8 +182,10 @@ export default function Post({ className, post, isGroup }) {
             </DropdownMenu>
           </div>
         </div>
-        <p className="text-lg font-bold">{post?.title}</p>
-        <ContentWithReadMore content={post.content} maxLength={200} t={t} />
+        <div className="space-y-2">
+          <p className="text-lg font-bold">{post?.title}</p>
+          <ContentWithReadMore content={post.content} maxLength={200} t={t} />
+        </div>
       </div>
       {post?.mediaUrls.length !== 0 && (
         <div className="w-full">
@@ -214,9 +199,9 @@ export default function Post({ className, post, isGroup }) {
           />
         </div>
       )}
-      <Separator />
-      <div className="flex justify-around items-center">
-        <div className="flex items-center">
+      <Separator className="my-2" />
+      <div className="flex justify-around items-center px-2">
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost rounded-full"
             onClick={() => handleUpvote(post.id)}
@@ -238,14 +223,14 @@ export default function Post({ className, post, isGroup }) {
           </Button>
         </div>
         <Link href={`/groups/${post.groupId}/post/${post.id}`}>
-          <Button variant="ghost" className="gap-1 items-center rounded-full">
+          <Button variant="ghost" className="gap-2 items-center rounded-full">
             <MessageCircle className="h-5 w-5" />
             {t("comment")}
           </Button>
         </Link>
         <Button
           variant="ghost"
-          className={`flex items-center gap-1 rounded-full ${saved ? "text-yellow-500 hover:text-yellow-500" : ""
+          className={`flex items-center gap-2 rounded-full ${saved ? "text-yellow-500 hover:text-yellow-500" : ""
             }`}
           onClick={() => handleSaveStatusChange(saved ? "unsave" : "save")}
         >
@@ -310,13 +295,18 @@ function ContentWithReadMore({ content, maxLength = 200, t }) {
 export const PostSkeleton = () => {
   return (
     <div className={"grid w-full bg-card rounded-lg drop-shadow-2xl"}>
-      <div className="grid gap-3 p-2 pt-4">
-        <div className="flex gap-2 items-center">
-          <Skeleton className="w-8 h-8 rounded-full" />
-          <Skeleton className="w-1/5 h-6" />
+      <div className="grid gap-4 p-4">
+        <div className="flex gap-4 items-center">
+          <Skeleton className="w-10 h-10 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="w-32 h-5" />
+            <Skeleton className="w-24 h-4" />
+          </div>
         </div>
-        <Skeleton className="w-2/3 h-8" />
-        <Skeleton className="w-full h-16" />
+        <div className="space-y-2">
+          <Skeleton className="w-2/3 h-6" />
+          <Skeleton className="w-full h-16" />
+        </div>
       </div>
       <div className="w-full">
         <Skeleton
@@ -325,8 +315,8 @@ export const PostSkeleton = () => {
           className="w-full aspect-[16/6] object-cover"
         />
       </div>
-      <Separator />
-      <div className="flex justify-around items-centerm mt-1">
+      <Separator className="my-2" />
+      <div className="flex justify-around items-center px-4 py-2">
         <Skeleton className="w-24 h-8" />
         <Skeleton className="w-24 h-8" />
         <Skeleton className="w-24 h-8" />

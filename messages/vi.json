@@ -7,12 +7,12 @@
         "input_placeholder": "Tìm kiếm...",
         "login": "Đăng nhập",
         "search_placeholder": "Tìm kiếm...",
-        "notifications":"Thông báo",
-        "no_have_notifications":"Không có thông báo nào",
+        "notifications": "Thông báo",
+        "no_have_notifications": "Không có thông báo nào",
         "MenuProfile": {
             "account": "Tài khoản",
-            "admin_page":"Trang admin",
-            "home_page":"Trang chủ",
+            "admin_page": "Trang admin",
+            "home_page": "Trang chủ",
             "my_profile": "Trang cá nhân",
             "settings": "Cài đặt",
             "help": "Trợ giúp",
@@ -87,13 +87,13 @@
             "share": "Share",
             "category": "Thể loại"
         },
-        "Review":{
-            "rating":"Đánh giá phim",
-            "rating_score":"Điểm đánh giá",
-            "rating_input":"Nội dung đánh giá",
-            "button_rating":"Đánh giá",
-            "movie_review":"Đánh giá của phim",
-            "no_review":"Không có đánh giá nào cho bộ phim này."
+        "Review": {
+            "rating": "Đánh giá phim",
+            "rating_score": "Điểm đánh giá",
+            "rating_input": "Nội dung đánh giá",
+            "button_rating": "Đánh giá",
+            "movie_review": "Đánh giá của phim",
+            "no_review": "Không có đánh giá nào cho bộ phim này."
         }
     },
     "Dashboard": {
@@ -113,12 +113,12 @@
     "Badge": {
         "title": "Huy hiệu thành tích",
         "title_description": "Huy hiệu thể hiện sự đóng góp và tương tác của bạn trong cộng đồng",
-        "descrioption_1":"Bạn đang giữ vững chuỗi thành tích! 🎉",
-        "descrioption_2":"Bạn đã tương tác thường xuyên và giữ vững huy hiệu fan cứng của mình.",
-        "descrioption_3":"Huy hiệu fan cứng có thể giúp bạn được vinh danh nhờ sự ủng hộ của mình và sẽ được đánh giá lại hàng tuần.",
+        "descrioption_1": "Bạn đang giữ vững chuỗi thành tích! 🎉",
+        "descrioption_2": "Bạn đã tương tác thường xuyên và giữ vững huy hiệu fan cứng của mình.",
+        "descrioption_3": "Huy hiệu fan cứng có thể giúp bạn được vinh danh nhờ sự ủng hộ của mình và sẽ được đánh giá lại hàng tuần.",
         "descrioption_4": "Hãy không ngừng tương tác để giữ vững huy hiệu của mình nhé.",
-        "go_to_groups_button":"Đi đến nhóm",
-        "go_to_back_home_button":"Quay lại trang chủ"
+        "go_to_groups_button": "Đi đến nhóm",
+        "go_to_back_home_button": "Quay lại trang chủ"
     },
     "Category": {
         "category": "Thể loại",
@@ -155,29 +155,28 @@
         "rules": "Quy tắc",
         "rules_description": "Những quy định chung của nhóm",
         "add_rule": "Thêm quy tắc",
-        "title_about":"Giới thiệu về nhóm",
-        "public":"Công khai",
-        "private":"Riêng tư",
-        "public_description":" Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng.",
-        "private_description":"Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.",
-        "display":"Hiển thị",
-        "display_description":"Ai cũng có thể tìm thấy nhóm này.",
-        "button_see_all_members":"Xem tất cả thành viên",
-        "activity":"Hoạt động",
-        "date_of_establishment":"Ngày thành lập",
-        "established_on":"Thành lập ngày",
-        "post":"Bài viết",
-        "week_this_post":"bài viết tuần này",
-        "request_to_join_group":"Yêu cầu tham gia nhóm",
-        "founder":"Người thành lập",
-        "recently_joined":"Tham gia gần đây",
-        "joined_a_while_ago":"Tham gia cách đây",
-        "view_profile":"Xem trang cá nhân",
-        "leave_group":"Rời nhóm",
-        "actions":"Hành động",
-        "delete":"Xóa",
-        "edit":"Chỉnh sửa",
-
+        "title_about": "Giới thiệu về nhóm",
+        "public": "Công khai",
+        "private": "Riêng tư",
+        "public_description": " Bất kỳ ai cũng có thể nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "private_description": "Chỉ thành viên mới nhìn thấy mọi người trong nhóm và những gì họ đăng.",
+        "display": "Hiển thị",
+        "display_description": "Ai cũng có thể tìm thấy nhóm này.",
+        "button_see_all_members": "Xem tất cả thành viên",
+        "activity": "Hoạt động",
+        "date_of_establishment": "Ngày thành lập",
+        "established_on": "Thành lập ngày",
+        "post": "Bài viết",
+        "week_this_post": "bài viết tuần này",
+        "request_to_join_group": "Yêu cầu tham gia nhóm",
+        "founder": "Người thành lập",
+        "recently_joined": "Tham gia gần đây",
+        "joined_a_while_ago": "Tham gia cách đây",
+        "view_profile": "Xem trang cá nhân",
+        "leave_group": "Rời nhóm",
+        "actions": "Hành động",
+        "delete": "Xóa",
+        "edit": "Chỉnh sửa",
         "NavbarGroup": {
             "feed": "Bảng tin",
             "message": "Nhắn tin",
@@ -201,7 +200,8 @@
             "group_status": "Trạng thái nhóm",
             "category": "Thể loại",
             "public": "Công khai",
-            "private": "Riêng tư"
+            "private": "Riêng tư",
+            "cancel": "Hủy"
         },
         "DialogCreatePost": {
             "create_post": "Tạo bài viết",
@@ -228,17 +228,17 @@
             "private": "Riêng tư",
             "button_submit": "Đăng"
         },
-        "Post":{
-            "comment_placeholder":"Nhập bình luận...",
-            "send":"Gửi",
-            "report_post":"Báo cáo bài viết",
-            "edit_post":"Chỉnh sửa bài viết",
-            "delete_post":"Xóa bài viết",
-            "comment":"Bình luận",
-            "save":"Lưu",
-            "saved":"Đã lưu",
-            "more":"Xem thêm",
-            "hide":"Ẩn"
+        "Post": {
+            "comment_placeholder": "Nhập bình luận...",
+            "send": "Gửi",
+            "report_post": "Báo cáo bài viết",
+            "edit_post": "Chỉnh sửa bài viết",
+            "delete_post": "Xóa bài viết",
+            "comment": "Bình luận",
+            "save": "Lưu",
+            "saved": "Đã lưu",
+            "more": "Xem thêm",
+            "hide": "Ẩn"
         }
     },
     "Actor": {

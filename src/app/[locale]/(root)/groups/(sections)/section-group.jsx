@@ -8,7 +8,7 @@ import { groupsApi } from '@/services/groupsApi'
 import { Search } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import React, { useState } from 'react'
-
+import { motion } from 'framer-motion'
 
 const tab = (t) => [
     {
@@ -25,82 +25,136 @@ const tab = (t) => [
     }
 ]
 
-
 export function SectionGroup({ movieCategories, userId, t }) {
     const [activeTab, setActiveTab] = useState('all');
 
     const { isLoading: loadingOwnerGroups, data: ownerGroups } = groupsApi.query.useFindByOwnerId(0, 24)
     const { isLoading: loadingUserGroups, data: userGroups } = groupsApi.query.useGetUserGroups(0, 24, userId)
 
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
     return (
-        <>
+        <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={containerVariants}
+            className="space-y-6"
+        >
             <div>
                 <Title title={t('title')} isMore={false} />
             </div>
 
-            <div className="flex justify-between mt-4 items-center">
-                <div className="flex gap-2">
-                    {
-                        tab(t).map((item, index) => (
-                            <Button
-                                key={index}
-                                size="sm"
-                                variant={activeTab === item.title ? undefined : 'outline'}
-                                onClick={() => setActiveTab(item.title)}
-                            >
-                                {item.display_title}
-                            </Button>
-                        ))
-                    }
-                </div>
+            <div className="flex flex-col sm:flex-row justify-between gap-4 items-start sm:items-center">
+                <motion.div
+                    className="flex gap-2"
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    {tab(t).map((item, index) => (
+                        <Button
+                            key={index}
+                            size="sm"
+                            variant={activeTab === item.title ? "default" : "outline"}
+                            onClick={() => setActiveTab(item.title)}
+                            className="transition-all duration-200"
+                        >
+                            {item.display_title}
+                        </Button>
+                    ))}
+                </motion.div>
 
-                <div className="flex gap-2">
-                    {/* <div className="hidden md:block relative">
-                        <Input type="text" placeholder="Tìm kiếm..." className="pr-10" />
-                        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                    </div> */}
+                <motion.div
+                    className="flex gap-2"
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
                     <DialogCreateGroup movieCategories={movieCategories} />
-                </div>
+                </motion.div>
             </div>
 
-            <div className="flex-1 mt-4">
-                <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
-                    {loadingOwnerGroups || loadingUserGroups ? (
-                        <>
-                            {Array.from({ length: 8 }).map((_, index) => (
-                                <CardGroupsSkeleton key={index} />
+            <motion.div
+                className="grid gap-8 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4"
+                variants={containerVariants}
+            >
+                {loadingOwnerGroups || loadingUserGroups ? (
+                    <>
+                        {Array.from({ length: 8 }).map((_, index) => (
+                            <motion.div
+                                key={index}
+                                variants={{
+                                    hidden: { opacity: 0, y: 20 },
+                                    visible: { opacity: 1, y: 0 }
+                                }}
+                            >
+                                <CardGroupsSkeleton />
+                            </motion.div>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {activeTab === 'ownerGroups' &&
+                            ownerGroups.content.map((group, index) => (
+                                <motion.div
+                                    key={group.id}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0 }
+                                    }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <CardGroups group={group} initialStatus="joined" categories={movieCategories} />
+                                </motion.div>
                             ))}
-                        </>
-                    ) : (
-                        <>
-                            {activeTab === 'ownerGroups' &&
-                                ownerGroups.content.map(group => (
-                                    <CardGroups key={group.id} group={group} initialStatus="joined" categories={movieCategories} />
-                                ))}
-                            {activeTab === 'userGroups' &&
-                                userGroups.content.map(group => (
-                                    <CardGroups key={group.id} group={group} initialStatus="joined" categories={movieCategories} />
-                                ))}
-                            {activeTab === 'all' && (
-                                <>
-                                    {Array.from(
-                                        new Map(
-                                            [...ownerGroups.content, ...userGroups.content].map(group => [group.id, group])
-                                        ).values()
-                                    ).map(group => (
+                        {activeTab === 'userGroups' &&
+                            userGroups.content.map((group, index) => (
+                                <motion.div
+                                    key={group.id}
+                                    variants={{
+                                        hidden: { opacity: 0, y: 20 },
+                                        visible: { opacity: 1, y: 0 }
+                                    }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <CardGroups group={group} initialStatus="joined" categories={movieCategories} />
+                                </motion.div>
+                            ))}
+                        {activeTab === 'all' && (
+                            <>
+                                {Array.from(
+                                    new Map(
+                                        [...ownerGroups.content, ...userGroups.content].map(group => [group.id, group])
+                                    ).values()
+                                ).map((group, index) => (
+                                    <motion.div
+                                        key={group.id}
+                                        variants={{
+                                            hidden: { opacity: 0, y: 20 },
+                                            visible: { opacity: 1, y: 0 }
+                                        }}
+                                        transition={{ delay: index * 0.1 }}
+                                    >
                                         <CardGroups
-                                            key={group.id}
                                             group={group}
                                             initialStatus="joined"
                                             categories={movieCategories}
                                         />
-                                    ))}
-                                </>
-                            )}
-                        </>
-                    )}
-                </div>
-            </div>
-        </>
+                                    </motion.div>
+                                ))}
+                            </>
+                        )}
+                    </>
+                )}
+            </motion.div>
+        </motion.div>
     )
 }
