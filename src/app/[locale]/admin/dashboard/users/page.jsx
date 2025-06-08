@@ -118,6 +118,13 @@ export default function Users() {
 
     return (
         <div className="bg-background p-6">
+                <div className="flex items-center justify-end mb-6 gap-4">
+                <div className="flex items-center gap-4">
+                    <Input
+                        placeholder="Search users..."
+                        className="text-muted-foreground" />
+                </div>
+            </div>
             <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
                 <Table>
                     <TableHeader>

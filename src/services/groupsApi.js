@@ -135,6 +135,15 @@ const findAllGroupsAsPage = async ({ queryKey }) => {
     return res.data
 }
 
+const getTopActiveUsers = async (groupId) => {
+    const res = await privateApi.get(`/activity-analytics/top-active-users`, {
+        params: {
+            groupId: groupId,
+        }
+    })
+    return res.data
+}
+
 export const groupsApi = {
     query: {
         useFindByOwnerId(page, size) {
@@ -184,6 +193,12 @@ export const groupsApi = {
             return useQuery({
                 queryKey: QUERY_KEY.allGroups(page, size),
                 queryFn: findAllGroupsAsPage,
+            })
+        },
+        useGetTopActiveUsers(groupId) {
+            return useQuery({
+                queryKey: QUERY_KEY.getTopActiveUsers(groupId),
+                queryFn: ({ queryKey }) => getTopActiveUsers(queryKey[1]),
             })
         }
     },

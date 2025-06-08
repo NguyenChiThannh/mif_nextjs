@@ -19,6 +19,7 @@ export const QUERY_KEY = {
   pendingInvitations: (groupId) => ["pending_invitations", groupId],
   searchGroupByGroupName: (search) => ["search_group_by_group_name", search],
   allGroups: (page, size) => ["all_groups", { page, size }],
+  getTopActiveUsers: (groupId) => ["top_active_users", groupId],
   // Actor
   actorMovieography: (actorId) => ["actor_movieography", actorId],
   actorById: (actorId) => ["actor", actorId],

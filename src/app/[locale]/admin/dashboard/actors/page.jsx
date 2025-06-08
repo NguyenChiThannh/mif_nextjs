@@ -101,12 +101,12 @@ export default function Actors() {
         <div>
             <div className="bg-background p-6">
                 {/* Header */}
-                <div className="flex items-center justify-end mb-6">
-                    {/* <div className="flex items-center gap-4">
+                <div className="flex items-center justify-end mb-6 gap-4">
+                    <div className="flex items-center gap-4">
                         <Input
                             placeholder="Search actors..."
                             className="text-muted-foreground" />
-                    </div> */}
+                    </div>
                     <div className='flex items-center gap-2'>
                         <Button
                             onClick={() => { router.push('/admin/dashboard/actors/create') }}
