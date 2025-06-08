@@ -41,8 +41,14 @@ export const chatBotApi = {
   },
   mutation: {
     useChatWithBot() {
+      const queryClient = useQueryClient();
       return useMutation({
         mutationFn: chatWithBot,
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: QUERY_KEY.historyChatBot(),
+          });
+        },
       });
     },
     useDeleteHistoryChatBot() {
