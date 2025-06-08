@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { favoriteActorsApi } from '@/services/favoriteActorsApi';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useTranslations } from 'use-intl';
-
+import { motion } from 'framer-motion';
 
 export default function CardActorHorizontal({ actor, isTopRanked }) {
     const t = useTranslations('Actor');
@@ -51,66 +51,72 @@ export default function CardActorHorizontal({ actor, isTopRanked }) {
     };
 
     return (
-        <div className="flex p-1 rounded border-b-2 items-center">
+        <motion.div
+            className="flex p-4 items-center hover:bg-muted/30 transition-colors duration-200 border-b last:border-b-0"
+            whileHover={{ scale: 1.01 }}
+            transition={{ duration: 0.2 }}
+        >
             <ActorInfo actor={actor} isTopRanked={isTopRanked} t={t} />
             <LikeButton
                 isLiked={isLiked}
                 onLike={handleAddFavoriteActor}
                 onUnlike={handleRemoveFavoriteActor}
             />
-        </div>
+        </motion.div>
     );
 }
 
 function ActorInfo({ actor, isTopRanked, t }) {
     return (
-        <div className="flex items-center gap-2">
-            <Avatar className="border w-10 h-10">
+        <div className="flex items-center gap-4">
+            <Avatar className="border border-border w-12 h-12 transition-transform duration-200 hover:scale-105">
                 <AvatarImage src={actor.profilePictureUrl} alt={actor.name} />
-                <AvatarFallback>{actor.name?.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="bg-muted text-muted-foreground">
+                    {actor.name?.charAt(0)}
+                </AvatarFallback>
             </Avatar>
-            <div className="grid gap-2 py-2">
+            <div className="grid gap-1">
                 <Link href={`/actor/${actor.id}`}>
-                    <p className="leading-none font-bold">{actor.name}</p>
+                    <p className="leading-none font-semibold text-foreground hover:text-primary transition-colors duration-200">
+                        {actor.name}
+                    </p>
                 </Link>
-                {/* Rank actor */}
-                {/* <div className="flex items-center gap-1">
-                    <span className="text-sm">#1(</span>
-                    <Triangle
-                        className={isTopRanked
-                            ? "fill-green-500 text-green-500"
-                            : "rotate-180 fill-red-500 text-red-500"}
-                        size="10px"
-                    />
-                    <span className="text-sm">16)</span>
-                </div> */}
                 <div className="flex items-center gap-1">
-                    <span className="text-sm">{t("actor")}</span>
-
+                    <span className="text-sm text-muted-foreground">{t("actor")}</span>
                 </div>
             </div>
         </div>
     );
 }
 
-
 function LikeButton({ isLiked, onLike, onUnlike }) {
     return (
-        <div className="flex items-center gap-1 ml-auto">
-            <button onClick={isLiked ? onUnlike : onLike} aria-label="Toggle Favorite">
-                <Heart className={isLiked ? "fill-red-500 text-red-500" : "text-gray-500"} />
+        <motion.div
+            className="flex items-center gap-1 ml-auto"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+        >
+            <button
+                onClick={isLiked ? onUnlike : onLike}
+                aria-label="Toggle Favorite"
+                className="p-2 rounded-full hover:bg-muted/30 transition-colors duration-200"
+            >
+                <Heart
+                    className={`w-5 h-5 transition-colors duration-200 ${isLiked ? "fill-primary text-primary" : "text-muted-foreground"
+                        }`}
+                />
             </button>
-        </div>
+        </motion.div>
     );
 }
 
 export function CardActorHorizontalSkeleton() {
     return (
-        <div className="flex p-1 rounded border-b-2 items-center">
-            <div className="flex items-center gap-2">
-                <Skeleton className="rounded-full w-10 h-10" />
-                <div className="grid gap-2 py-2">
-                    <Skeleton className="w-24 h-4" />
+        <div className="flex p-4 items-center border-b last:border-b-0">
+            <div className="flex items-center gap-4">
+                <Skeleton className="rounded-full w-12 h-12" />
+                <div className="grid gap-1">
+                    <Skeleton className="w-32 h-5" />
                     <Skeleton className="w-20 h-4" />
                 </div>
             </div>

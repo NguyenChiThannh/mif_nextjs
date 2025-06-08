@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function CardMovieSmall({ movie }) {
     const router = useRouter();
@@ -17,59 +18,59 @@ export default function CardMovieSmall({ movie }) {
     const duration = movie?.duration;
 
     return (
-        <div className="flex items-center w-full gap-4">
+        <motion.div
+            className="flex items-center w-full p-4 hover:bg-muted/30 transition-colors duration-200 border-b last:border-b-0"
+            whileHover={{ scale: 1.01 }}
+            transition={{ duration: 0.2 }}
+        >
             {/* Movie Details */}
             <div
-                className="flex items-stretch gap-2 cursor-pointer"
+                className="flex items-stretch gap-4 cursor-pointer w-full"
                 onClick={handleDetailMovie}
             >
-                <Image
-                    src={movie?.posterUrl}
-                    alt={movie?.title || 'Movie Poster'}
-                    width={80}
-                    height={120}
-                    className="rounded-lg object-cover aspect-[3/4]"
-                />
-                <div className="grid gap-0.5 my-1">
-                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold line-clamp-2">
+                <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-24 flex-shrink-0">
+                    <Image
+                        src={movie?.posterUrl}
+                        alt={movie?.title || 'Movie Poster'}
+                        fill
+                        className="object-cover transition-transform duration-300 hover:scale-105"
+                    />
+                </div>
+                <div className="grid gap-1 my-1 min-w-0 flex-1">
+                    <h3 className="text-base font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors duration-200">
                         {movie?.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm">
-                        {t('year_release')}: {yearRelease}
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                        {t('duration')}: {duration} {t('minutes')}
-                    </p>
-                    <p className="text-muted-foreground text-sm">
-                        <strong>{movie.country}</strong>
-                    </p>
+                    <div className="grid gap-0.5 text-sm text-muted-foreground">
+                        <p>
+                            {t('year_release')}: {yearRelease}
+                        </p>
+                        <p>
+                            {t('duration')}: {duration} {t('minutes')}
+                        </p>
+                        <p>
+                            <span className="font-medium">{movie.country}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
-
-            {/* Bookmark Icon */}
-            {/* <div className="ml-auto flex items-center gap-1 cursor-pointer">
-                <Bookmark />
-            </div> */}
-        </div>
+        </motion.div>
     );
 }
 
 export function CardMovieSmallSkeleton() {
     return (
-        <div className="flex items-center w-full gap-4">
+        <div className="flex items-center w-full p-4 border-b last:border-b-0">
             {/* Skeleton for Movie Poster */}
-            <div className="flex items-stretch gap-2">
-                <Skeleton className="rounded-lg w-20 h-32" />
-                <div className="grid gap-1 my-1">
-                    <Skeleton className="w-40 h-6" />
-                    <Skeleton className="w-32 h-5" />
-                    <Skeleton className="w-28 h-5" />
+            <div className="flex items-stretch gap-4 w-full">
+                <Skeleton className="rounded-lg w-24 aspect-[3/4] flex-shrink-0" />
+                <div className="grid gap-1 my-1 min-w-0 flex-1">
+                    <Skeleton className="w-full h-6" />
+                    <div className="grid gap-0.5">
+                        <Skeleton className="w-32 h-4" />
+                        <Skeleton className="w-28 h-4" />
+                        <Skeleton className="w-24 h-4" />
+                    </div>
                 </div>
-            </div>
-
-            {/* Skeleton for Bookmark */}
-            <div className="ml-auto flex items-center gap-1">
-                <Skeleton className="w-6 h-6 rounded-full" />
             </div>
         </div>
     );

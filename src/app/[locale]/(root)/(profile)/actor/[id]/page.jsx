@@ -12,6 +12,7 @@ import HeaderSection from '@/app/[locale]/(root)/(profile)/actor/[id]/(sections)
 import BiographySection from '@/app/[locale]/(root)/(profile)/actor/[id]/(sections)/biography-section'
 import AwardsSection from '@/app/[locale]/(root)/(profile)/actor/[id]/(sections)/awards-section'
 import FilmographySection from '@/app/[locale]/(root)/(profile)/actor/[id]/(sections)/filmography-section'
+import { motion } from 'framer-motion'
 
 export default function Actor() {
   const t = useTranslations('Profile.Actor')
@@ -67,29 +68,69 @@ export default function Actor() {
     })
   }
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  }
+
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-8">
-      <HeaderSection
-        actor={actor}
-        liked={liked}
-        onLike={handleLike}
-        onUnlike={handleUnlike}
-        favoriteCount={favoriteCount}
-        t={t}
-      />
+    <motion.div
+      className="max-w-4xl mx-auto p-4 space-y-8 bg-background min-h-screen"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
+      <motion.div variants={itemVariants}>
+        <HeaderSection
+          actor={actor}
+          liked={liked}
+          onLike={handleLike}
+          onUnlike={handleUnlike}
+          favoriteCount={favoriteCount}
+          t={t}
+        />
+      </motion.div>
 
-      <BiographySection bio={actor.bio} />
+      <motion.div variants={itemVariants}>
+        <BiographySection bio={actor.bio} />
+      </motion.div>
 
-      <AwardsSection awards={actor.awards} t={t} />
+      <motion.div variants={itemVariants}>
+        <AwardsSection awards={actor.awards} t={t} />
+      </motion.div>
 
-      <div>
+      <motion.div variants={itemVariants}>
         <Title title={t("images")} isMore={false} />
-        <div className="mt-4">
+        <motion.div
+          className="mt-4"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
           <DynamicImageGallery type="actor" />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <FilmographySection actorId={id} t={t} />
-    </div>
+      <motion.div variants={itemVariants}>
+        <FilmographySection actorId={id} t={t} />
+      </motion.div>
+    </motion.div>
   )
 }

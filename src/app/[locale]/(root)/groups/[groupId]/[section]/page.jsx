@@ -106,7 +106,7 @@ export default function GroupPage() {
                         section={section}
                         t={t}
                     />
-                    <Separator />
+                    <Separator className='mt-4' />
                     {renderSection()}
                 </div>
             </div>

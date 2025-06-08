@@ -7,12 +7,12 @@
         "input_placeholder": "Search...",
         "login": "Login",
         "search_placeholder": "Search...",
-        "notifications":"Notifications",
-        "no_have_notifications":"No notifications",
+        "notifications": "Notifications",
+        "no_have_notifications": "No notifications",
         "MenuProfile": {
             "account": "Account",
-            "admin_page":"Page Admin",
-            "home_page":"Home",
+            "admin_page": "Page Admin",
+            "home_page": "Home",
             "my_profile": "My profile",
             "settings": "Settings",
             "help": "Help",
@@ -88,10 +88,10 @@
             "category": "Category"
         },
         "Review": {
-            "rating":"Rating movie",
-            "rating_score":"Rating score",
-            "rating_input":"Rating",
-            "button_rating":"Rating",
+            "rating": "Rating movie",
+            "rating_score": "Rating score",
+            "rating_input": "Rating",
+            "button_rating": "Rating",
             "movie_review": "Movie reviews",
             "no_review": "No reviews for this movie."
         }
@@ -200,7 +200,8 @@
             "group_status": "Group status",
             "category": "Category",
             "public": "Public",
-            "private": "Private"
+            "private": "Private",
+            "cancel": "Cancel"
         },
         "DialogCreatePost": {
             "create_post": "Create post",
@@ -230,14 +231,14 @@
         "Post": {
             "comment_placeholder": "Enter comment...",
             "send": "Send",
-            "report_post":"Report post",
-            "edit_post":"Edit post",
-            "delete_post":"Delete post",
-            "comment":"Comment",
-            "save":"Save",
-            "saved":"Saved",
-            "more":"See more",
-            "hide":"Hide"
+            "report_post": "Report post",
+            "edit_post": "Edit post",
+            "delete_post": "Delete post",
+            "comment": "Comment",
+            "save": "Save",
+            "saved": "Saved",
+            "more": "See more",
+            "hide": "Hide"
         }
     },
     "Actor": {

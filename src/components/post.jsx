@@ -29,6 +29,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { BadgeIcon } from "@/components/badge-icon"
 import DialogReportPost from "@/components/dialog-report-post";
+import { motion } from "framer-motion";
 
 export default function Post({ className, post, isGroup }) {
   const t = useTranslations("Groups.Post");
@@ -101,14 +102,27 @@ export default function Post({ className, post, isGroup }) {
   const hashtags = "#Hành động #Hài kịch";
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
       className={`grid w-full bg-card rounded-lg drop-shadow-2xl ${className}`}
     >
-      <div className="grid gap-3 p-2 pt-4">
-        <div className="flex justify-between w-full">
+      <div className="grid gap-4 p-4">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.1 }}
+          className="flex justify-between w-full"
+        >
           <div className="flex items-center gap-4">
             {/* Avatar with Badge */}
-            <div className="relative">
+            <motion.div
+              className="relative"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
               <Avatar className="w-10 h-10 flex items-center justify-center object-cover rounded-full border border-border">
                 <AvatarImage
                   src={post.owner.profilePictureUrl}
@@ -123,10 +137,10 @@ export default function Post({ className, post, isGroup }) {
                   <BadgeIcon level={post.owner.badgeMap[post.groupId]} size="sm" showAnimation />
                 </div>
               )}
-            </div>
+            </motion.div>
 
             {/* User Info */}
-            <div className="flex flex-col">
+            <div className="flex flex-col gap-1">
               <Link
                 className="text-base font-semibold hover:underline"
                 href={`/user/${post.owner.id}`}
@@ -149,25 +163,12 @@ export default function Post({ className, post, isGroup }) {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center gap-2">
-            {/* Join Button */}
-            {/* {joinStatus === "NOT_JOIN" && (
-                            <div
-                                className="px-2 py-1 text-sm font-medium cursor-pointer text-center transition-all bg-primary text-primary-foreground rounded-2xl shadow-md active:scale-95"
-                            >
-                                Tham gia
-                            </div>
-                        )}
-
-                        {joinStatus === "PENDING" && (
-                            <div
-                                className="px-2 py-1 text-sm font-medium cursor-pointer border text-center transition-all rounded-2xl active:scale-95"
-                            >
-                                Hủy tham gia
-                            </div>
-                        )} */}
-
-            {/* Dropdown Menu */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="flex items-center gap-2"
+          >
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -197,13 +198,25 @@ export default function Post({ className, post, isGroup }) {
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
-          </div>
-        </div>
-        <p className="text-lg font-bold">{post?.title}</p>
-        <ContentWithReadMore content={post.content} maxLength={200} t={t} />
+          </motion.div>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="space-y-2"
+        >
+          <p className="text-lg font-bold">{post?.title}</p>
+          <ContentWithReadMore content={post.content} maxLength={200} t={t} />
+        </motion.div>
       </div>
       {post?.mediaUrls.length !== 0 && (
-        <div className="w-full">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="w-full"
+        >
           <Image
             src={post.mediaUrls[0]}
             width={400}
@@ -212,11 +225,16 @@ export default function Post({ className, post, isGroup }) {
             className="w-full h-[400px] object-contain"
             quality={75}
           />
-        </div>
+        </motion.div>
       )}
-      <Separator />
-      <div className="flex justify-around items-center">
-        <div className="flex items-center">
+      <Separator className="my-2" />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="flex justify-around items-center px-2"
+      >
+        <div className="flex items-center gap-2">
           <Button
             variant="ghost rounded-full"
             onClick={() => handleUpvote(post.id)}
@@ -238,14 +256,14 @@ export default function Post({ className, post, isGroup }) {
           </Button>
         </div>
         <Link href={`/groups/${post.groupId}/post/${post.id}`}>
-          <Button variant="ghost" className="gap-1 items-center rounded-full">
+          <Button variant="ghost" className="gap-2 items-center rounded-full">
             <MessageCircle className="h-5 w-5" />
             {t("comment")}
           </Button>
         </Link>
         <Button
           variant="ghost"
-          className={`flex items-center gap-1 rounded-full ${saved ? "text-yellow-500 hover:text-yellow-500" : ""
+          className={`flex items-center gap-2 rounded-full ${saved ? "text-yellow-500 hover:text-yellow-500" : ""
             }`}
           onClick={() => handleSaveStatusChange(saved ? "unsave" : "save")}
         >
@@ -254,16 +272,14 @@ export default function Post({ className, post, isGroup }) {
           />
           {saved ? t("saved") : t("save")}
         </Button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
 function ContentWithReadMore({ content, maxLength = 200, t }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const isContentLong = content.length > maxLength;
-  console.log('🚀 ~ ContentWithReadMore ~ isContentLong:', isContentLong)
-  console.log('🚀 ~ ContentWithReadMore ~ content.length:', content?.slice(0, maxLength))
 
   const toggleContent = () => {
     setIsExpanded(!isExpanded);
@@ -311,14 +327,24 @@ function ContentWithReadMore({ content, maxLength = 200, t }) {
 
 export const PostSkeleton = () => {
   return (
-    <div className={"grid w-full bg-card rounded-lg drop-shadow-2xl"}>
-      <div className="grid gap-3 p-2 pt-4">
-        <div className="flex gap-2 items-center">
-          <Skeleton className="w-8 h-8 rounded-full" />
-          <Skeleton className="w-1/5 h-6" />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className={"grid w-full bg-card rounded-lg drop-shadow-2xl"}
+    >
+      <div className="grid gap-4 p-4">
+        <div className="flex gap-4 items-center">
+          <Skeleton className="w-10 h-10 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="w-32 h-5" />
+            <Skeleton className="w-24 h-4" />
+          </div>
         </div>
-        <Skeleton className="w-2/3 h-8" />
-        <Skeleton className="w-full h-16" />
+        <div className="space-y-2">
+          <Skeleton className="w-2/3 h-6" />
+          <Skeleton className="w-full h-16" />
+        </div>
       </div>
       <div className="w-full">
         <Skeleton
@@ -327,13 +353,13 @@ export const PostSkeleton = () => {
           className="w-full aspect-[16/6] object-cover"
         />
       </div>
-      <Separator />
-      <div className="flex justify-around items-centerm mt-1">
+      <Separator className="my-2" />
+      <div className="flex justify-around items-center px-2">
         <Skeleton className="w-24 h-8" />
         <Skeleton className="w-24 h-8" />
         <Skeleton className="w-24 h-8" />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

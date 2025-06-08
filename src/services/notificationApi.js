@@ -6,6 +6,7 @@ const getAllNotifications = async ({ pageParam = 0, queryKey }) => {
     const res = await privateApi.get('/notifications', {
         params: {
             page: pageParam,
+            size: 50,
         }
     })
     return res.data

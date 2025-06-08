@@ -3,56 +3,64 @@ import { Triangle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function CardActor({ actor }) {
     const { name, rank } = actor;
 
     return (
-        <div className="grid rounded-lg gap-4 w-40 hover:underline">
+        <motion.div
+            className="grid rounded-lg gap-4 w-40 group"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+        >
             {/* Actor Image */}
-            <Image
-                src={actor.profilePictureUrl}
-                alt={`${name} image`}
-                width={200}
-                height={200}
-                className="h-full w-full object-cover rounded-full aspect-square shadow-lg"
-            />
+            <motion.div
+                className="relative overflow-hidden rounded-full"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.3 }}
+            >
+                <Image
+                    src={actor.profilePictureUrl}
+                    alt={`${name} image`}
+                    width={200}
+                    height={200}
+                    className="h-full w-full object-cover rounded-full aspect-square border-2 border-border transition-colors duration-300"
+                />
+            </motion.div>
 
             {/* Actor Details */}
             <div className="pb-2">
-                <Link
-                    href={`/actor/${actor.id}`}
-                >
-                    <p className="flex justify-center text-base font-bold ">{name}</p>
+                <Link href={`/actor/${actor.id}`}>
+                    <motion.p
+                        className="flex justify-center text-base font-semibold text-foreground hover:text-primary transition-colors duration-200"
+                        whileHover={{ x: 5 }}
+                        transition={{ duration: 0.2 }}
+                    >
+                        {name}
+                    </motion.p>
                 </Link>
-
-                {/* Rank actor */}
-                {/* <div className="flex justify-center items-center gap-[2px]">
-                    <span className="text-sm">#{rank} (</span>
-                    <Triangle
-                        className={`${true ? 'fill-green-500 text-green-500' : 'rotate-180 fill-red-500 text-red-500'
-                            }`}
-                        size={10}
-                    />
-
-                    <span className="text-sm">16)</span>
-                </div> */}
             </div>
-        </div>
+        </motion.div>
     );
 }
 
 export const CardActorSkeleton = () => {
     return (
-        <div className="grid rounded-lg gap-4 w-40">
+        <motion.div
+            className="grid rounded-lg gap-4 w-40"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
             {/* Skeleton for Image */}
-            <Skeleton className="h-full w-full object-cover rounded-full aspect-square" />
+            <Skeleton className="h-full w-full object-cover rounded-full aspect-square bg-muted" />
 
             <div className="grid pb-2 gap-2">
                 {/* Skeleton for Name and Rank */}
-                <Skeleton className="flex justify-center h-4" />
-                <Skeleton className="flex justify-center h-4" />
+                <Skeleton className="flex justify-center h-4 bg-muted" />
+                <Skeleton className="flex justify-center h-4 bg-muted" />
             </div>
-        </div>
+        </motion.div>
     );
 };
