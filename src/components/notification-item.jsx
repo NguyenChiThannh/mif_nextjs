@@ -114,6 +114,8 @@ export default function NotificationItem({ notification, onClick }) {
         break
       case 'ACCEPT_REQUEST':
       case 'JOIN_REQUEST':
+        router.push(`/groups/${notification.groupId}/members`)
+        break
       case 'BADGE_EARNED':
         router.push(`/badge?level=${badgeLevel}&groupId=${notification.groupId}`)
         break
