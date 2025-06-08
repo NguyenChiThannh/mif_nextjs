@@ -43,12 +43,17 @@ const blockPost = async (reportId) => {
 }
 
 const unBlockPost = async (reportId) => {
-    const res = await privateApi.post(`/group-posts/reports/${reportId}/handle?status=PENDING`)
+    const res = await privateApi.post(`/group-posts/${reportId}/unblock`)
     return res.data
 }
 
 const analyzeReport = async (reportId) => {
     const res = await privateApi.get(`/group-posts/reports/${reportId}/analyze`)
+    return res.data
+}
+
+const rejectReportPost = async (reportId) => {
+    const res = await privateApi.post(`/group-posts/reports/${reportId}/handle?status=REJECTED`)
     return res.data
 }
 
@@ -110,9 +115,6 @@ export const reportPostApi = {
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupBlockReports(groupId) })
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPendingReports(groupId) })
                 },
-                onError: () => {
-                    toast.error(t('block_post_failed'))
-                }
             })
         },
         useUnBlockPost(groupId) {
@@ -125,9 +127,17 @@ export const reportPostApi = {
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupBlockReports(groupId) })
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPendingReports(groupId) })
                 },
-                onError: () => {
-                    toast.error(t('block_post_failed'))
-                }
+            })
+        },
+        useRejectReportPost(groupId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: rejectReportPost,
+                onSuccess: () => {
+                    toast.success(t('reject_report_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPendingReports(groupId) })
+                },
             })
         }
     }

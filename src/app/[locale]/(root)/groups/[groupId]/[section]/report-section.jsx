@@ -44,6 +44,7 @@ export default function ReportSection({ groupId }) {
 
     const blockPostMutation = reportPostApi.mutation.useBlockPost(groupId);
     const unBlockPostMutation = reportPostApi.mutation.useUnBlockPost(groupId);
+    const rejectReportMutation = reportPostApi.mutation.useRejectReportPost(groupId);
 
     const reportsObserverElem = useInfiniteScroll(hasNextReports, fetchNextReports);
     const blockedObserverElem = useInfiniteScroll(hasNextBlocked, fetchNextBlocked);
@@ -51,6 +52,14 @@ export default function ReportSection({ groupId }) {
     const handleViewAnalysis = (report) => {
         setSelectedReport(report);
         setShowAnalysis(true);
+    };
+
+    const handleRejectReport = (reportId) => {
+        confirmDelete('Bạn có chắc chắn muốn từ chối xử lý báo cáo này không?', (result) => {
+            if (result) {
+                rejectReportMutation.mutate(reportId);
+            }
+        });
     };
 
     const handleBlockPost = (reportId) => {
@@ -223,6 +232,16 @@ export default function ReportSection({ groupId }) {
                                                 className="hover:bg-muted"
                                             >
                                                 Xem bài viết
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={() => handleRejectReport(report.id)}
+                                                disabled={rejectReportMutation.isLoading}
+                                                className="hover:bg-muted"
+                                            >
+                                                <XCircle className="h-4 w-4 mr-2" />
+                                                {rejectReportMutation.isLoading ? 'Đang xử lý...' : 'Từ chối xử lý'}
                                             </Button>
                                             <Button
                                                 variant="destructive"

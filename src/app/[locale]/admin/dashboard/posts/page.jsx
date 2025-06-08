@@ -13,6 +13,7 @@ import DialogConfirmDelete from '@/components/dialog-confirm-delete'
 import Loading from '@/components/loading'
 import DialogDetailPost from '@/app/[locale]/admin/dashboard/posts/(components)/dialog-detail-post'
 import { MoreHorizontal } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
 export default function PostsAdmin() {
     const [currentPage, setCurrentPage] = useState(0)
@@ -89,6 +90,13 @@ export default function PostsAdmin() {
 
     return (
         <div className="bg-background p-6">
+            <div className="flex items-center justify-end mb-6 gap-4">
+                <div className="flex items-center gap-4">
+                    <Input
+                        placeholder="Search posts..."
+                        className="text-muted-foreground" />
+                </div>
+            </div>
             <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
                 <Table>
                     <TableHeader>

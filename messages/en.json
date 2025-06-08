@@ -177,6 +177,7 @@
         "actions": "Actions",
         "delete": "Delete",
         "edit": "Edit",
+        "active_members": "Top Active Members",
         "NavbarGroup": {
             "feed": "Feed",
             "message": "Message",
@@ -384,7 +385,8 @@
         "report_post_failed": "Report post failed",
         "block_post_successful": "Block post successful",
         "block_post_failed": "Block post failed",
-        "login_google_error": "Login with Google failed"
+        "login_google_error": "Login with Google failed",
+        "reject_report_successful": "Reject successful"
     },
     "duration": "Duration",
     "minutes": "minutes",

@@ -34,11 +34,15 @@ export default function GroupPage() {
         data: pendingInvitations,
         isLoading: isLoadingPendingInvitations
     } = groupsApi.query.useGetPendingInvitations(groupId)
+    const { 
+        data: activeMembers,
+        isLoading: isLoadingActiveMembers
+     } = groupsApi.query.useGetTopActiveUsers(groupId);
 
     const { status } = useGroupStatus(group?.id)
     const isOwner = useIsGroupOwner(group)
 
-    if (isLoadingGroup || isLoadingMember || isLoadingPendingInvitations) {
+    if (isLoadingGroup || isLoadingMember || isLoadingPendingInvitations || isLoadingActiveMembers) {
         return <Loading />
     }
 
@@ -66,6 +70,7 @@ export default function GroupPage() {
             case 'members':
                 return <MembersSection
                     members={members}
+                    activeMembers={activeMembers}
                     group={group}
                     pendingInvitations={pendingInvitations}
                     isOwner={isOwner}

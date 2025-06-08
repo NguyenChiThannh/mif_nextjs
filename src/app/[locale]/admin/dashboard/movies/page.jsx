@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import React, { useMemo, useState } from 'react';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import DialogDetailMovie from '@/app/[locale]/admin/dashboard/movies/(components)/dialog-detail-movie';
+import { Input } from '@/components/ui/input';
 
 export default function Movies() {
     const router = useRouter();
@@ -69,7 +70,12 @@ export default function Movies() {
 
     return (
         <div className="bg-background p-6">
-            <div className="flex items-center justify-end mb-6">
+            <div className="flex items-center justify-end mb-6 gap-4">
+                <div className="flex items-center gap-4">
+                                        <Input
+                                            placeholder="Search movies..."
+                                            className="text-muted-foreground" />
+                                    </div>
                 <Button onClick={() => router.push('/admin/dashboard/movies/create')}>Add Movie</Button>
             </div>
             <div className="border border-border shadow-lg rounded-lg overflow-hidden mt-4">
