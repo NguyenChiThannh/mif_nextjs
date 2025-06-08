@@ -5,23 +5,12 @@ import Image from "next/image";
 import { Trash2, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { chatBotApi } from "@/services/chatBotApi";
-import Link from "next/link";
 import DialogConfirmDelete, {
   confirmDelete,
 } from "@/components/dialog-confirm-delete";
 import Loading from "@/components/loading";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
-
-// Types cho response từ Spring AI MCP
-const ChatResponseType = {
-  SEARCH_MOVIE: "search_movie",
-  GET_UPCOMING_EVENTS: "get_upcoming_events",
-  CLEAR_HISTORY: "clear_history",
-  GET_TRENDING_POSTS: "get_trending_posts",
-  GET_TOP_UPVOTED_POSTS: "get_top_upvoted_posts",
-  CHITCHAT: "chitchat",
-};
 
 export default function ChatBotBubble() {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,7 +65,6 @@ export default function ChatBotBubble() {
       userId: null,
       timestamp: new Date().toISOString(),
       response: null,
-      movies: [],
       isTemp: true,
     };
 
@@ -92,15 +80,9 @@ export default function ChatBotBubble() {
             // Update the temporary chat with the response
             setCurrentChat((prev) => {
               if (!prev) return null;
-              // If it's a clear history response, show message and clear after 1 second
-              if (response.type === ChatResponseType.CLEAR_HISTORY) {
-                setTimeout(() => {
-                  setCurrentChat(null);
-                }, 1000);
-              }
               return {
                 ...prev,
-                response: response,
+                response: response.data,
                 isTemp: false,
               };
             });
@@ -112,14 +94,7 @@ export default function ChatBotBubble() {
               if (!prev) return null;
               return {
                 ...prev,
-                response: {
-                  type: "error",
-                  data:
-                    error.response?.data?.message ||
-                    "Đã xảy ra lỗi khi gửi tin nhắn.",
-                  status: "error",
-                  message: "Xử lý yêu cầu thất bại",
-                },
+                response: error.response?.data?.message || "Đã xảy ra lỗi khi gửi tin nhắn.",
                 isTemp: false,
               };
             });
@@ -132,14 +107,7 @@ export default function ChatBotBubble() {
         if (!prev) return null;
         return {
           ...prev,
-          response: {
-            type: "error",
-            data:
-              error.response?.data?.message ||
-              "Xin lỗi, đã xảy ra lỗi khi xử lý yêu cầu của bạn.",
-            status: "error",
-            message: "Xử lý yêu cầu thất bại",
-          },
+          response: error.response?.data?.message || "Xin lỗi, đã xảy ra lỗi khi xử lý yêu cầu của bạn.",
           isTemp: false,
         };
       });
@@ -185,11 +153,7 @@ export default function ChatBotBubble() {
           query: chat.query,
           userId: chat.userId,
           timestamp: chat.timestamp,
-          response: {
-            type: chat.movies ? ChatResponseType.SEARCH_MOVIE : ChatResponseType.CHITCHAT,
-            data: chat.response,
-            movies: chat.movies
-          },
+          response: chat.response,
           isTemp: false
         };
         groups.get(dateKey).push(transformedChat);
@@ -217,130 +181,7 @@ export default function ChatBotBubble() {
   // Render response dựa vào type
   const renderResponse = (response) => {
     if (!response) return null;
-
-    switch (response.type) {
-      case ChatResponseType.SEARCH_MOVIE:
-        return (
-          <div className="space-y-4">
-            <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response.data}</ReactMarkdown>
-            {response.movies && response.movies.length > 0 && (
-              <div className="flex flex-col gap-4 mt-4">
-                {response.movies.map((movie) => (
-                  <Link
-                    href={`/movies/${movie.id}`}
-                    key={movie.id}
-                    className="group flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-border"
-                  >
-                    <div className="relative w-20 h-28 flex-shrink-0">
-                      {movie.posterUrl ? (
-                        <img
-                          src={movie.posterUrl}
-                          alt={movie.title}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-muted rounded-md flex items-center justify-center">
-                          <span className="text-muted-foreground text-xs">No poster</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-medium truncate group-hover:text-primary transition-colors">
-                        {movie.title.length > 21 ? `${movie.title.substring(0, 21)}...` : movie.title}
-                      </h3>
-                      {movie.releaseDate && (
-                        <span className="text-sm text-muted-foreground block mt-0.5">
-                          {new Date(movie.releaseDate).getFullYear()}
-                        </span>
-                      )}
-                      <p className="text-sm text-muted-foreground line-clamp-2 mt-1.5 mb-2">
-                        {movie.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {movie.genre?.slice(0, 2).map((g) => (
-                          <span
-                            key={g.id}
-                            className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full"
-                          >
-                            {g.categoryName}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-
-      case ChatResponseType.GET_UPCOMING_EVENTS:
-        return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response.data}</ReactMarkdown>
-
-      case ChatResponseType.CLEAR_HISTORY:
-        return <p>{response.data}</p>;
-
-      case ChatResponseType.GET_TRENDING_POSTS:
-        return (
-          <div className="space-y-4">
-            <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response.data.response}</ReactMarkdown>
-            {response.data.posts && response.data.posts.length > 0 && (
-              <div className="flex flex-col gap-4 mt-4">
-                {response.data.posts.map((post) => (
-                  <Link
-                    href={`/groups/${post.groupId}/posts/${post.id}`}
-                    key={post.id}
-                    className="group flex gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors border border-border"
-                  >
-                    <div className="relative w-20 h-28 flex-shrink-0">
-                      {post.mediaUrls && post.mediaUrls.length > 0 ? (
-                        <img
-                          src={post.mediaUrls[0]}
-                          alt={post.title}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-muted rounded-md flex items-center justify-center">
-                          <span className="text-muted-foreground text-xs">No image</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <img
-                          src={post.owner.profilePictureUrl}
-                          alt={post.owner.displayName}
-                          className="w-5 h-5 rounded-full"
-                        />
-                        <span className="text-sm font-medium">{post.owner.displayName}</span>
-                      </div>
-                      <h3 className="text-base font-medium truncate group-hover:text-primary transition-colors">
-                        {post.title.length > 30 ? `${post.title.substring(0, 30)}...` : post.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                        {post.content.length > 100 ? `${post.content.substring(0, 100)}...` : post.content}
-                      </p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full">
-                          {post.voteNumber} upvotes
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      case ChatResponseType.GET_TOP_UPVOTED_POSTS:
-        return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response.data}</ReactMarkdown>;
-
-      case ChatResponseType.CHITCHAT:
-        return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response.data}</ReactMarkdown>;
-
-      default:
-        return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response.data}</ReactMarkdown>
-    }
+    return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
   };
 
   // Format timestamps

@@ -8,10 +8,7 @@ import {
 
 const chatWithBot = async (body) => {
   const res = await privateApi.post("ai/chat", body);
-  return {
-    data: res.data,
-    type: res?.type
-  };
+  return res.data;
 };
 
 const getHistoryChatBot = async ({ pageParam = 0, queryKey }) => {
