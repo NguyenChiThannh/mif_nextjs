@@ -58,6 +58,9 @@ export default function ChatBotBubble() {
   const handleSend = async () => {
     if (!input.trim()) return;
 
+    console.log('Starting chat request...');
+    const startTime = Date.now();
+
     // Create a temporary chat to display immediately
     const tempChat = {
       id: `temp-${Date.now()}`,
@@ -73,36 +76,16 @@ export default function ChatBotBubble() {
     setIsLoading(true);
 
     try {
-      chatWithBotMutation.mutate(
-        { message: input },
-        {
-          onSuccess: (response) => {
-            // Update the temporary chat with the response
-            setCurrentChat((prev) => {
-              if (!prev) return null;
-              return {
-                ...prev,
-                response: response.data,
-                isTemp: false,
-              };
-            });
-          },
-          onError: (error) => {
-            console.error("Error response:", error);
-            // Update with error message
-            setCurrentChat((prev) => {
-              if (!prev) return null;
-              return {
-                ...prev,
-                response: error.response?.data?.message || "Đã xảy ra lỗi khi gửi tin nhắn.",
-                isTemp: false,
-              };
-            });
-          },
-        }
-      );
+      console.log('Sending request to backend...');
+      const response = await chatWithBotMutation.mutateAsync({ message: input });
+      console.log('Received response from backend:', response);
+      console.log('Time taken:', Date.now() - startTime, 'ms');
+
+      // Update the temporary chat with the response
+      setCurrentChat(null);
     } catch (error) {
       console.error("Error chatting with bot:", error);
+      // Update with error message
       setCurrentChat((prev) => {
         if (!prev) return null;
         return {
@@ -112,6 +95,7 @@ export default function ChatBotBubble() {
         };
       });
     } finally {
+      console.log('Setting loading to false');
       setIsLoading(false);
     }
   };
@@ -181,7 +165,41 @@ export default function ChatBotBubble() {
   // Render response dựa vào type
   const renderResponse = (response) => {
     if (!response) return null;
-    return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
+
+    // Check if response contains movie data
+    try {
+      const parsedResponse = JSON.parse(response);
+      if (parsedResponse.type === 'movie' && parsedResponse.data) {
+        return (
+          <div className="flex items-stretch gap-4 w-full">
+            <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-24 flex-shrink-0">
+              <Image
+                src={parsedResponse.data.posterUrl}
+                alt={parsedResponse.data.title || 'Movie Poster'}
+                fill
+                className="object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+            <div className="grid gap-1 my-1 min-w-0 flex-1">
+              <h3 className="text-base font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors duration-200">
+                {parsedResponse.data.title}
+              </h3>
+              <div className="grid gap-0.5 text-sm text-muted-foreground">
+                <p>Năm phát hành: {parsedResponse.data.releaseDate?.split('-')[0]}</p>
+                <p>Thời lượng: {parsedResponse.data.duration} phút</p>
+                <p><span className="font-medium">{parsedResponse.data.country}</span></p>
+              </div>
+            </div>
+          </div>
+        );
+      }
+    } catch (e) {
+      // If response is not JSON or doesn't contain movie data, render as markdown
+      return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>;
+    }
+
+    // Default to markdown rendering
+    return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>;
   };
 
   // Format timestamps
