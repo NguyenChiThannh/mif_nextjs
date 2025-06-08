@@ -385,7 +385,8 @@
         "report_post_failed": "Báo cáo bài viết thất bại",
         "block_post_successful": "Chặn bài viết thành công",
         "block_post_failed": "Chặn bài viết thất bại",
-        "login_google_error": "Đăng nhập bằng Google thất bại"
+        "login_google_error": "Đăng nhập bằng Google thất bại",
+        "reject_report_successful": "Từ chối thành công"
     },
     "duration": "Thời lượng",
     "minutes": "phút",
