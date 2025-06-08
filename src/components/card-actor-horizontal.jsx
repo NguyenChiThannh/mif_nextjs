@@ -33,7 +33,7 @@ export default function CardActorHorizontal({ actor, isTopRanked }) {
     }, [actor.id]);
 
     if (isInitialLoading) {
-        return <Loading />;
+        return '';
     }
 
     const handleAddFavoriteActor = () => {
