@@ -62,7 +62,7 @@ export default function FormLogin({ t }) {
                     .then(response => response.json())
                     .then(responseData => {
                         console.log('Server response:', responseData);
-                        router.push('/');
+                        router.push('/home');
                         console.log('Login successful, redirecting to home page');
                     })
                     .catch(error => {
@@ -70,7 +70,7 @@ export default function FormLogin({ t }) {
                     })
                     .finally(() => {
                         console.log('Login process finished');
-                        router.push('/');
+                        router.push('/home');
                     });
             },
         });
