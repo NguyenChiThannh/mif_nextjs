@@ -7,6 +7,7 @@ import { Award, Shield, Star, Trophy } from 'lucide-react';
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React from 'react'
+import { motion } from 'framer-motion'
 
 export const BADGE_THRESHOLDS = [
   {
@@ -61,18 +62,17 @@ export function BadgeIcon({
     }
   }
 
-  const animationClass = showAnimation
-    ? "transition-all duration-700 hover:scale-110 hover:rotate-3 hover:shadow-lg"
-    : ""
-
   return (
-    <div className={cn("flex items-center gap-2", className)}>
+    <motion.div
+      className={cn("flex items-center gap-2", className)}
+      whileHover={{ scale: 1.1, rotate: 5 }}
+      transition={{ duration: 0.2 }}
+    >
       <div
         className={cn(
           "rounded-full flex items-center justify-center",
-          badgeInfo.color, 
+          badgeInfo.color,
           sizeClasses[size],
-          animationClass,
           "relative overflow-hidden"
         )}
       >
@@ -85,14 +85,13 @@ export function BadgeIcon({
         {/* Subtle ring */}
         <div className="absolute inset-0 rounded-full border border-white/20" />
       </div>
-    </div>
+    </motion.div>
   )
 }
 
 function getBadgeInfo(level) {
   return BADGE_THRESHOLDS.find((threshold) => threshold.level === level)
 }
-
 
 export default function NotificationItem({ notification, onClick }) {
   const router = useRouter()
@@ -129,48 +128,111 @@ export default function NotificationItem({ notification, onClick }) {
   const badgeLevel = notification?.message?.split(' ').at(-1)?.replace(/!$/, '')
 
   return (
-    <div
-      className={`flex gap-2 p-2 rounded-md cursor-pointer ${notification.isRead ? '' : 'bg-secondary'}`}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ scale: 1.02 }}
+      className={cn(
+        "px-4 pt-4 pb-2 rounded-lg cursor-pointer transition-all duration-300",
+        "bg-card shadow-sm hover:shadow-lg",
+        "border border-border/50 hover:border-border",
+        notification.isRead ? '' : 'bg-secondary'
+      )}
       onClick={handleReadNotification}
     >
-      <div className="relative size-8">
-        <Avatar className="size-8">
-          <AvatarImage src={notification.groupAvatar} alt="Group Avatar" />
-          <AvatarFallback>T</AvatarFallback>
-        </Avatar>
+      <div className="flex items-start gap-4">
+        {/* Avatar */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <div className="relative size-8">
+            <Avatar className="size-10 border-2 border-border hover:border-primary transition-colors duration-300">
+              <AvatarImage src={notification.groupAvatar} alt="Group Avatar" />
+              <AvatarFallback className="uppercase text-sm bg-muted text-muted-foreground">
+                {notification.groupName?.[0] || 'G'}
+              </AvatarFallback>
+            </Avatar>
 
-        {notification.type === "BADGE_EARNED" && badgeLevel && (
-          <div className="absolute -bottom-1 -right-1">
-            <BadgeIcon level={badgeLevel} size="sm" showAnimation />
+            {notification.type === "BADGE_EARNED" && badgeLevel && (
+              <div className="absolute -bottom-3 -right-3">
+                <BadgeIcon level={badgeLevel} size="sm" showAnimation />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </motion.div>
 
-      <div className="flex flex-col w-full">
+        {/* Content */}
+        <div className="flex flex-col w-full gap-2">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="flex items-center justify-between"
+          >
+            <span className="text-sm font-medium line-clamp-2 text-foreground">
+              {notification.message}
+            </span>
+          </motion.div>
 
-        <div className='flex items-center gap-2'>
-          <span className="text-sm gap-2 line-clamp-2">{notification.message}</span>
+          <motion.span
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+            className="text-xs text-muted-foreground"
+          >
+            {calculateTimeAgo(new Date(notification.createdAt), locale)}
+          </motion.span>
         </div>
-
-        <span className="text-xs text-muted-foreground">
-          {calculateTimeAgo(new Date(notification.createdAt), locale)}
-        </span>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
-
 export function NotificationItemSkeleton() {
   return (
-    <div className="flex gap-2 p-2 rounded-md  animate-pulse">
-      <Skeleton className="w-8 h-8 rounded-full" />
-      <div className="flex flex-col flex-1 space-y-2">
-        <Skeleton className="w-1/2 h-4 rounded" />
-        <Skeleton className="w-3/4 h-4 rounded" />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="p-4 rounded-lg border border-border/50 bg-card shadow-sm"
+    >
+      <div className="flex items-start gap-4">
+        <Skeleton className="w-10 h-10 rounded-full bg-muted/50" />
+        <div className="flex flex-col w-full gap-2">
+          <Skeleton className="w-3/4 h-4 rounded bg-muted/50" />
+          <Skeleton className="w-1/4 h-3 rounded bg-muted/50" />
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
+}
+
+// Add this at the end of the file
+const styles = `
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+`
+
+// Add the styles to the document
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement("style")
+  styleSheet.textContent = styles
+  document.head.appendChild(styleSheet)
 }
 
 
