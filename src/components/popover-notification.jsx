@@ -17,6 +17,7 @@ import { useState, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatDateOrTimeAgo } from "@/lib/formatter";
 import BadgeIconNotification from "@/components/badge-icon-notification";
+import { cn } from "@/lib/utils";
 
 export function NotificationPopover({ t }) {
   const authState = useAppSelector((state) => state.auth.authState);
@@ -94,7 +95,15 @@ export function NotificationPopover({ t }) {
   return (
     <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost"
+          size="icon"
+          className={cn(
+            "relative transition-all duration-200",
+            "hover:bg-accent/50 active:bg-accent/70",
+            isPopoverOpen && "bg-accent/30"
+          )}
+        >
           <BadgeIconNotification
             icon={Bell}
             {...(totalUnreadNotificationCount !== 0 && {
@@ -104,32 +113,51 @@ export function NotificationPopover({ t }) {
           <span className="sr-only">Notifications</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[400px] pr-0">
-        <div className="grid gap-4 divide-y overflow-y-scroll max-h-[600px]">
-          <div>
-            <h4 className="text-xl font-medium">{t("notifications")}</h4>
+      <PopoverContent
+        className="w-[400px] p-0 border-border/50 shadow-lg"
+      >
+        <div className="flex flex-col h-[600px]">
+          {/* Header */}
+          <div className="p-4 border-b border-border/50">
+            <h4 className="text-lg font-semibold text-foreground">
+              {t("notifications")}
+            </h4>
           </div>
-          <div className="pt-3 grid space-y-1 pr-2">
-            {combinedNotifications.length === 0 && !isLoadingNotifications && (
-              <p>{t("no_have_notifications")}</p>
-            )}
-            {isLoadingNotifications && (
-              <>
-                <NotificationItemSkeleton />
-                <NotificationItemSkeleton />
-                <NotificationItemSkeleton />
-              </>
-            )}
-            {combinedNotifications.map((notification) => (
-              <NotificationItem
-                key={notification.notifyId}
-                notification={notification}
-                t={t}
-              />
-            ))}
-            {isFetchingNextPage && <NotificationItemSkeleton />}
-            <div ref={observerElem}></div>
-          </div>
+
+          {/* Content */}
+          <ScrollArea className="flex-1">
+            <div className="p-2 space-y-1">
+              {combinedNotifications.length === 0 && !isLoadingNotifications && (
+                <div className="flex items-center justify-center h-32 text-muted-foreground">
+                  <p>{t("no_have_notifications")}</p>
+                </div>
+              )}
+
+              {isLoadingNotifications && (
+                <div className="space-y-1">
+                  <NotificationItemSkeleton />
+                  <NotificationItemSkeleton />
+                  <NotificationItemSkeleton />
+                </div>
+              )}
+
+              {combinedNotifications.map((notification) => (
+                <NotificationItem
+                  key={notification.notifyId}
+                  notification={notification}
+                  t={t}
+                />
+              ))}
+
+              {isFetchingNextPage && (
+                <div className="py-2">
+                  <NotificationItemSkeleton />
+                </div>
+              )}
+
+              <div ref={observerElem} className="h-4" />
+            </div>
+          </ScrollArea>
         </div>
       </PopoverContent>
     </Popover>

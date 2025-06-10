@@ -10,6 +10,7 @@ import {
     Legend,
     ResponsiveContainer
 } from 'recharts'
+import { motion } from 'framer-motion'
 
 export default function SentimentOverview({ sentimentData }) {
     const sentimentPie = [
@@ -17,11 +18,22 @@ export default function SentimentOverview({ sentimentData }) {
         { name: 'Negative', value: Number(sentimentData.negativePercentage.toFixed(2)), color: '#ef4444' },
         { name: 'Neutral', value: Number(sentimentData.neutralPercentage.toFixed(2)), color: '#6b7280' }
     ];
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <motion.div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
             {/* Enhanced Pie Chart */}
-            <div className="md:col-span-1 bg-accent/20 rounded-lg p-4 transition-shadow">
-                <h3 className="text-lg font-semibold mb-4">Phân bố cảm xúc</h3>
+            <motion.div
+                className="md:col-span-1 bg-card rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+            >
+                <h3 className="text-lg font-semibold mb-4 text-foreground">Phân bố cảm xúc</h3>
                 <div className="h-[300px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
@@ -83,78 +95,102 @@ export default function SentimentOverview({ sentimentData }) {
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
-            </div>
+            </motion.div>
 
             {/* Stats and Info */}
-            <div className="md:col-span-2">
-                <h3 className="text-lg font-semibold mb-4">Thống kê cảm xúc</h3>
+            <motion.div
+                className="md:col-span-2"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+            >
+                <h3 className="text-lg font-semibold mb-4 text-foreground">Thống kê cảm xúc</h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <Card className="bg-green-50 border-green-200">
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-green-600 font-medium">Tích cực</p>
-                                    <h4 className="text-2xl font-bold text-green-700">{Number(sentimentData.positivePercentage.toFixed(2))} %</h4>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.4 }}
+                    >
+                        <Card className="bg-green-50 border-green-200 hover:shadow-md transition-all duration-300">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-green-600 font-medium">Tích cực</p>
+                                        <h4 className="text-2xl font-bold text-green-700">{Number(sentimentData.positivePercentage.toFixed(2))} %</h4>
+                                    </div>
+                                    <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                                        <Heart className="h-5 w-5 text-green-600" />
+                                    </div>
                                 </div>
-                                <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                                    <Heart className="h-5 w-5 text-green-600" />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
 
-                    <Card className="bg-red-50 border-red-200">
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-red-600 font-medium">Tiêu cực</p>
-                                    <h4 className="text-2xl font-bold text-red-700">{Number(sentimentData.negativePercentage.toFixed(2))} %</h4>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                    >
+                        <Card className="bg-red-50 border-red-200 hover:shadow-md transition-all duration-300">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-red-600 font-medium">Tiêu cực</p>
+                                        <h4 className="text-2xl font-bold text-red-700">{Number(sentimentData.negativePercentage.toFixed(2))} %</h4>
+                                    </div>
+                                    <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
+                                        <FileText className="h-5 w-5 text-red-600" />
+                                    </div>
                                 </div>
-                                <div className="h-10 w-10 rounded-full bg-red-100 flex items-center justify-center">
-                                    <FileText className="h-5 w-5 text-red-600" />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
 
-                    <Card className="bg-gray-50 border-gray-200">
-                        <CardContent className="p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm text-gray-600 font-medium">Trung tính</p>
-                                    <h4 className="text-2xl font-bold text-gray-700">{Number(sentimentData.neutralPercentage.toFixed(2))} %</h4>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.6 }}
+                    >
+                        <Card className="bg-gray-50 border-gray-200 hover:shadow-md transition-all duration-300">
+                            <CardContent className="p-4">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm text-gray-600 font-medium">Trung tính</p>
+                                        <h4 className="text-2xl font-bold text-gray-700">{Number(sentimentData.neutralPercentage.toFixed(2))} %</h4>
+                                    </div>
+                                    <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                        <Clock className="h-5 w-5 text-gray-600" />
+                                    </div>
                                 </div>
-                                <div className="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
-                                    <Clock className="h-5 w-5 text-gray-600" />
-                                </div>
-                            </div>
-                        </CardContent>
-                    </Card>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
                 </div>
 
-                <div className="bg-accent/20 rounded-lg p-4">
-                    <h4 className="font-medium mb-2">Thông tin chi tiết</h4>
+                <motion.div
+                    className="bg-card rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.7 }}
+                >
+                    <h4 className="font-medium mb-2 text-foreground">Thông tin chi tiết</h4>
                     <ul className="space-y-2">
                         <li className="flex items-center justify-between">
-                            <span className="text-sm">Tổng số bình luận phân tích:</span>
-                            <span className="font-medium">{sentimentData.totalComments}</span>
+                            <span className="text-sm text-muted-foreground">Tổng số bình luận phân tích:</span>
+                            <span className="font-medium text-foreground">{sentimentData.totalComments}</span>
                         </li>
                         <li className="flex items-center justify-between">
-                            <span className="text-sm">Phim có cảm xúc tích cực nhất:</span>
-                            <span className="font-medium">{sentimentData.mostPositiveMovie} ({Number(sentimentData.mostPositivePercentage.toFixed(2))} %)</span>
+                            <span className="text-sm text-muted-foreground">Phim có cảm xúc tích cực nhất:</span>
+                            <span className="font-medium text-foreground">{sentimentData.mostPositiveMovie} ({Number(sentimentData.mostPositivePercentage.toFixed(2))} %)</span>
                         </li>
                         <li className="flex items-center justify-between">
-                            <span className="text-sm">Phim có cảm xúc tiêu cực nhất:</span>
-                            <span className="font-medium">{sentimentData.mostNegativeMovie} ({Number(sentimentData.mostNegativePercentage.toFixed(2))} %)</span>
+                            <span className="text-sm text-muted-foreground">Phim có cảm xúc tiêu cực nhất:</span>
+                            <span className="font-medium text-foreground">{sentimentData.mostNegativeMovie} ({Number(sentimentData.mostNegativePercentage.toFixed(2))} %)</span>
                         </li>
-                        {/* <li className="flex items-center justify-between">
-                            <span className="text-sm">Thời gian cập nhật gần nhất:</span>
-                            <span className="font-medium">Hôm nay, 15:30</span>
-                        </li> */}
                     </ul>
-                </div>
-            </div>
-        </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     )
 } 

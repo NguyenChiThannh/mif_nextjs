@@ -210,11 +210,11 @@ export default function MonthlyChart() {
                             <label className="text-sm font-medium">Xuất dữ liệu</label>
                             <div className="grid grid-cols-2 gap-2">
                                 <Button variant="outline" onClick={handleExportCSV}>
-                                    <Download className="h-4 w-4 mr-2" />
+                                    {/* <Download className="h-4 w-4 mr-2" /> */}
                                     CSV
                                 </Button>
                                 <Button variant="outline" onClick={handleExportExcel}>
-                                    <Download className="h-4 w-4 mr-2" />
+                                    {/* <Download className="h-4 w-4 mr-2" /> */}
                                     Excel
                                 </Button>
                             </div>
