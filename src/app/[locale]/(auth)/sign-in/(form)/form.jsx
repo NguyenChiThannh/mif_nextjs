@@ -37,7 +37,7 @@ export default function FormLogin({ t }) {
             reset(data);
             setRememberMe(isRememberMe);
         }
-    }, [reset, rememberMe]);
+    }, [reset]);
 
     const handleLogin = (data) => {
         mutation.mutate(data, {
