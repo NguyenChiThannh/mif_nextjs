@@ -53,7 +53,7 @@ function GoogleLoginButton({ t }) {
                 })
                   .then((res) => res.json())
                   .then(() => {
-                    router.push('/home')
+                    window.location.href = '/home';
                   })
                   .catch((err) => {
                     console.error('Error sending token to server:', err)
