@@ -180,15 +180,6 @@ export default function MembersSection({ members, group, pendingInvitations, isO
                     · {group?.memberCount}
                 </span>
             </div>
-
-            {/* <div className="hidden md:block relative mt-4">
-                <Input 
-                    type="text" 
-                    placeholder="Tìm kiếm..." 
-                    className="pr-10 bg-muted/50 border-border focus:bg-background transition-colors duration-200" 
-                />
-                <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-            </div> */}
         </motion.div>
     ), [group?.memberCount]);
 
