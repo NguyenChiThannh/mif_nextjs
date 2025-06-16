@@ -66,8 +66,6 @@ export function CardInfoUser({ setOpenDialogEdit, infoUser, t }) {
                             month: '2-digit',
                             year: 'numeric',
                         })}</div>
-                        <div className="text-muted-foreground font-medium">{t('member_type')}:</div>
-                        <div className="text-foreground">{infoUser.userType}</div>
                     </div>
 
                     {/* Bio */}

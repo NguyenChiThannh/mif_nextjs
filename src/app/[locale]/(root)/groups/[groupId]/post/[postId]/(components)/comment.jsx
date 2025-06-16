@@ -62,16 +62,6 @@ export default function Comment({ comment, setReplyTo, replyTo, onVote, userId }
                         fill={currentVote === 'downvote' ? 'currentColor' : 'none'}
                     />
                 </Button>
-                {/* <Button
-                    variant="ghost"
-                    className="gap-1 items-center rounded-full text-sm hover:bg-muted"
-                    onClick={() => {
-                        setReplyTo(replyTo === comment.id ? null : comment.id);
-                    }}
-                >
-                    <MessageCircle size={16} />
-                    Phản hồi
-                </Button> */}
             </div>
         </div>
     );
