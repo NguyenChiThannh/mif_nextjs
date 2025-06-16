@@ -7,10 +7,10 @@ export const schemaLogin = (t) => z.object({
     password: z
         .string()
         .min(6, t('passwordMin'))
-    // .regex(
-    //     /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
-    //     t('passwordComplexity')
-    // )
+    .regex(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/,
+        t('passwordComplexity')
+    )
 });
 
 export const schemaRegister = (t) => z.object({
