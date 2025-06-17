@@ -27,6 +27,11 @@
             "displayNameMin": "Full name must be at least 2 characters",
             "passwordMismatch": "Passwords must match.",
             "otp_length_error": "Please enter all 6 digits"
+        },
+        "postGroup": {
+            "title_length_min": "The title must be at least 5 characters long",
+            "title_length_max": "The title must not exceed 100 characters",
+            "content_length_min": "The content must be at least 10 characters long"
         }
     },
     "Login_register": {
@@ -387,7 +392,9 @@
         "block_post_successful": "Block post successful",
         "block_post_failed": "Block post failed",
         "login_google_error": "Login with Google failed",
-        "reject_report_successful": "Reject successful"
+        "reject_report_successful": "Reject successful",
+        "edit_post_successful":"Edit post successful",
+        "delete_post_successful":"Delete post successful"
     },
     "duration": "Duration",
     "minutes": "minutes",

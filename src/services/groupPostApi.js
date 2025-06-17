@@ -55,10 +55,19 @@ const getAllPostsTable = async ({ queryKey }) => {
     return res.data
 }
 
-
-
 const getPostById = async (postId) => {
     const res = await privateApi.get(`/group-posts/${postId}`)
+    return res.data
+}
+
+const deletePost = async (postId) => {
+    const res = await privateApi.delete(`/group-posts/${postId}`)
+    return res.data
+}
+
+const editPost = async (data) => {
+    console.log('🚀 ~ editPost ~ data:', data)
+    const res = await privateApi.put(`/group-posts/${data.postId}`, data)
     return res.data
 }
 
@@ -135,6 +144,32 @@ export const groupPostApi = {
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
                 },
             })
-        }
+        },
+        useEditPost(groupId, postId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: editPost,
+                onSuccess: () => {
+                    toast.success(t('edit_post_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.allPosts() })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.postById(postId) })
+                },
+            })
+        },
+        useDeletePost(groupId, postId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: deletePost,
+                onSuccess: () => {
+                    toast.success(t('delete_post_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPosts(groupId) })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.allPosts() })
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.postById(postId) })
+                },
+            })
+        },
     },
 }
