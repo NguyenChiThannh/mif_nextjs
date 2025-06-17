@@ -17,8 +17,8 @@ export default function LiveStreamPage() {
   const handleScriptLoad = () => {
     if (!user || !roomId || !window.ZegoUIKitPrebuilt) return;
 
-    const appID = 1295998980;
-    const serverSecret = "d221d2d893bb2439f052d6a3e8821929";
+    const appID = 531319821;
+    const serverSecret = "c28221e745214f11b832f757890f7395";
 
     const kitToken = window.ZegoUIKitPrebuilt.generateKitTokenForTest(
       appID,
