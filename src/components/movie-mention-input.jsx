@@ -150,10 +150,8 @@ export default function MovieMentionInput({ value, onChange, placeholder }) {
         renderSuggestion={renderSuggestion}
         markup="@[__display__](__id__)"
         style={{
-          backgroundColor: "#cee4e5",
-          color: "#0084ff",
-          padding: "0 2px",
-          borderRadius: "3px",
+          backgroundColor: "rgba(248, 101, 128, 0.87)",
+          borderRadius: "5px",
         }}
       />
     </MentionsInput>
