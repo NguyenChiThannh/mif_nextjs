@@ -36,6 +36,7 @@ export default function CreatePostDialog({ groupId }) {
   const userId = useUserId();
   const { data: userInfo } = userApi.query.useGetUserInfoById(userId);
   const t = useTranslations("Groups.DialogCreatePost");
+  const tSchema = useTranslations("Schema.postGroup");
 
   const {
     register,
@@ -45,7 +46,7 @@ export default function CreatePostDialog({ groupId }) {
     watch,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(schemaPost),
+    resolver: zodResolver(schemaPost(tSchema)),
   });
 
   const createPostMutation = groupPostApi.mutation.useCreatePost(groupId);
@@ -113,8 +114,8 @@ export default function CreatePostDialog({ groupId }) {
               className="mt-2"
             />
             {errors.title && (
-              <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
-            )}
+                            <p className="text-red-500 text-xs mt-2 font-bold">{errors.title.message}</p>
+                        )}
           </div>
 
           <div>
@@ -127,7 +128,7 @@ export default function CreatePostDialog({ groupId }) {
               placeholder={t("content_placeholder")}
             />
             {errors.content && (
-              <p className="text-red-500 text-xs mt-1">{errors.content.message}</p>
+              <p className="text-red-500 text-xs mt-2 font-bold">{errors.content.message}</p>
             )}
           </div>
 
