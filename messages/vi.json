@@ -27,6 +27,11 @@
             "displayNameMin": "Tên đầy đủ phải có ít nhất 2 ký tự",
             "passwordMismatch": "Mật khẩu phải khớp.",
             "otp_length_error": "OTP phải bao gồm 6 số"
+        },
+        "postGroup": {
+            "title_length_min": "Tiêu đề phải có ít nhất 5 ký tự",
+            "title_length_max": "Tiêu đề không được vượt quá 100 ký tự",
+            "content_length_min": "Nội dung phải có ít nhất 10 ký tự"
         }
     },
     "Login_register": {
@@ -387,7 +392,9 @@
         "block_post_successful": "Chặn bài viết thành công",
         "block_post_failed": "Chặn bài viết thất bại",
         "login_google_error": "Đăng nhập bằng Google thất bại",
-        "reject_report_successful": "Từ chối thành công"
+        "reject_report_successful": "Từ chối thành công",
+        "edit_post_successful": "Chỉnh sửa bài viết thành công",
+        "delete_post_successful": "Xóa bài viết thành công"
     },
     "duration": "Thời lượng",
     "minutes": "phút",

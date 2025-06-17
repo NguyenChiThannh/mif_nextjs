@@ -109,12 +109,11 @@ export default function CreatePostDialog({ groupId }) {
             <Input
               id="title"
               placeholder={t("title_placeholder")}
-              {...register("title", { required: true })}
+              {...register("title")}
               className="mt-2"
-              required
             />
             {errors.title && (
-              <p className="text-red-500 text-xs">{t("title_error")}</p>
+              <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>
             )}
           </div>
 
@@ -128,7 +127,7 @@ export default function CreatePostDialog({ groupId }) {
               placeholder={t("content_placeholder")}
             />
             {errors.content && (
-              <p className="text-red-500 text-xs">{t("content_error")}</p>
+              <p className="text-red-500 text-xs mt-1">{errors.content.message}</p>
             )}
           </div>
 

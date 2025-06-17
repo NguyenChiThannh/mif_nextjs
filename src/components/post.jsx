@@ -30,6 +30,9 @@ import React, { useEffect, useState } from "react";
 import { BadgeIcon } from "@/components/badge-icon"
 import DialogReportPost from "@/components/dialog-report-post";
 import { motion } from "framer-motion";
+import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
+import Loading from "@/components/loading";
+import DialogEditPost from "@/components/dialog-edit-post";
 
 export default function Post({ className, post, isGroup }) {
   const t = useTranslations("Groups.Post");
@@ -44,6 +47,7 @@ export default function Post({ className, post, isGroup }) {
     post.groupId
   );
 
+  const deletePostMutation = groupPostApi.mutation.useDeletePost(post.groupId, post.id);
   const savePostMutation = savedPostApi.mutation.useSavePost(userId);
   const unSavePostMutation = savedPostApi.mutation.useUnsavePost(userId);
   const batchCheckSavedStatusMutation = savedPostApi.mutation.useBatchCheckSavedStatus();
@@ -98,6 +102,18 @@ export default function Post({ className, post, isGroup }) {
       downvoteMutation.mutate(postId);
     }
   };
+
+  const handleDeletePost = (postId) => {
+    confirmDelete('Bạn muốn xóa bài viết này không ?', (result) => {
+      if (result) {
+        deletePostMutation.mutate(postId);
+      }
+    });
+  }
+
+  if (deletePostMutation.isPending) {
+    return <Loading />;
+  }
 
   const hashtags = "#Hành động #Hài kịch";
 
@@ -185,16 +201,15 @@ export default function Post({ className, post, isGroup }) {
                   />
                 </DropdownMenuItem>
                 {post.owner.id === userId && (
-                  <>
-                    <DropdownMenuItem onClick={() => { }}>
-                      <PencilLine className="h-4 w-4 mr-2" />
-                      {t("edit_post")}
+                  <div className="flex flex-col">
+                    <DropdownMenuItem asChild>
+                      <DialogEditPost post={post} groupId={post.groupId} />
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => { }}>
-                      <Trash2 className="h-4 w-4 mr-2" />
+                    <DropdownMenuItem onClick={() => handleDeletePost(post.id)}>
+                      <Trash2 className="h-4 w-4 mr-5 ml-1" />
                       {t("delete_post")}
                     </DropdownMenuItem>
-                  </>
+                  </div>
                 )}
               </DropdownMenuContent>
             </DropdownMenu>
@@ -273,6 +288,7 @@ export default function Post({ className, post, isGroup }) {
           {saved ? t("saved") : t("save")}
         </Button>
       </motion.div>
+      <DialogConfirmDelete />
     </motion.div>
   );
 }
@@ -362,31 +378,3 @@ export const PostSkeleton = () => {
     </motion.div>
   );
 };
-
-// const handleUpvote = (postId) => {
-//     const upvoteMutation = useMutation({
-//         mutationFn: async (postId) => {
-//             try {
-//                 await privateApi.post(`/group-posts/${postId}/vote`, { type: 'UPVOTE' });
-//             } catch (error) {
-//                 return Promise.reject(error);
-//             }
-//         },
-//         onSuccess: () => {
-//             queryClient.invalidateQueries('group_posts');
-//         },
-//         onError: () => {
-//             toast('Có lỗi, vui lòng thử lại');
-//         },
-//     });
-
-//     setVote('UPVOTE');
-//     if (vote === 'DOWNVOTE') {
-//         setVoteNumber(voteNumber + 2)
-//     }
-//     else {
-//         setVoteNumber(voteNumber + 1)
-//     }
-//     upvoteMutation.mutate(postId);
-// }
-// }
