@@ -36,7 +36,7 @@ export default function RulesSection({ isOwner, group, t }) {
         });
     }
 
-    if (isLoading) return (<Loading />)
+    if (isLoading || deleteRuleMutation.isPending) return (<Loading />)
 
     const containerVariants = {
         hidden: { opacity: 0, y: 20 },
@@ -97,70 +97,53 @@ export default function RulesSection({ isOwner, group, t }) {
                             {rules && rules.map((rule, index) => {
                                 const number = Number(index) + 1
                                 return (
-                                    <motion.div
-                                        key={number}
-                                        variants={itemVariants}
-                                        whileHover={{ scale: 1.01 }}
-                                        transition={{ duration: 0.2 }}
+                                    <AccordionItem
+                                        value={`item-${number}`}
+                                        className="border-border"
                                     >
-                                        <AccordionItem
-                                            value={`item-${number}`}
-                                            className="border-border"
-                                        >
-                                            <AccordionTrigger className="rounded-lg h-fit p-3 hover:bg-muted/50 transition-colors duration-200 my-2">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium">
-                                                        {number}
-                                                    </span>
-                                                    <span className="text-foreground font-medium">
-                                                        {t('rules')} {number}
-                                                    </span>
-                                                </div>
-                                            </AccordionTrigger>
-                                            <AccordionContent>
-                                                <div className='flex justify-between items-start p-2'>
-                                                    <p className='text-muted-foreground text-sm leading-relaxed'>
-                                                        {rule.ruleDescription}
-                                                    </p>
-                                                    {isOwner && (
-                                                        <motion.div
-                                                            whileHover={{ scale: 1.05 }}
-                                                            whileTap={{ scale: 0.95 }}
-                                                        >
-                                                            <DropdownMenu modal={false}>
-                                                                <DropdownMenuTrigger asChild>
-                                                                    <Button
-                                                                        aria-haspopup="true"
-                                                                        size="icon"
-                                                                        variant="ghost"
-                                                                        className="hover:bg-muted/50"
-                                                                    >
-                                                                        <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
-                                                                        <span className="sr-only">Menu</span>
-                                                                    </Button>
-                                                                </DropdownMenuTrigger>
-                                                                <DropdownMenuContent align="end" className="bg-background border-border">
-                                                                    <DropdownMenuLabel className="text-foreground">{t("actions")}</DropdownMenuLabel>
-                                                                    <DropdownMenuItem
-                                                                        onClick={() => handleEditRule(rule)}
-                                                                        className="text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                                                                    >
-                                                                        {t("edit")}
-                                                                    </DropdownMenuItem>
-                                                                    <DropdownMenuItem
-                                                                        onClick={() => handleDeleteRule(rule)}
-                                                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                                                                    >
-                                                                        {t("delete")}
-                                                                    </DropdownMenuItem>
-                                                                </DropdownMenuContent>
-                                                            </DropdownMenu>
-                                                        </motion.div>
-                                                    )}
-                                                </div>
-                                            </AccordionContent>
-                                        </AccordionItem>
-                                    </motion.div>
+                                        <AccordionTrigger className="rounded-lg h-fit p-3 hover:bg-muted/50 transition-colors duration-200 my-2">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-foreground font-medium">
+                                                    {t('rules')} {number}
+                                                </span>
+                                            </div>
+                                        </AccordionTrigger>
+                                        <AccordionContent>
+                                            <div className='flex justify-between items-start p-2'>
+                                                <p className='text-muted-foreground text-sm leading-relaxed'>
+                                                    {rule.ruleDescription}
+                                                </p>
+                                                {isOwner && (
+                                                    <DropdownMenu modal={false}>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button
+                                                                aria-haspopup="true"
+                                                                size="icon"
+                                                                variant="ghost"
+                                                                className="hover:bg-muted/50"
+                                                            >
+                                                                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+                                                                <span className="sr-only">Menu</span>
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end" className="bg-background border-border">
+                                                            <DropdownMenuLabel className="text-foreground">{t("actions")}</DropdownMenuLabel>
+                                                            <DropdownMenuItem
+                                                                onClick={() => handleEditRule(rule)}
+                                                            >
+                                                                {t("edit")}
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuItem
+                                                                onClick={() => handleDeleteRule(rule)}
+                                                            >
+                                                                {t("delete")}
+                                                            </DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                )}
+                                            </div>
+                                        </AccordionContent>
+                                    </AccordionItem>
                                 )
                             })}
                         </Accordion>
