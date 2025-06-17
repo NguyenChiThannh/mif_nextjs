@@ -35,6 +35,12 @@ export const schemaRegister = (t) => z.object({
     message: t('passwordMismatch'),
 });
 
+export const schemaForgotPassword = (t) => z.object({
+    email: z
+        .string()
+        .email(t('emailInvalid')),
+});
+
 export const schemaNewPassword = (t) => z.object({
   newPassword: z
   .string()
