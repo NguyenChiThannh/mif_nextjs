@@ -25,7 +25,8 @@
             "passwordMin": "Mật khẩu phải có ít nhất 6 ký tự",
             "passwordComplexity": "Mật khẩu phải bao gồm ít nhất một chữ hoa, một chữ thường và một chữ số",
             "displayNameMin": "Tên đầy đủ phải có ít nhất 2 ký tự",
-            "passwordMismatch": "Mật khẩu phải khớp."
+            "passwordMismatch": "Mật khẩu phải khớp.",
+            "otp_length_error": "OTP phải bao gồm 6 số"
         }
     },
     "Login_register": {

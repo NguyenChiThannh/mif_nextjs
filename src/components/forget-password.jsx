@@ -15,17 +15,26 @@ import { resetPasswordApi } from "@/services/resetPassword";
 import { useState } from "react"
 import DialogOTP from "@/components/dialog-otp";
 import DialogNewPassword from "@/components/dialog-new-password"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { schemaForgotPassword } from "@/lib/schemas/auth.schema"
+import { useTranslations } from "next-intl"
 
 export function ForgetPassword({ t }) {
-  const [email, setEmail] = useState("");
+  const tSchema = useTranslations('Schema.auth');
   const [isOTPOpen, setIsOTPOpen] = useState(false);
   const [isNewPasswordOpen, setIsNewPasswordOpen] = useState(false);
   const requestPasswordResetMutation = resetPasswordApi.mutation.useRequestPasswordReset();
 
-  const handleSendEmail = async () => {
-    await requestPasswordResetMutation.mutateAsync({ email }, {
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    resolver: zodResolver(schemaForgotPassword(tSchema)),
+  });
+
+  const handleSendEmail = async (data) => {
+    await requestPasswordResetMutation.mutateAsync({ email: data.email }, {
       onSuccess: () => {
         setIsOTPOpen(true);
+        reset();
       },
     });
   };
@@ -47,7 +56,10 @@ export function ForgetPassword({ t }) {
               {t('forget_password_description')}
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
+          <form onSubmit={(e) => {
+            e.stopPropagation();
+            handleSubmit(handleSendEmail)(e);
+          }} className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="email" className="text-right">
                 {t('email')}
@@ -55,19 +67,19 @@ export function ForgetPassword({ t }) {
               <Input
                 id="email"
                 placeholder={t('email')}
-                className="col-span-3"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                className={`col-span-3 ${errors.email ? 'border-red-500' : ''}`}
+                {...register("email")}
               />
             </div>
-          </div>
-          <DialogFooter>
-            <Button type="button" onClick={handleSendEmail}>{t('forget_password_action')}</Button>
-          </DialogFooter>
+            {errors.email && <span className="text-red-500 text-sm font-bold">{errors.email.message}</span>}
+            <DialogFooter>
+              <Button type="submit">{t('forget_password_action')}</Button>
+            </DialogFooter>
+          </form>
         </DialogContent>
       </Dialog>
 
-      {isOTPOpen && <DialogOTP t={t} onClose={() => setIsOTPOpen(false)} type={"reset"} setIsNewPasswordOpen={setIsNewPasswordOpen}/>}
+      {isOTPOpen && <DialogOTP t={t} onClose={() => setIsOTPOpen(false)} type={"reset"} setIsNewPasswordOpen={setIsNewPasswordOpen} />}
       {isNewPasswordOpen && <DialogNewPassword t={t} onClose={() => setIsNewPasswordOpen(false)} />}
     </>
   )

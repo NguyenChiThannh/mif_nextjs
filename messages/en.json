@@ -25,7 +25,8 @@
             "passwordMin": "Password must be at least 6 characters",
             "passwordComplexity": "Password must include at least one uppercase letter, one lowercase letter, and one number",
             "displayNameMin": "Full name must be at least 2 characters",
-            "passwordMismatch": "Passwords must match."
+            "passwordMismatch": "Passwords must match.",
+            "otp_length_error": "Please enter all 6 digits"
         }
     },
     "Login_register": {
