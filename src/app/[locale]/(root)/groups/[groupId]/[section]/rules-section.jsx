@@ -100,6 +100,7 @@ export default function RulesSection({ isOwner, group, t }) {
                                     <AccordionItem
                                         value={`item-${number}`}
                                         className="border-border"
+                                        key={index}
                                     >
                                         <AccordionTrigger className="rounded-lg h-fit p-3 hover:bg-muted/50 transition-colors duration-200 my-2">
                                             <div className="flex items-center gap-2">
