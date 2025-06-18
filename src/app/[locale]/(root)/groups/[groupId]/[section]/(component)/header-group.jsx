@@ -43,13 +43,13 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="bg-background border-border">
                         <DropdownMenuLabel className="text-sm font-bold text-muted-foreground mb-2">Thao tác</DropdownMenuLabel>
-                        <DropdownMenuItem 
+                        {/* <DropdownMenuItem 
                             onClick={() => setOpenDialogEditGroup(true)}
                             className="hover:bg-muted transition-colors duration-200"
                         >
                             <PencilLine className="h-4 w-4 mr-2" />
                             Chỉnh sửa
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                         <DropdownMenuItem
                             onClick={handleDeleteGroup}
                             className="flex items-center gap-2 p-2 rounded-md cursor-pointer font-medium text-destructive hover:bg-destructive/10 transition-colors duration-200"

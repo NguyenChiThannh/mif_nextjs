@@ -32,6 +32,15 @@
             "title_length_min": "The title must be at least 5 characters long",
             "title_length_max": "The title must not exceed 100 characters",
             "content_length_min": "The content must be at least 10 characters long"
+        },
+        "ratingMovie": {
+            "rating_value_min": "You must select at least 1 star",
+            "rating_value_max": "The maximum rating score is 5",
+            "comment_length_min": "The comment must be at least 20 characters long"
+        },
+        "userInfo": {
+            "display_name_min": "Tên hiển thị phải có ít nhất 2 ký tự",
+            "bio_max_length": "Giới thiệu không được vượt quá 500 ký tự"
         }
     },
     "Login_register": {
