@@ -43,8 +43,7 @@ export default function Groups() {
                 <div className="flex items-center gap-2 mt-2 text-xs text-primary">
                   <span className="bg-primary/10 px-2 py-1 rounded">Tip:</span>
                   <span>
-                    Bấm ⋮ → Kéo "Rạp chiếu nhà mình" → Chatbot = "@Rạp chiếu nhà
-                    mình"
+                    Bấm ⋮ → Kéo &quot;Rạp chiếu nhà mình&quot; → Chatbot = &quot;@Rạp chiếu nhà mình&quot;
                   </span>
                 </div>
               </div>
