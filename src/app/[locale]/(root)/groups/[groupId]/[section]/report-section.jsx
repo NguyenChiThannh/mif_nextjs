@@ -10,14 +10,16 @@ import { reportPostApi } from '@/services/reportPostApi';
 import { formatDate, formatDateOrTimeAgo } from '@/lib/formatter';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
-import { AlertTriangle, CheckCircle2, XCircle, Ban, ShieldAlert, Flag, User } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, XCircle, Ban, ShieldAlert, Flag, User, Shield } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Switch } from "@/components/ui/switch";
 
 export default function ReportSection({ groupId }) {
     const t = useTranslations('Groups.Report');
+    const tConfirmDelete = useTranslations('DialogConfirmDelete')
     const [selectedReport, setSelectedReport] = useState(null);
     const [showAnalysis, setShowAnalysis] = useState(false);
     const [activeTab, setActiveTab] = useState("reports");
@@ -49,13 +51,16 @@ export default function ReportSection({ groupId }) {
     const reportsObserverElem = useInfiniteScroll(hasNextReports, fetchNextReports);
     const blockedObserverElem = useInfiniteScroll(hasNextBlocked, fetchNextBlocked);
 
+    const { data: autoModerationStatus } = reportPostApi.query.useCheckAutoModerationStatus(groupId);
+    const toggleAutoModerationMutation = reportPostApi.mutation.useToggleAutoModeration(groupId);
+
     const handleViewAnalysis = (report) => {
         setSelectedReport(report);
         setShowAnalysis(true);
     };
 
     const handleRejectReport = (reportId) => {
-        confirmDelete('Bạn có chắc chắn muốn từ chối xử lý báo cáo này không?', (result) => {
+        confirmDelete(tConfirmDelete('message_reject_report'), (result) => {
             if (result) {
                 rejectReportMutation.mutate(reportId);
             }
@@ -63,7 +68,7 @@ export default function ReportSection({ groupId }) {
     };
 
     const handleBlockPost = (reportId) => {
-        confirmDelete('Bạn muốn chặn bài viết này không', (result) => {
+        confirmDelete(tConfirmDelete('message_block_post'), (result) => {
             if (result) {
                 blockPostMutation.mutate(reportId)
             }
@@ -71,7 +76,7 @@ export default function ReportSection({ groupId }) {
     };
 
     const handleUnblockPost = (reportId) => {
-        confirmDelete('Bạn muốn bỏ chặn bài viết này không', (result) => {
+        confirmDelete(tConfirmDelete('message_un_block_post'), (result) => {
             if (result) {
                 unBlockPostMutation.mutate(reportId);
             }
@@ -103,7 +108,7 @@ export default function ReportSection({ groupId }) {
             <Dialog open={showAnalysis} onOpenChange={setShowAnalysis}>
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-xl font-semibold text-foreground">Phân tích nội dung</DialogTitle>
+                        <DialogTitle className="text-xl font-semibold text-foreground">{t('analysis_title')}</DialogTitle>
                     </DialogHeader>
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -111,13 +116,13 @@ export default function ReportSection({ groupId }) {
                         className="space-y-6"
                     >
                         <div className="space-y-3">
-                            <h3 className="font-semibold text-foreground">Tiêu đề bài viết:</h3>
+                            <h3 className="font-semibold text-foreground">{t('post_title')}</h3>
                             <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">{analysisData.post.title}</p>
-                            <h3 className="font-semibold text-foreground">Nội dung bài viết:</h3>
+                            <h3 className="font-semibold text-foreground">{t('post_content')}</h3>
                             <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">{analysisData.post.content}</p>
                         </div>
                         <div className="space-y-3">
-                            <h3 className="font-semibold text-foreground">Kết quả phân tích:</h3>
+                            <h3 className="font-semibold text-foreground">{t('analysis_results')}</h3>
                             <div className="grid grid-cols-2 gap-3">
                                 {Object.entries(categories).map(([category, flagged], index) => (
                                     <motion.div
@@ -172,7 +177,7 @@ export default function ReportSection({ groupId }) {
                                         <div className="space-y-1">
                                             <CardTitle className="text-base flex items-center gap-2">
                                                 <Flag className="h-4 w-4 text-destructive" />
-                                                <span className="text-foreground">Báo cáo #{report.id.slice(-6)}</span>
+                                                <span className="text-foreground">{t('report_id', { id: report.id.slice(-6) })}</span>
                                                 <Badge variant={report.status === 'PENDING' ? 'warning' : 'destructive'}>
                                                     {report.status}
                                                 </Badge>
@@ -182,7 +187,7 @@ export default function ReportSection({ groupId }) {
                                             </div>
                                         </div>
                                         <Badge variant="outline" className="text-sm">
-                                            {report.reportCount} báo cáo
+                                            {t('report_count', { count: report.reportCount })}
                                         </Badge>
                                     </div>
                                 </CardHeader>
@@ -190,10 +195,10 @@ export default function ReportSection({ groupId }) {
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                             <User className="h-4 w-4" />
-                                            <span>Người đăng: {report.ownerUsername}</span>
+                                            <span>{t('post_owner', { username: report.ownerUsername })}</span>
                                         </div>
                                         <div className="space-y-3">
-                                            <h4 className="font-semibold text-sm text-foreground">Danh sách báo cáo:</h4>
+                                            <h4 className="font-semibold text-sm text-foreground">{t('report_list')}</h4>
                                             {report.groupReports.map((groupReport, index) => (
                                                 <motion.div
                                                     key={index}
@@ -205,7 +210,7 @@ export default function ReportSection({ groupId }) {
                                                     <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
                                                         <div className="flex-1 space-y-1">
                                                             <div className="text-sm">
-                                                                <span className="font-medium text-foreground">Lý do:</span> {groupReport.reason}
+                                                                <span className="font-medium text-foreground">{t('report_reason', { reason: groupReport.reason })}</span>
                                                             </div>
                                                             <div className="text-xs text-muted-foreground">
                                                                 {formatDateOrTimeAgo(groupReport.reportedAt)}
@@ -223,7 +228,7 @@ export default function ReportSection({ groupId }) {
                                                 onClick={() => handleViewAnalysis(report)}
                                                 className="hover:bg-muted"
                                             >
-                                                Xem phân tích
+                                                {t('view_analysis')}
                                             </Button>
                                             <Button
                                                 variant="outline"
@@ -231,7 +236,7 @@ export default function ReportSection({ groupId }) {
                                                 onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
                                                 className="hover:bg-muted"
                                             >
-                                                Xem bài viết
+                                                {t('view_post')}
                                             </Button>
                                             <Button
                                                 variant="outline"
@@ -241,7 +246,7 @@ export default function ReportSection({ groupId }) {
                                                 className="hover:bg-muted"
                                             >
                                                 <XCircle className="h-4 w-4 mr-2" />
-                                                {rejectReportMutation.isLoading ? 'Đang xử lý...' : 'Từ chối xử lý'}
+                                                {rejectReportMutation.isLoading ? t('processing') : t('reject_report')}
                                             </Button>
                                             <Button
                                                 variant="destructive"
@@ -251,7 +256,7 @@ export default function ReportSection({ groupId }) {
                                                 className="hover:bg-destructive/90"
                                             >
                                                 <Ban className="h-4 w-4 mr-2" />
-                                                {blockPostMutation.isLoading ? 'Đang chặn...' : 'Chặn bài viết'}
+                                                {blockPostMutation.isLoading ? t('blocking') : t('block_post')}
                                             </Button>
                                         </div>
                                     </div>
@@ -290,7 +295,7 @@ export default function ReportSection({ groupId }) {
                                         <div className="space-y-1">
                                             <CardTitle className="text-base flex items-center gap-2">
                                                 <Ban className="h-4 w-4 text-destructive" />
-                                                <span className="text-foreground">Báo cáo #{report.id.slice(-6)}</span>
+                                                <span className="text-foreground">{t('report_id', { id: report.id.slice(-6) })}</span>
                                                 <Badge variant="destructive">BLOCKED</Badge>
                                             </CardTitle>
                                             <div className="text-sm text-muted-foreground">
@@ -298,7 +303,7 @@ export default function ReportSection({ groupId }) {
                                             </div>
                                         </div>
                                         <Badge variant="outline" className="text-sm">
-                                            {report.reportCount} báo cáo
+                                            {t('report_count', { count: report.reportCount })}
                                         </Badge>
                                     </div>
                                 </CardHeader>
@@ -306,10 +311,10 @@ export default function ReportSection({ groupId }) {
                                     <div className="space-y-4">
                                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                             <User className="h-4 w-4" />
-                                            <span>Người đăng: {report.ownerUsername}</span>
+                                            <span>{t('post_owner', { username: report.ownerUsername })}</span>
                                         </div>
                                         <div className="space-y-3">
-                                            <h4 className="font-semibold text-sm text-foreground">Lý do bị chặn:</h4>
+                                            <h4 className="font-semibold text-sm text-foreground">{t('block_reason')}</h4>
                                             {report.groupReports.map((groupReport, index) => (
                                                 <motion.div
                                                     key={index}
@@ -326,7 +331,7 @@ export default function ReportSection({ groupId }) {
                                                         </Avatar>
                                                         <div className="flex-1 space-y-1">
                                                             <div className="text-sm">
-                                                                <span className="font-medium text-foreground">Lý do:</span> {groupReport.reason}
+                                                                <span className="font-medium text-foreground">{t('report_reason', { reason: groupReport.reason })}</span>
                                                             </div>
                                                             <div className="text-xs text-muted-foreground">
                                                                 {formatDateOrTimeAgo(groupReport.reportedAt)}
@@ -344,7 +349,7 @@ export default function ReportSection({ groupId }) {
                                                 onClick={() => window.open(`/groups/${groupId}/post/${report.postId}`, '_blank')}
                                                 className="hover:bg-muted"
                                             >
-                                                Xem bài viết
+                                                {t('view_post')}
                                             </Button>
                                             <Button
                                                 variant="outline"
@@ -354,7 +359,7 @@ export default function ReportSection({ groupId }) {
                                                 className="hover:bg-muted"
                                             >
                                                 <ShieldAlert className="h-4 w-4 mr-2" />
-                                                {unBlockPostMutation.isLoading ? 'Đang bỏ chặn...' : 'Bỏ chặn bài viết'}
+                                                {unBlockPostMutation.isLoading ? t('unblocking') : t('unblock_post')}
                                             </Button>
                                         </div>
                                     </div>
@@ -375,17 +380,27 @@ export default function ReportSection({ groupId }) {
             animate={{ opacity: 1, y: 0 }}
             className="space-y-6"
         >
-            <div className="flex items-center gap-2 mt-4">
-                <h2 className="text-2xl font-bold text-foreground">Quản lý tố cáo</h2>
+            <div className="flex items-center justify-between mt-4">
+                <h2 className="text-2xl font-bold text-foreground">{t('title')}</h2>
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold">{t('auto_moderation')}</span>
+                    <Switch
+                        checked={autoModerationStatus?.enabled}
+                        onCheckedChange={(checked) => {
+                            toggleAutoModerationMutation.mutate({ groupId, status: checked });
+                        }}
+                        disabled={toggleAutoModerationMutation.isLoading}
+                    />
+                </div>
             </div>
 
             <Tabs defaultValue="reports" className="w-full" onValueChange={setActiveTab}>
                 <TabsList className="grid w-full grid-cols-2 bg-muted/50">
                     <TabsTrigger value="reports" className="data-[state=active]:bg-background">
-                        Bài viết bị tố cáo
+                        {t('reported_posts')}
                     </TabsTrigger>
                     <TabsTrigger value="blocked" className="data-[state=active]:bg-background">
-                        Bài viết bị chặn
+                        {t('blocked_posts')}
                     </TabsTrigger>
                 </TabsList>
                 <TabsContent value="reports">

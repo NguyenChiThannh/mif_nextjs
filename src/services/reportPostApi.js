@@ -57,6 +57,16 @@ const rejectReportPost = async (reportId) => {
     return res.data
 }
 
+const checkAutoModerationStatus = async (groupId) => {
+    const res = await privateApi.get(`/groups/${groupId}/auto-moderation`)
+    return res.data
+}
+
+const toggleAutoModeration = async (data) => {
+    const res = await privateApi.patch(`/groups/${data.groupId}/auto-moderation?enabled=${data.status}`)
+    return res.data
+}
+
 export const reportPostApi = {
     query: {
         useGetUnresolvedReportsByGroup(groupId) {
@@ -91,7 +101,13 @@ export const reportPostApi = {
                 queryFn: () => analyzeReport(reportId),
                 enabled: !!selectedReport && showAnalysis,
             });
-        }
+        },
+        useCheckAutoModerationStatus(groupId) {
+            return useQuery({
+                queryKey: QUERY_KEY.groupAutoModerationStatus(groupId),
+                queryFn: () => checkAutoModerationStatus(groupId),
+            });
+        },
     },
     mutation: {
         useReportPost(groupId) {
@@ -139,6 +155,17 @@ export const reportPostApi = {
                     queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupPendingReports(groupId) })
                 },
             })
-        }
+        },
+        useToggleAutoModeration(groupId) {
+            const t = useTranslations('Toast')
+            const queryClient = useQueryClient()
+            return useMutation({
+                mutationFn: toggleAutoModeration,
+                onSuccess: () => {
+                    toast.success(t('toggle_auto_moderation_successful'))
+                    queryClient.invalidateQueries({ queryKey: QUERY_KEY.groupAutoModerationStatus(groupId) })
+                },
+            })
+        },
     }
 }

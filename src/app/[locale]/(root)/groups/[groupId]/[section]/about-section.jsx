@@ -91,7 +91,7 @@ function CardInformationGroup({ group, t }) {
                                 <SquareLibrary className="h-4 w-4 text-primary" />
                                 {t("category")}
                             </p>
-                            <p className="text-sm text-muted-foreground pl-6">&middot; Phim hành động</p>
+                            <p className="text-sm text-muted-foreground pl-6">&middot; {t("category_action")}</p>
                         </div>
                     </div>
                 </div>

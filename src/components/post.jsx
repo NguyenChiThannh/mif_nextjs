@@ -205,8 +205,8 @@ export default function Post({ className, post, isGroup }) {
                     <DropdownMenuItem asChild>
                       <DialogEditPost post={post} groupId={post.groupId} />
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDeletePost(post.id)}>
-                      <Trash2 className="h-4 w-4 mr-5 ml-1" />
+                    <DropdownMenuItem onClick={() => handleDeletePost(post.id)} className="font-medium">
+                      <Trash2 className="h-4 w-4 mr-4 ml-1" />
                       {t("delete_post")}
                     </DropdownMenuItem>
                   </div>
