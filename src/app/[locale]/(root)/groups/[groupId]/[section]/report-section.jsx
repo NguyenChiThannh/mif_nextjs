@@ -53,6 +53,7 @@ export default function ReportSection({ groupId }) {
 
     const { data: autoModerationStatus } = reportPostApi.query.useCheckAutoModerationStatus(groupId);
     const toggleAutoModerationMutation = reportPostApi.mutation.useToggleAutoModeration(groupId);
+    console.log('🚀 ~ ReportSection ~ autoModerationStatus:', autoModerationStatus)
 
     const handleViewAnalysis = (report) => {
         setSelectedReport(report);
@@ -385,7 +386,7 @@ export default function ReportSection({ groupId }) {
                 <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold">{t('auto_moderation')}</span>
                     <Switch
-                        checked={autoModerationStatus?.enabled}
+                        checked={autoModerationStatus}
                         onCheckedChange={(checked) => {
                             toggleAutoModerationMutation.mutate({ groupId, status: checked });
                         }}

@@ -248,7 +248,7 @@ export default function ChatBotBubble() {
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-2 border-b border-border">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm">Trợ lý AI</span>
+              <span className="font-semibold text-sm">Trợ lý MIF AI</span>
               <Button
                 variant="ghost"
                 size="icon"
