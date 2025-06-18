@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl'
 import Link from 'next/link'
 import React from 'react'
 import { motion } from 'framer-motion'
+import { categoryApi } from '@/services/movieCategoriesApi'
 
 export default function FeedSection({ group, canCreate }) {
 
@@ -69,6 +70,7 @@ export default function FeedSection({ group, canCreate }) {
 }
 
 function LeftContent({ group, t }) {
+    const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories();
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -147,7 +149,7 @@ function LeftContent({ group, t }) {
                             {t('category')}
                         </p>
                         <p className="text-muted-foreground pl-6">
-                            &middot; Phim hành động
+                            &middot; {movieCategories?.find((category) => category.id === group.categoryId)?.categoryName || t("category_action")}
                         </p>
                     </motion.div>
                 </CardContent>

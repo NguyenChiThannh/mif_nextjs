@@ -11,10 +11,12 @@ import EditGroupDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(c
 import DialogAddMemberToGroup from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-add-member-to-group'
 import useUserId from '@/hooks/useUserId'
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 
 export default function HeaderGroup({ group, members, t, isOwner }) {
     const router = useRouter();
     const deleteGroupMutation = groupsApi.mutation.useDeleteGroup();
+    const [openDialogEditGroup, setOpenDialogEditGroup] = useState(false);
     const userId = useUserId()
     const { status, handleJoinGroup, handleRemovePendingGroup, handleLeaveGroup } = useGroupStatus(group.id, userId);
 
@@ -41,8 +43,12 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start" className="bg-background border-border">
                         <DropdownMenuLabel className="text-sm font-bold text-muted-foreground mb-2">Thao tác</DropdownMenuLabel>
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="hover:bg-muted transition-colors duration-200">
-                            <EditGroupDialog group={group} />
+                        <DropdownMenuItem 
+                            onClick={() => setOpenDialogEditGroup(true)}
+                            className="hover:bg-muted transition-colors duration-200"
+                        >
+                            <PencilLine className="h-4 w-4 mr-2" />
+                            Chỉnh sửa
                         </DropdownMenuItem>
                         <DropdownMenuItem
                             onClick={handleDeleteGroup}
@@ -52,6 +58,7 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
                             Xóa nhóm
                         </DropdownMenuItem>
                     </DropdownMenuContent>
+                    <EditGroupDialog group={group} open={openDialogEditGroup} setOpen={setOpenDialogEditGroup}/>
                 </DropdownMenu>
             );
         }
