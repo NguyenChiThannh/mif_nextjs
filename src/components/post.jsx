@@ -37,6 +37,7 @@ import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-
 import Loading from "@/components/loading";
 import DialogEditPost from "@/components/dialog-edit-post";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { renderContent } from "@/lib/convert";
 
 export default function Post({ className, post, isGroup }) {
   const t = useTranslations("Groups.Post");
@@ -142,8 +143,6 @@ export default function Post({ className, post, isGroup }) {
   if (deletePostMutation.isPending) {
     return <Loading />;
   }
-
-  const hashtags = "#Hành động #Hài kịch";
 
   return (
     <motion.div
@@ -490,26 +489,6 @@ function ContentWithReadMore({ content, maxLength = 200, t }) {
 
   const toggleContent = () => {
     setIsExpanded(!isExpanded);
-  };
-
-  const renderContent = (content) => {
-    const parts = content.split(/(@\[.*?\]\(.*?\))/g);
-    return parts.map((part, index) => {
-      const match = part.match(/@\[(.*?)\]\((.*?)\)/);
-      if (match) {
-        const [_, display, id] = match;
-        return (
-          <Link
-            key={index}
-            href={`/movies/${id}`}
-            className="text-blue-500 hover:underline"
-          >
-            {display}
-          </Link>
-        );
-      }
-      return part;
-    });
   };
 
   return (

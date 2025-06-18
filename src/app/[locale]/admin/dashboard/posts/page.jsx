@@ -14,6 +14,7 @@ import Loading from '@/components/loading'
 import DialogDetailPost from '@/app/[locale]/admin/dashboard/posts/(components)/dialog-detail-post'
 import { MoreHorizontal } from 'lucide-react'
 import { Input } from '@/components/ui/input'
+import { renderContent } from '@/lib/convert'
 
 export default function PostsAdmin() {
     const [currentPage, setCurrentPage] = useState(0)
@@ -38,15 +39,23 @@ export default function PostsAdmin() {
             {
                 accessorKey: 'title',
                 header: 'Title',
+                cell: ({ row }) => {
+                    const title = row.getValue('title');
+                    const truncated = title.length > 50 ? title.slice(0, 50) + '...' : title;
+                    return <span title={title}>{truncated}</span>;
+                }
             },
             {
                 accessorKey: 'content',
                 header: 'Content',
-                cell: ({ row }) => (
-                    <div className="max-w-xs text-justify">
-                        {row.getValue('content')}
-                    </div>
-                )
+                cell: ({ row }) => {
+                    const content = row.getValue('content');
+                    return (
+                        <div className="max-w-xs text-justify">
+                            {renderContent(content)}
+                        </div>
+                    );
+                }
             },
             {
                 accessorKey: 'owner.displayName',
