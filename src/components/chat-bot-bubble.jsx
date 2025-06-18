@@ -10,15 +10,22 @@ import DialogConfirmDelete, {
 } from "@/components/dialog-confirm-delete";
 import Loading from "@/components/loading";
 import ReactMarkdown from "react-markdown";
-import rehypeRaw from 'rehype-raw';
+import rehypeRaw from "rehype-raw";
+import useDragAndDrop from "@/hooks/useDragAndDrop";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ChatBotBubble() {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentChat, setCurrentChat] = useState(null);
+  const [isDropZone, setIsDropZone] = useState(false);
+  const [mentions, setMentions] = useState([]);
   const historyContainerRef = useRef(null);
   const observerRef = useRef(null);
+  const inputRef = useRef(null);
+
+  const { handleDragOver, handleDrop } = useDragAndDrop();
 
   // Chat API integration
   const chatWithBotMutation = chatBotApi.mutation.useChatWithBot();
@@ -55,10 +62,54 @@ export default function ChatBotBubble() {
     };
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
+  // Handle drag and drop
+  const handleGroupDrop = (dragData) => {
+    if (dragData.type === "group") {
+      const mention = `@${dragData.name}`;
+      const newInput = input ? `${input} ${mention}` : mention;
+      setInput(newInput);
+
+      // Add to mentions array for context
+      setMentions((prev) => [
+        ...prev,
+        {
+          id: dragData.id,
+          name: dragData.name,
+          type: dragData.type,
+        },
+      ]);
+
+      // Focus input
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+
+      // Show success animation
+      setIsDropZone(false);
+    }
+  };
+
+  const handleInputDragOver = (e) => {
+    handleDragOver(e);
+    setIsDropZone(true);
+  };
+
+  const handleInputDragLeave = (e) => {
+    // Only hide drop zone if we're leaving the input area completely
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setIsDropZone(false);
+    }
+  };
+
+  const handleInputDrop = (e) => {
+    handleDrop(e, handleGroupDrop);
+    setIsDropZone(false);
+  };
+
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    console.log('Starting chat request...');
+    console.log("Starting chat request...");
     const startTime = Date.now();
 
     // Create a temporary chat to display immediately
@@ -73,13 +124,17 @@ export default function ChatBotBubble() {
 
     setCurrentChat(tempChat);
     setInput("");
+    setMentions([]); // Clear mentions after sending
     setIsLoading(true);
 
     try {
-      console.log('Sending request to backend...');
-      const response = await chatWithBotMutation.mutateAsync({ message: input });
-      console.log('Received response from backend:', response);
-      console.log('Time taken:', Date.now() - startTime, 'ms');
+      console.log("Sending request to backend...");
+      const response = await chatWithBotMutation.mutateAsync({
+        message: input,
+        mentions: mentions, // Send mentions as context
+      });
+      console.log("Received response from backend:", response);
+      console.log("Time taken:", Date.now() - startTime, "ms");
 
       // Update the temporary chat with the response
       setCurrentChat(null);
@@ -90,12 +145,14 @@ export default function ChatBotBubble() {
         if (!prev) return null;
         return {
           ...prev,
-          response: error.response?.data?.message || "Xin lỗi, đã xảy ra lỗi khi xử lý yêu cầu của bạn.",
+          response:
+            error.response?.data?.message ||
+            "Xin lỗi, đã xảy ra lỗi khi xử lý yêu cầu của bạn.",
           isTemp: false,
         };
       });
     } finally {
-      console.log('Setting loading to false');
+      console.log("Setting loading to false");
       setIsLoading(false);
     }
   };
@@ -138,7 +195,7 @@ export default function ChatBotBubble() {
           userId: chat.userId,
           timestamp: chat.timestamp,
           response: chat.response,
-          isTemp: false
+          isTemp: false,
         };
         groups.get(dateKey).push(transformedChat);
       });
@@ -169,13 +226,13 @@ export default function ChatBotBubble() {
     // Check if response contains movie data
     try {
       const parsedResponse = JSON.parse(response);
-      if (parsedResponse.type === 'movie' && parsedResponse.data) {
+      if (parsedResponse.type === "movie" && parsedResponse.data) {
         return (
           <div className="flex items-stretch gap-4 w-full">
             <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-24 flex-shrink-0">
               <Image
                 src={parsedResponse.data.posterUrl}
-                alt={parsedResponse.data.title || 'Movie Poster'}
+                alt={parsedResponse.data.title || "Movie Poster"}
                 fill
                 className="object-cover transition-transform duration-300 hover:scale-105"
               />
@@ -185,9 +242,16 @@ export default function ChatBotBubble() {
                 {parsedResponse.data.title}
               </h3>
               <div className="grid gap-0.5 text-sm text-muted-foreground">
-                <p>Năm phát hành: {parsedResponse.data.releaseDate?.split('-')[0]}</p>
+                <p>
+                  Năm phát hành:{" "}
+                  {parsedResponse.data.releaseDate?.split("-")[0]}
+                </p>
                 <p>Thời lượng: {parsedResponse.data.duration} phút</p>
-                <p><span className="font-medium">{parsedResponse.data.country}</span></p>
+                <p>
+                  <span className="font-medium">
+                    {parsedResponse.data.country}
+                  </span>
+                </p>
               </div>
             </div>
           </div>
@@ -195,11 +259,15 @@ export default function ChatBotBubble() {
       }
     } catch (e) {
       // If response is not JSON or doesn't contain movie data, render as markdown
-      return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>;
+      return (
+        <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
+      );
     }
 
     // Default to markdown rendering
-    return <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>;
+    return (
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
+    );
   };
 
   // Format timestamps
@@ -231,20 +299,27 @@ export default function ChatBotBubble() {
           <Button
             variant="ghost"
             onClick={() => setIsOpen(true)}
-            className="relative rounded-full shadow-lg overflow-hidden border border-border w-14 h-14 hover:scale-105 transition-transform duration-300 animate-float"
+            className="relative rounded-full shadow-lg overflow-hidden border border-border w-20 h-20 hover:scale-105 transition-transform duration-300 animate-float"
           >
             <Image
               src="/logo.png"
               alt="AI Avatar"
-              fill
-              className="object-cover"
+              width={80}
+              height={80}
+              className="object-cover w-full h-full"
             />
           </Button>
+          <span className="text-xs font-medium text-foreground">MIF</span>
         </div>
       )}
 
       {isOpen && (
-        <div className="w-96 h-[500px] bg-background text-foreground rounded-lg shadow-xl flex flex-col border border-border">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          className="w-96 h-[500px] bg-background text-foreground rounded-lg shadow-xl flex flex-col border border-border"
+        >
           {/* Header */}
           <div className="flex items-center justify-between px-3 py-2 border-b border-border">
             <div className="flex items-center gap-2">
@@ -355,25 +430,102 @@ export default function ChatBotBubble() {
           </div>
 
           {/* Input */}
-          <div className="p-2 border-t border-border flex items-center gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
-              placeholder="Nhập tin nhắn..."
-              disabled={isLoading}
-              className="flex-1 text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border border-border"
-            />
-            <Button
-              onClick={handleSend}
-              size="sm"
-              disabled={isLoading || !input.trim()}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+          <div className="p-2 border-t border-border">
+            {/* Mentions display */}
+            <AnimatePresence>
+              {mentions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="mb-2 flex flex-wrap gap-1"
+                >
+                  {mentions.map((mention, index) => (
+                    <motion.div
+                      key={mention.id}
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.8 }}
+                      className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full text-xs"
+                    >
+                      <span>@{mention.name}</span>
+                      <button
+                        onClick={() =>
+                          setMentions((prev) =>
+                            prev.filter((m) => m.id !== mention.id)
+                          )
+                        }
+                        className="hover:bg-primary/20 rounded-full p-0.5"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <div className="flex items-center gap-2">
+              <motion.div
+                className={`flex-1 relative transition-all duration-300 ${
+                  isDropZone
+                    ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                    : ""
+                }`}
+                animate={{
+                  scale: isDropZone ? 1.02 : 1,
+                }}
+                onDragOver={handleInputDragOver}
+                onDragLeave={handleInputDragLeave}
+                onDrop={handleInputDrop}
+              >
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  placeholder={
+                    isDropZone
+                      ? "Thả group vào đây để mention..."
+                      : "Nhập tin nhắn..."
+                  }
+                  disabled={isLoading}
+                  className={`w-full text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border transition-all duration-300 ${
+                    isDropZone
+                      ? "border-primary bg-primary/5 placeholder-primary/70"
+                      : "border-border"
+                  }`}
+                />
+
+                {/* Drop zone overlay */}
+                <AnimatePresence>
+                  {isDropZone && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="absolute inset-0 bg-primary/10 rounded-md border-2 border-dashed border-primary flex items-center justify-center"
+                    >
+                      <span className="text-primary text-xs font-medium">
+                        Thả để mention group
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+
+              <Button
+                onClick={handleSend}
+                size="sm"
+                disabled={isLoading || !input.trim()}
+                className="shrink-0"
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </div>
+        </motion.div>
       )}
       <DialogConfirmDelete />
       <style jsx global>{`
