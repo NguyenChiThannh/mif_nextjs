@@ -8,8 +8,11 @@ import { CalendarDays, Clock5, Eye, Lock, SquareLibrary, Users } from 'lucide-re
 import Link from 'next/link'
 import React from 'react'
 import { motion } from 'framer-motion'
+import { categoryApi } from '@/services/movieCategoriesApi'
 
 export default function AboutSection({ group, members, t }) {
+    const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories();
+            
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -35,7 +38,7 @@ export default function AboutSection({ group, members, t }) {
         >
             {/* Information Group */}
             <motion.div variants={itemVariants}>
-                <CardInformationGroup group={group} t={t} />
+                <CardInformationGroup group={group} t={t} movieCategories={movieCategories}/>
             </motion.div>
 
             {/* Member Group */}
@@ -51,7 +54,7 @@ export default function AboutSection({ group, members, t }) {
     )
 }
 
-function CardInformationGroup({ group, t }) {
+function CardInformationGroup({ group, t ,movieCategories }) {
     return (
         <Card className="w-full max-w-3xl mx-auto border-border bg-card mt-6">
             <CardContent>
@@ -91,7 +94,8 @@ function CardInformationGroup({ group, t }) {
                                 <SquareLibrary className="h-4 w-4 text-primary" />
                                 {t("category")}
                             </p>
-                            <p className="text-sm text-muted-foreground pl-6">&middot; {t("category_action")}</p>
+                            <p className="text-sm text-muted-foreground pl-6">&middot; {movieCategories?.find((category) => category.id === group.categoryId)?.categoryName || t("category_action")}
+                            </p>
                         </div>
                     </div>
                 </div>

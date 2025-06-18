@@ -94,9 +94,16 @@ export function DialogCreateGroup({ movieCategories }) {
                       id="groupName"
                       {...register("groupName")}
                       className="col-span-3 bg-background border-border focus:border-primary transition-colors duration-200"
-                      required
                     />
                   </div>
+                  {errors.groupName && (
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <p></p>
+                      <p className="text-destructive col-span-3 text-xs font-bold">
+                        {errors.groupName.message}
+                      </p>
+                    </div>
+                  )}
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="categoryId" className="text-right text-foreground">
                       {t("DialogCreateGroup.category")}

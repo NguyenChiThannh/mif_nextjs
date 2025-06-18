@@ -9,10 +9,12 @@ import { DatePickerPopover } from '@/components/date-picker-popover'
 import { schemaProfileUser } from '@/lib/schemas/profile-user.schema'
 import { userApi } from '@/services/userApi'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useTranslations } from 'next-intl'
 
 export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser, t }) {
-    const { register, handleSubmit, control, reset } = useForm({
-        resolver: zodResolver(schemaProfileUser),
+    const tSchema = useTranslations('Schema.userInfo')
+    const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+        resolver: zodResolver(schemaProfileUser(tSchema)),
     })
 
     useEffect(() => {
@@ -52,6 +54,9 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                             {...register("displayName")}
                             className="bg-card border-input focus-visible:ring-primary"
                         />
+                        {errors.displayName && (
+                            <p className="text-red-500 text-sm font-bold">{errors.displayName.message}</p>
+                        )}
                     </div>
 
                     {/* Date of Birth */}
@@ -76,8 +81,11 @@ export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser,
                             {...register("bio")}
                             placeholder={t('bio_placeholder')}
                             rows={5}
-                            className="bg-card border-input focus-visible:ring-primary resize-none"
+                            className="bg-card border-input focus-visible:ring-primary resize-none overflow-y-auto max-h-[200px]"
                         />
+                        {errors.bio && (
+                            <p className="text-red-500 text-sm font-bold">{errors.bio.message}</p>
+                        )}
                     </div>
 
                     {/* Footer */}

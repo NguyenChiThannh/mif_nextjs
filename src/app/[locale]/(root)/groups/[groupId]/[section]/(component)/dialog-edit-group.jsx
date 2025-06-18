@@ -16,9 +16,7 @@ import { categoryApi } from "@/services/movieCategoriesApi";
 import { groupsApi } from "@/services/groupsApi";
 import { Separator } from "@/components/ui/separator";
 
-export default function EditGroupDialog({ group }) {
-
-    const [open, setOpen] = useState(false);
+export default function EditGroupDialog({ open, setOpen, group }) {
     const t = useTranslations("Groups.DialogEditInfoGroup");
 
     const { control, register, handleSubmit, reset, formState: { errors } } = useForm({
@@ -50,13 +48,6 @@ export default function EditGroupDialog({ group }) {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-
-                <Button className='gap-2 p-0' variant="ghost" size="sm">
-                    <PencilLine className="h-4 w-4" />
-                    {t("edit_info_group")}
-                </Button>
-            </DialogTrigger>
             <DialogContent className="w-full max-w-2xl max-h-screen overflow-y-auto bg-background text-foreground">
                 <DialogHeader>
                     <DialogTitle className="text-lg font-bold">{t("edit_info_group")}</DialogTitle>

@@ -11,10 +11,11 @@ import { useTranslations } from "next-intl";
 
 export default function DialogRating({ movieId }) {
     const t = useTranslations('Movie.Review');
+    const tSchema = useTranslations('Schema.ratingMovie');
     const [isOpen, setIsOpen] = useState(false);
     const createRatingMutation = movieRatingsApi.mutation.useCreateRating(movieId);
     const { handleSubmit, control, reset, formState: { errors } } = useForm({
-        resolver: zodResolver(schemaRatingMovie),
+        resolver: zodResolver(schemaRatingMovie(tSchema)),
         defaultValues: {
             ratingValue: 0,
             movieId,

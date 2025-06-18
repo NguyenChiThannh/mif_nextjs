@@ -32,6 +32,15 @@
             "title_length_min": "Tiêu đề phải có ít nhất 5 ký tự",
             "title_length_max": "Tiêu đề không được vượt quá 100 ký tự",
             "content_length_min": "Nội dung phải có ít nhất 10 ký tự"
+        },
+        "ratingMovie": {
+            "rating_value_min": "Bạn phải chọn ít nhất 1 sao",
+            "rating_value_max": "Điểm đánh giá tối đa là 5",
+            "comment_length_min": "Nội dung đánh giá phải có ít nhất 20 ký tự"
+        },
+        "userInfo": {
+            "display_name_min": "Tên hiển thị phải có ít nhất 2 ký tự",
+            "bio_max_length": "Giới thiệu không được vượt quá 500 ký tự"
         }
     },
     "Login_register": {
