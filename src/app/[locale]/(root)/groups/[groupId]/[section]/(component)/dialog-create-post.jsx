@@ -57,27 +57,71 @@ export default function CreatePostDialog({ groupId }) {
 
   if (isLoading) return <Loading />;
 
+  // Function để extract movie mentions từ content - distinct only
+  const extractMovieMentions = (content) => {
+    if (!content) return [];
+
+    // Regex để tìm movie mentions với format @[MovieTitle](movieId)
+    const movieMentionRegex = /@\[([^\]]+)\]\(([^)]+)\)/g;
+    const movieIds = new Set(); // Sử dụng Set để tự động distinct
+    let match;
+
+    while ((match = movieMentionRegex.exec(content)) !== null) {
+      const movieId = match[2].trim(); // movieId từ (movieId), trim để clean
+      if (movieId) {
+        movieIds.add(movieId);
+      }
+    }
+
+    const distinctMovieIds = Array.from(movieIds);
+    console.log("Extracted distinct movie mentions:", distinctMovieIds);
+    return distinctMovieIds;
+
+    /* Test cases:
+     * Input: "@[Inception](683f2e74f259647e8295a6b1) và @[The Dark Knight](683f32bbf259647e8295a74e) @[Inception](683f2e74f259647e8295a6b1)"
+     * Output: ["683f2e74f259647e8295a6b1", "683f32bbf259647e8295a74e"] (distinct)
+     *
+     * Input: "Xem #[Group A](groupId1) và @[Movie A](movieId1) thật tuyệt!"
+     * Output: ["movieId1"] (chỉ movie, không group)
+     */
+  };
+
   const onSubmit = async (data) => {
     setIsLoading(true);
-    const mediaUrls = await Promise.all(
-      images.map((image) => uploadImage(image))
-    );
 
-    const updatedData = {
-      ...data,
-      mediaUrls,
-    };
+    try {
+      // Upload images
+      const mediaUrls = await Promise.all(
+        images.map((image) => uploadImage(image))
+      );
 
-    createPostMutation.mutate(updatedData, {
-      onSuccess: () => {
-        reset();
-        setImages([]);
-        setOpen(false);
-      },
-      onSettled: () => {
-        setIsLoading(false);
-      },
-    });
+      // Extract distinct movie mentions from content
+      const mentionedMovieIds = extractMovieMentions(data.content);
+
+      const updatedData = {
+        ...data,
+        mediaUrls,
+        mentionedMovieIds, // Add distinct movie IDs
+      };
+
+      console.log("Post content:", data.content);
+      console.log("Extracted movie IDs:", mentionedMovieIds);
+      console.log("Final post data being sent to backend:", updatedData);
+
+      createPostMutation.mutate(updatedData, {
+        onSuccess: () => {
+          reset();
+          setImages([]);
+          setOpen(false);
+        },
+        onSettled: () => {
+          setIsLoading(false);
+        },
+      });
+    } catch (error) {
+      console.error("Error creating post:", error);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -114,7 +158,9 @@ export default function CreatePostDialog({ groupId }) {
               className="mt-2"
             />
             {errors.title && (
-              <p className="text-red-500 text-xs mt-2 font-bold">{errors.title.message}</p>
+              <p className="text-red-500 text-xs mt-2 font-bold">
+                {errors.title.message}
+              </p>
             )}
           </div>
 
@@ -126,9 +172,12 @@ export default function CreatePostDialog({ groupId }) {
               value={watch("content") || ""}
               onChange={(value) => setValue("content", value)}
               placeholder={t("content_placeholder")}
+              enableDropZone={true}
             />
             {errors.content && (
-              <p className="text-red-500 text-xs mt-2 font-bold">{errors.content.message}</p>
+              <p className="text-red-500 text-xs mt-2 font-bold">
+                {errors.content.message}
+              </p>
             )}
           </div>
 
