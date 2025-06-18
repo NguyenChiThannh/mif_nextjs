@@ -304,9 +304,8 @@ export default function ChatBotBubble() {
             <Image
               src="/logo.png"
               alt="AI Avatar"
-              width={80}
-              height={80}
-              className="object-cover w-full h-full"
+              fill
+              className="object-cover"
             />
           </Button>
           <span className="text-xs font-medium text-foreground">MIF</span>
