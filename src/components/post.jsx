@@ -22,6 +22,9 @@ import {
   PencilLine,
   Play,
   Trash2,
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
@@ -33,6 +36,8 @@ import { motion } from "framer-motion";
 import DialogConfirmDelete, { confirmDelete } from '@/components/dialog-confirm-delete'
 import Loading from "@/components/loading";
 import DialogEditPost from "@/components/dialog-edit-post";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { renderContent } from "@/lib/convert";
 
 export default function Post({ className, post, isGroup }) {
   const t = useTranslations("Groups.Post");
@@ -40,6 +45,8 @@ export default function Post({ className, post, isGroup }) {
   const [vote, setVote] = useState(post?.userVotes || null);
   const [voteNumber, setVoteNumber] = useState(post?.voteNumber || 0);
   const [saved, setSaved] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const upvoteMutation = groupPostApi.mutation.useUpVotePost(post.groupId);
   const downvoteMutation = groupPostApi.mutation.useDownVotePost(post.groupId);
@@ -111,11 +118,31 @@ export default function Post({ className, post, isGroup }) {
     });
   }
 
+  const handleImageClick = (index) => {
+    setSelectedImageIndex(index);
+    setIsImageModalOpen(true);
+  };
+
+  const handleNextImage = () => {
+    if (selectedImageIndex < post.mediaUrls.length - 1) {
+      setSelectedImageIndex(selectedImageIndex + 1);
+    }
+  };
+
+  const handlePrevImage = () => {
+    if (selectedImageIndex > 0) {
+      setSelectedImageIndex(selectedImageIndex - 1);
+    }
+  };
+
+  const handleCloseModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImageIndex(null);
+  };
+
   if (deletePostMutation.isPending) {
     return <Loading />;
   }
-
-  const hashtags = "#Hành động #Hài kịch";
 
   return (
     <motion.div
@@ -205,8 +232,8 @@ export default function Post({ className, post, isGroup }) {
                     <DropdownMenuItem asChild>
                       <DialogEditPost post={post} groupId={post.groupId} />
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => handleDeletePost(post.id)}>
-                      <Trash2 className="h-4 w-4 mr-5 ml-1" />
+                    <DropdownMenuItem onClick={() => handleDeletePost(post.id)} className="font-medium">
+                      <Trash2 className="h-4 w-4 mr-4 ml-1" />
                       {t("delete_post")}
                     </DropdownMenuItem>
                   </div>
@@ -232,14 +259,129 @@ export default function Post({ className, post, isGroup }) {
           transition={{ delay: 0.4 }}
           className="w-full"
         >
-          <Image
-            src={post.mediaUrls[0]}
-            width={400}
-            height={400}
-            alt="Image"
-            className="w-full h-[400px] object-contain"
-            quality={75}
-          />
+          {post.mediaUrls.length === 1 ? (
+            <div
+              className="cursor-pointer hover:opacity-90 transition-opacity"
+              onClick={() => handleImageClick(0)}
+            >
+              <Image
+                src={post.mediaUrls[0]}
+                width={400}
+                height={400}
+                alt="Image"
+                className="w-full h-[400px] object-contain"
+                quality={75}
+              />
+            </div>
+          ) : post.mediaUrls.length === 2 ? (
+            <div className="grid grid-cols-2 gap-2 p-2">
+              {post.mediaUrls.map((url, index) => (
+                <div
+                  key={index}
+                  className="cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => handleImageClick(index)}
+                >
+                  <Image
+                    src={url}
+                    width={400}
+                    height={400}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-[300px] object-cover rounded-lg"
+                    quality={75}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : post.mediaUrls.length === 3 ? (
+            <div className="grid grid-cols-2 gap-2 p-2">
+              <div
+                className="cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handleImageClick(0)}
+              >
+                <Image
+                  src={post.mediaUrls[0]}
+                  width={400}
+                  height={400}
+                  alt="Image 1"
+                  className="w-full h-[300px] object-cover rounded-lg row-span-2"
+                  quality={75}
+                />
+              </div>
+              <div
+                className="cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handleImageClick(1)}
+              >
+                <Image
+                  src={post.mediaUrls[1]}
+                  width={400}
+                  height={400}
+                  alt="Image 2"
+                  className="w-full h-[145px] object-cover rounded-lg"
+                  quality={75}
+                />
+              </div>
+              <div
+                className="cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => handleImageClick(2)}
+              >
+                <Image
+                  src={post.mediaUrls[2]}
+                  width={400}
+                  height={400}
+                  alt="Image 3"
+                  className="w-full h-[145px] object-cover rounded-lg"
+                  quality={75}
+                />
+              </div>
+            </div>
+          ) : post.mediaUrls.length === 4 ? (
+            <div className="grid grid-cols-2 gap-2 p-2">
+              {post.mediaUrls.map((url, index) => (
+                <div
+                  key={index}
+                  className="cursor-pointer hover:opacity-90 transition-opacity"
+                  onClick={() => handleImageClick(index)}
+                >
+                  <Image
+                    src={url}
+                    width={400}
+                    height={400}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-[200px] object-cover rounded-lg"
+                    quality={75}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-2 p-2">
+              {post.mediaUrls.slice(0, 5).map((url, index) => (
+                <div key={index} className="relative">
+                  <div
+                    className="cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={() => handleImageClick(index)}
+                  >
+                    <Image
+                      src={url}
+                      width={400}
+                      height={400}
+                      alt={`Image ${index + 1}`}
+                      className={`w-full object-cover rounded-lg ${index === 4 ? 'h-[200px]' : 'h-[200px]'
+                        }`}
+                      quality={75}
+                    />
+                    {index === 4 && post.mediaUrls.length > 5 && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
+                        <span className="text-white font-bold text-lg">
+                          +{post.mediaUrls.length - 5}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </motion.div>
       )}
       <Separator className="my-2" />
@@ -288,6 +430,54 @@ export default function Post({ className, post, isGroup }) {
           {saved ? t("saved") : t("save")}
         </Button>
       </motion.div>
+      <Dialog open={isImageModalOpen} onOpenChange={handleCloseModal}>
+        <DialogContent className="h-fit max-w-2xl">
+          <div className="relative w-full h-full flex items-center justify-center">
+
+            {post.mediaUrls.length > 1 && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 z-50 bg-black/50 hover:bg-black/70 text-white border-none"
+                  onClick={handlePrevImage}
+                  disabled={selectedImageIndex === 0}
+                >
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 z-50 bg-black/50 hover:bg-black/70 text-white border-none"
+                  onClick={handleNextImage}
+                  disabled={selectedImageIndex === post.mediaUrls.length - 1}
+                >
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
+              </>
+            )}
+
+            {post.mediaUrls.length > 1 && (
+              <div className="absolute top-2 left-2 z-50 bg-black/50 text-white px-2 py-1 rounded-full text-xs">
+                {selectedImageIndex + 1} / {post.mediaUrls.length}
+              </div>
+            )}
+
+            {selectedImageIndex !== null && (
+              <div className="h-[550px] flex items-center justify-center">
+                  <Image
+                    src={post.mediaUrls[selectedImageIndex]}
+                    alt={`Image ${selectedImageIndex + 1}`}
+                    width={400}
+                    height={500}
+                    objectFit="cover"
+                    className="rounded-md h-full w-full"
+                  />
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
       <DialogConfirmDelete />
     </motion.div>
   );
@@ -299,26 +489,6 @@ function ContentWithReadMore({ content, maxLength = 200, t }) {
 
   const toggleContent = () => {
     setIsExpanded(!isExpanded);
-  };
-
-  const renderContent = (content) => {
-    const parts = content.split(/(@\[.*?\]\(.*?\))/g);
-    return parts.map((part, index) => {
-      const match = part.match(/@\[(.*?)\]\((.*?)\)/);
-      if (match) {
-        const [_, display, id] = match;
-        return (
-          <Link
-            key={index}
-            href={`/movies/${id}`}
-            className="text-blue-500 hover:underline"
-          >
-            {display}
-          </Link>
-        );
-      }
-      return part;
-    });
   };
 
   return (

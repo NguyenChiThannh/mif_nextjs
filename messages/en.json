@@ -149,7 +149,9 @@
         "invite_button": "Invite",
         "invite_title": "Invite members",
         "invite_content": "User link/ID",
+        "invite_placeholder": "Enter user link/ID...",
         "category": "Category",
+        "category_action": "Action Movies",
         "display_mode": "Display",
         "display_mode_description": "Anyone can find this group.",
         "introduce": "Introduction",
@@ -193,6 +195,30 @@
             "events": "Events",
             "statistical": "Statistics",
             "report": "Report"
+        },
+        "Report": {
+            "title": "Report Management",
+            "auto_moderation": "Auto Moderation",
+            "reported_posts": "Reported Posts",
+            "blocked_posts": "Blocked Posts",
+            "report_id": "Report #{id}",
+            "report_count": "{count} reports",
+            "post_owner": "Posted by: {username}",
+            "report_list": "Report List",
+            "report_reason": "Reason: {reason}",
+            "view_analysis": "View Analysis",
+            "view_post": "View Post",
+            "reject_report": "Reject Report",
+            "block_post": "Block Post",
+            "unblock_post": "Unblock Post",
+            "processing": "Processing...",
+            "blocking": "Blocking...",
+            "unblocking": "Unblocking...",
+            "analysis_title": "Content Analysis",
+            "post_title": "Post Title:",
+            "post_content": "Post Content:",
+            "analysis_results": "Analysis Results:",
+            "block_reason": "Block Reason:"
         },
         "DialogAddOrEditRule": {
             "add": "Add rule",
@@ -296,7 +322,10 @@
         "confirm_delete": "Confirm delete",
         "button_cancel": "Cancel",
         "button_submit_delete": "Delete",
-        "message_default": "Do you want to delete?"
+        "message_default": "Do you want to delete?",
+        "message_reject_report": "Are you sure you want to reject this report?",
+        "message_block_post": "Do you want to block this post?",
+        "message_un_block_post": "Do you want to unblock this post?"
     },
     "Search": {
         "search_keywords": "Search keywords",
@@ -393,8 +422,9 @@
         "block_post_failed": "Block post failed",
         "login_google_error": "Login with Google failed",
         "reject_report_successful": "Reject successful",
-        "edit_post_successful":"Edit post successful",
-        "delete_post_successful":"Delete post successful"
+        "edit_post_successful": "Edit post successful",
+        "delete_post_successful": "Delete post successful",
+        "toggle_auto_moderation_successful": " Update auto-moderation status successful"
     },
     "duration": "Duration",
     "minutes": "minutes",

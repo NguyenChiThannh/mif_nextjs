@@ -72,4 +72,5 @@ export const QUERY_KEY = {
   groupBlockReports: (groupId) => ["group_block_reports", groupId],
   postReportCounts: (postId) => ["post_report_counts", postId],
   reportAnalysis: (reportId) => ["report_analysis", reportId],
+  groupAutoModerationStatus: (groupId) => ["group_auto_moderation_status", groupId],
 };

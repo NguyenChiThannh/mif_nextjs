@@ -36,30 +36,6 @@ export default function FeedSection({ group, canCreate }) {
                         </div>
 
                     )}
-                    {/* <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="h-8 gap-1">
-                                <Filter className="h-4 w-4" />
-                                <span className="sr-only sm:not-sr-only">Filter</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Sort by</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                <Clock className="h-4 w-4 mr-2" />
-                                Latest
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <Star className="h-4 w-4 mr-2" />
-                                Top
-                            </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                <TrendingUp className="h-4 w-4 mr-2" />
-                                Trending
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu> */}
                 </div>
 
                 <div className="space-y-2">

@@ -149,7 +149,9 @@
         "invite_button": "Mời",
         "invite_title": "Mời thành viên",
         "invite_content": "Link/Id của người dùng",
+        "invite_placeholder": "Nhập link hoặc id của người dùng",
         "category": "Thể loại",
+        "category_action": "Phim hành động",
         "display_mode": "Hiển thị",
         "display_mode_description": "Ai cũng có thể tìm thấy nhóm này.",
         "introduce": "Giới thiệu",
@@ -193,6 +195,30 @@
             "events": "Sự kiện",
             "statistical": "Thống kê",
             "report": "Quản lý báo cáo"
+        },
+        "Report": {
+            "title": "Quản lý tố cáo",
+            "auto_moderation": "Tự động kiểm duyệt",
+            "reported_posts": "Bài viết bị tố cáo",
+            "blocked_posts": "Bài viết bị chặn",
+            "report_id": "Báo cáo #{id}",
+            "report_count": "{count} báo cáo",
+            "post_owner": "Người đăng: {username}",
+            "report_list": "Danh sách báo cáo",
+            "report_reason": "Lý do: {reason}",
+            "view_analysis": "Xem phân tích",
+            "view_post": "Xem bài viết",
+            "reject_report": "Từ chối xử lý",
+            "block_post": "Chặn bài viết",
+            "unblock_post": "Bỏ chặn bài viết",
+            "processing": "Đang xử lý...",
+            "blocking": "Đang chặn...",
+            "unblocking": "Đang bỏ chặn...",
+            "analysis_title": "Phân tích nội dung",
+            "post_title": "Tiêu đề bài viết:",
+            "post_content": "Nội dung bài viết:",
+            "analysis_results": "Kết quả phân tích:",
+            "block_reason": "Lý do bị chặn:"
         },
         "DialogAddOrEditRule": {
             "add": "Thêm quy tắc",
@@ -296,7 +322,10 @@
         "confirm_delete": "Xác nhận xóa",
         "button_cancel": "Hủy",
         "button_submit_delete": "Xóa",
-        "message_default": "Bạn có muốn xóa không ?"
+        "message_default": "Bạn có muốn xóa không ?",
+        "message_reject_report": "Bạn có chắc chắn muốn từ chối xử lý báo cáo này không ?",
+        "message_block_post": "Bạn muốn chặn bài viết này không ?",
+        "message_un_block_post": "Bạn muốn bỏ chặn bài viết này không ?"
     },
     "Search": {
         "search_keywords": "Từ khóa tìm kiếm",
@@ -394,7 +423,8 @@
         "login_google_error": "Đăng nhập bằng Google thất bại",
         "reject_report_successful": "Từ chối thành công",
         "edit_post_successful": "Chỉnh sửa bài viết thành công",
-        "delete_post_successful": "Xóa bài viết thành công"
+        "delete_post_successful": "Xóa bài viết thành công",
+        "toggle_auto_moderation_successful": " Cập nhật trạng thái tự động kiểm duyệt thành công"
     },
     "duration": "Thời lượng",
     "minutes": "phút",

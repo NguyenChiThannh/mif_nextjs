@@ -66,7 +66,6 @@ const deletePost = async (postId) => {
 }
 
 const editPost = async (data) => {
-    console.log('🚀 ~ editPost ~ data:', data)
     const res = await privateApi.put(`/group-posts/${data.postId}`, data)
     return res.data
 }
