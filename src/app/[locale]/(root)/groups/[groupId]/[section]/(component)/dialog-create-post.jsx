@@ -114,8 +114,8 @@ export default function CreatePostDialog({ groupId }) {
               className="mt-2"
             />
             {errors.title && (
-                            <p className="text-red-500 text-xs mt-2 font-bold">{errors.title.message}</p>
-                        )}
+              <p className="text-red-500 text-xs mt-2 font-bold">{errors.title.message}</p>
+            )}
           </div>
 
           <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Trash2, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { motion, AnimatePresence } from "framer-motion";
+import { renderContent } from "@/lib/convert";
+import Link from "next/link";
 
 export default function ChatBotBubble() {
   const [isOpen, setIsOpen] = useState(false);
@@ -223,51 +225,15 @@ export default function ChatBotBubble() {
   const renderResponse = (response) => {
     if (!response) return null;
 
-    // Check if response contains movie data
-    try {
-      const parsedResponse = JSON.parse(response);
-      if (parsedResponse.type === "movie" && parsedResponse.data) {
-        return (
-          <div className="flex items-stretch gap-4 w-full">
-            <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-24 flex-shrink-0">
-              <Image
-                src={parsedResponse.data.posterUrl}
-                alt={parsedResponse.data.title || "Movie Poster"}
-                fill
-                className="object-cover transition-transform duration-300 hover:scale-105"
-              />
-            </div>
-            <div className="grid gap-1 my-1 min-w-0 flex-1">
-              <h3 className="text-base font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors duration-200">
-                {parsedResponse.data.title}
-              </h3>
-              <div className="grid gap-0.5 text-sm text-muted-foreground">
-                <p>
-                  Năm phát hành:{" "}
-                  {parsedResponse.data.releaseDate?.split("-")[0]}
-                </p>
-                <p>Thời lượng: {parsedResponse.data.duration} phút</p>
-                <p>
-                  <span className="font-medium">
-                    {parsedResponse.data.country}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-      }
-    } catch (e) {
-      // If response is not JSON or doesn't contain movie data, render as markdown
-      return (
-        <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
-      );
-    }
-
+    const decodedResponse = response.replace(/\\"/g, '"');
+    
     // Default to markdown rendering
     return (
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
-    );
+        <ReactMarkdown 
+        rehypePlugins={[rehypeRaw]}>
+          {decodedResponse}
+        </ReactMarkdown>
+  );
   };
 
   // Format timestamps
@@ -299,7 +265,7 @@ export default function ChatBotBubble() {
           <Button
             variant="ghost"
             onClick={() => setIsOpen(true)}
-            className="relative rounded-full shadow-lg overflow-hidden border border-border w-20 h-20 hover:scale-105 transition-transform duration-300 animate-float"
+            className="relative rounded-full shadow-lg overflow-hidden border border-border w-16 h-16 hover:scale-105 transition-transform duration-300 animate-float"
           >
             <Image
               src="/logo.png"
@@ -466,11 +432,10 @@ export default function ChatBotBubble() {
 
             <div className="flex items-center gap-2">
               <motion.div
-                className={`flex-1 relative transition-all duration-300 ${
-                  isDropZone
-                    ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                    : ""
-                }`}
+                className={`flex-1 relative transition-all duration-300 ${isDropZone
+                  ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                  : ""
+                  }`}
                 animate={{
                   scale: isDropZone ? 1.02 : 1,
                 }}
@@ -490,11 +455,10 @@ export default function ChatBotBubble() {
                       : "Nhập tin nhắn..."
                   }
                   disabled={isLoading}
-                  className={`w-full text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border transition-all duration-300 ${
-                    isDropZone
-                      ? "border-primary bg-primary/5 placeholder-primary/70"
-                      : "border-border"
-                  }`}
+                  className={`w-full text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border transition-all duration-300 relative z-10 ${isDropZone
+                    ? "border-primary bg-primary/5 placeholder-primary/70 text-primary font-medium"
+                    : "border-border"
+                    }`}
                 />
 
                 {/* Drop zone overlay */}
@@ -504,7 +468,7 @@ export default function ChatBotBubble() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="absolute inset-0 bg-primary/10 rounded-md border-2 border-dashed border-primary flex items-center justify-center"
+                      className="absolute inset-0 bg-primary/20 rounded-md border-2 border-dashed border-primary flex items-center justify-center z-20"
                     >
                       <span className="text-primary text-xs font-medium">
                         Thả để mention group
