@@ -130,7 +130,93 @@ export default function MonthlyChart() {
   };
 
   const handleExportExcelAnalytics = async () => {
-    exportExcelAnalyticsMutation.mutateAsync();
+    try {
+      console.log('1. Starting export...');
+      const response = await exportExcelAnalyticsMutation.mutateAsync();
+      console.log('2. Response received:', response);
+
+      // Kiểm tra response có đúng format không
+      if (!response?.base64Data) {
+        console.error('3. Invalid response format - missing base64Data');
+        throw new Error('Invalid response format');
+      }
+
+      console.log('4. Response data:', {
+        fileName: response.fileName,
+        fileSize: response.fileSize,
+        fileType: response.fileType,
+        base64Length: response.base64Data.length,
+        base64Preview: response.base64Data.substring(0, 100) + '...',
+      });
+
+      // Lấy base64 string từ response
+      const base64Data = response.base64Data;
+      console.log('5. Base64 string length:', base64Data.length);
+
+      try {
+        // Tạo binary string từ base64
+        const binaryString = atob(base64Data);
+        console.log('6. Binary string created, length:', binaryString.length);
+
+        // Chuyển binary string thành array buffer
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+        console.log('7. Uint8Array created, length:', bytes.length);
+
+        // Tạo blob từ array buffer
+        const blob = new Blob([bytes], {
+          type:
+            response.fileType ||
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        console.log('8. Blob created:', {
+          size: blob.size,
+          type: blob.type,
+        });
+
+        // Tạo object URL
+        const url = URL.createObjectURL(blob);
+        console.log('9. URL created:', url);
+
+        // Tạo temporary link để download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = response.fileName;
+        console.log(
+          '10. Download link created with filename:',
+          response.fileName,
+        );
+
+        // Thêm vào document và click
+        document.body.appendChild(link);
+        console.log('11. Link added to document');
+
+        // Click với timeout nhỏ để đảm bảo browser kịp xử lý
+        setTimeout(() => {
+          link.click();
+          console.log('12. Click triggered');
+
+          // Cleanup sau click
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+            document.body.removeChild(link);
+            console.log('13. Cleanup completed');
+          }, 100);
+        }, 100);
+      } catch (blobError) {
+        console.error('Error creating blob:', blobError);
+        throw blobError;
+      }
+    } catch (error) {
+      console.error('Error in export:', error);
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        response: error.response,
+      });
+    }
   };
 
   return (
