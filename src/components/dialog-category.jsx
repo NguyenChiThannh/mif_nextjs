@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 
 export default function DialogCategory({ isOpenDialog, setIsOpenDialog, queryClient, idEdit }) {
-    const { handleSubmit, register, reset } = useForm({
+    const { handleSubmit, register, reset, formState: { errors } } = useForm({
         resolver: zodResolver(schemaCategory),
     });
 
@@ -63,25 +63,32 @@ export default function DialogCategory({ isOpenDialog, setIsOpenDialog, queryCli
                                 <Label htmlFor="categoryName" className="w-40 text-right">
                                     Category Name
                                 </Label>
-                                <Input
-                                    id="categoryName"
-                                    {...register('categoryName', { required: true })}
-                                    required
-                                    className="flex-1"
-                                />
+                                <div className="flex flex-col flex-1">
+                                    <Input
+                                        id="categoryName"
+                                        {...register('categoryName', { required: true })}
+                                        className="flex-1"
+                                    />
+                                    {errors.categoryName && (
+                                        <span className="text-red-500 text-xs mt-1 font-bold">{errors.categoryName.message}</span>
+                                    )}
+                                </div>
                             </div>
                             <div className="flex items-center gap-4">
                                 <Label htmlFor="description" className="w-40 text-right">
                                     Description
                                 </Label>
-                                <Input
-                                    id="description"
-                                    {...register('description', { required: true })}
-                                    required
-                                    className="flex-1"
-                                />
+                                <div className="flex flex-col flex-1">
+                                    <Input
+                                        id="description"
+                                        {...register('description', { required: true })}
+                                        className="flex-1"
+                                    />
+                                    {errors.description && (
+                                        <span className="text-red-500 text-xs mt-1 font-bold">{errors.description.message}</span>
+                                    )}
+                                </div>
                             </div>
-
                             <DialogFooter>
                                 <Button type="submit" disabled={createCategoryMutation.isLoading || updateCategoryMutation.isLoading}>Save</Button>
                             </DialogFooter>
