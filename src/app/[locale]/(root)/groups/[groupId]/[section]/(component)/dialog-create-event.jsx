@@ -117,7 +117,7 @@ export function DialogCreateEvent({ groupId }) {
                             className="mt-2"
                         />
                         {errors.eventName && (
-                            <p className="text-red-500 text-xs">{errors.eventName.message}</p>
+                            <p className="text-red-500 text-xs mt-1 font-bold">{errors.eventName.message}</p>
                         )}
                     </div>
 
@@ -131,6 +131,9 @@ export function DialogCreateEvent({ groupId }) {
                             className="mt-2"
                             rows={3}
                         />
+                        {errors.description && (
+                            <p className="text-red-500 text-xs mt-1 font-bold">{errors.description.message}</p>
+                        )}
                     </div>
 
                     {/* Date and Time Picker */}
@@ -152,8 +155,8 @@ export function DialogCreateEvent({ groupId }) {
                                 />
                             )}
                         />
-                        {errors.time && (
-                            <p className="text-red-500 text-xs">{errors.time.message}</p>
+                        {errors.startDate && (
+                            <p className="text-red-500 text-xs mt-1 font-bold">{errors.startDate.message}</p>
                         )}
                     </div>
 
@@ -188,7 +191,7 @@ export function DialogCreateEvent({ groupId }) {
                             )}
                         />
                         {errors.eventType && (
-                            <p className="text-red-500 text-xs">{errors.eventType.message}</p>
+                            <p className="text-red-500 text-xs mt-1 font-bold">{errors.eventType.message}</p>
                         )}
                     </div>
 
@@ -220,6 +223,9 @@ export function DialogCreateEvent({ groupId }) {
                                         </Select>
                                     )}
                                 />
+                                {errors.socialType && (
+                                    <p className="text-red-500 text-xs mt-1 font-bold">{errors.socialType.message}</p>
+                                )}
                             </div>
 
                             {socialType === "OTHER" && (
@@ -230,7 +236,7 @@ export function DialogCreateEvent({ groupId }) {
                                         placeholder="Nhập link sự kiện"
                                         {...register("link", { required: socialType === "OTHER" ? "Link sự kiện là bắt buộc" : false })}
                                     />
-                                    {errors.link && <p className="text-red-500 text-xs">{errors.link.message}</p>}
+                                    {errors.link && <p className="text-red-500 text-xs mt-1 font-bold">{errors.link.message}</p>}
                                 </div>
                             )}
                         </>
@@ -244,7 +250,7 @@ export function DialogCreateEvent({ groupId }) {
                                 placeholder="Nhập địa điểm tổ chức sự kiện"
                                 {...register("location", { required: "Địa điểm là bắt buộc" })}
                             />
-                            {errors.location && <p className="text-red-500 text-xs">{errors.location.message}</p>}
+                            {errors.location && <p className="text-red-500 text-xs mt-1 font-bold">{errors.location.message}</p>}
                         </div>
                     )}
 
@@ -258,6 +264,9 @@ export function DialogCreateEvent({ groupId }) {
                             onChange={handleImageChange}
                             multiple
                         />
+                        {errors.eventPicture && (
+                            <p className="text-red-500 text-xs mt-1 font-bold">{errors.eventPicture.message}</p>
+                        )}
                     </div>
 
                     {/* Submit Button */}

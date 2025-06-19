@@ -171,7 +171,10 @@ export default function ActionsMovie() {
             <div className='grid grid-cols-5 gap-4'>
                 <div className='col-span-4'>
                     <p className='text-sm font-semibold pb-2'>Title</p>
-                    <Input {...register('title')} required />
+                    <Input {...register('title')} />
+                    {errors.title && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.title.message}</span>
+                    )}
                 </div>
                 <div className='col-span-1'>
                     <p className='text-sm font-semibold pb-2'>Release Date</p>
@@ -179,10 +182,15 @@ export default function ActionsMovie() {
                         control={control}
                         name='releaseDate'
                         render={({ field }) => (
-                            <DatePickerPopover
-                                selected={field.value ?? undefined}
-                                onSelect={field.onChange}
-                            />
+                            <>
+                                <DatePickerPopover
+                                    selected={field.value ?? undefined}
+                                    onSelect={field.onChange}
+                                />
+                                {errors.releaseDate && (
+                                    <span className='text-red-500 text-xs mt-1 font-bold'>{errors.releaseDate.message}</span>
+                                )}
+                            </>
                         )}
                     />
                 </div>
@@ -191,6 +199,9 @@ export default function ActionsMovie() {
             <div>
                 <p className='text-sm pb-2 font-semibold'>Description</p>
                 <Textarea {...register('description')} />
+                {errors.description && (
+                    <span className='text-red-500 text-xs mt-1 font-bold'>{errors.description.message}</span>
+                )}
             </div>
 
             <div>
@@ -201,6 +212,9 @@ export default function ActionsMovie() {
                     onSelectionChange={handleSelectionActor}
                     placeholder={'Chọn diễn viên ...'}
                 />
+                {errors.castIds && (
+                    <span className='text-red-500 text-xs mt-1 font-bold'>{errors.castIds.message}</span>
+                )}
             </div>
 
 
@@ -213,12 +227,18 @@ export default function ActionsMovie() {
                         onSelectionChange={handleSelectionGenre}
                         placeholder={'Chọn thể loại ...'}
                     />
+                    {errors.genreIds && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.genreIds.message}</span>
+                    )}
                 </div>
                 <div>
                     <p className='text-sm font-semibold pb-2'>Country</p>
                     <CountrySelect
                         value={watch('country')}
                         onChange={(newValue) => setValue('country', newValue)} />
+                    {errors.country && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.country.message}</span>
+                    )}
                 </div>
             </div>
 
@@ -231,11 +251,17 @@ export default function ActionsMovie() {
                         onChange={handleImageChange}
                         multiple
                     />
+                    {errors.posterUrl && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.posterUrl.message}</span>
+                    )}
                 </div>
 
                 <div className='col-span-2'>
                     <p className='text-sm pb-2 font-semibold'>Trailer URL</p>
                     <Input {...register('trailerUrl')} />
+                    {errors.trailerUrl && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.trailerUrl.message}</span>
+                    )}
                 </div>
             </div>
 
@@ -243,7 +269,10 @@ export default function ActionsMovie() {
 
                 <div className=''>
                     <p className='text-sm font-semibold pb-2'>Duration</p>
-                    <Input {...register('duration')} required />
+                    <Input {...register('duration')} />
+                    {errors.duration && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.duration.message}</span>
+                    )}
                 </div>
 
                 <div className=''>
@@ -253,8 +282,10 @@ export default function ActionsMovie() {
                         {...register('budget', {
                             setValueAs: (v) => v === "" ? undefined : parseFloat(v),
                         })}
-                        required
                     />
+                    {errors.budget && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.budget.message}</span>
+                    )}
                 </div>
 
             </div>
@@ -268,16 +299,24 @@ export default function ActionsMovie() {
                                 {...register(`awards.${index}.name`)}
                                 placeholder='Award Name'
                             />
+                            {errors.awards && errors.awards[index] && errors.awards[index].name && (
+                                <span className='text-red-500 text-xs mt-1 font-bold'>{errors.awards[index].name.message}</span>
+                            )}
                         </div>
                         <div className='flex col-span-2 items-center gap-2'>
                             <Controller
                                 control={control}
                                 name={`awards.${index}.date`}
                                 render={({ field }) => (
-                                    <DatePickerPopover
-                                        selected={field.value ?? undefined}
-                                        onSelect={field.onChange}
-                                    />
+                                    <>
+                                        <DatePickerPopover
+                                            selected={field.value ?? undefined}
+                                            onSelect={field.onChange}
+                                        />
+                                        {errors.awards && errors.awards[index] && errors.awards[index].date && (
+                                            <span className='text-red-500 text-xs mt-1 font-bold'>{errors.awards[index].date.message}</span>
+                                        )}
+                                    </>
                                 )}
                             />
                             <Button

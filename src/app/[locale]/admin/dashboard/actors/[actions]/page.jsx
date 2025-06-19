@@ -47,6 +47,7 @@ export default function ActionsActor() {
         handleSubmit,
         control,
         reset,
+        formState: { errors },
     } = useForm({
         resolver: zodResolver(schemaActor),
         defaultValues: {
@@ -108,7 +109,10 @@ export default function ActionsActor() {
             <div className='grid grid-cols-5 gap-4'>
                 <div className='col-span-4'>
                     <p className='text-sm whitespace-nowrap font-semibold pb-2'>Name Actor</p>
-                    <Input {...register('name')} required />
+                    <Input {...register('name')} />
+                    {errors.name && (
+                        <span className='text-red-500 text-xs mt-1 font-bold'>{errors.name.message}</span>
+                    )}
                 </div>
                 <div className='col-span-1'>
                     <p className='text-sm font-semibold pb-2'>Day of birth</p>
@@ -116,8 +120,13 @@ export default function ActionsActor() {
                         control={control}
                         name='dateOfBirth'
                         render={({ field }) => (
-                            <DatePickerPopover {...field}
-                                selected={field.value ?? undefined} onSelect={field.onChange} />
+                            <>
+                                <DatePickerPopover {...field}
+                                    selected={field.value ?? undefined} onSelect={field.onChange} />
+                                {errors.dateOfBirth && (
+                                    <span className='text-red-500 text-xs mt-1 font-bold'>{errors.dateOfBirth.message}</span>
+                                )}
+                            </>
                         )}
                     />
                 </div>
@@ -126,6 +135,9 @@ export default function ActionsActor() {
             <div>
                 <p className='text-sm pb-2 font-semibold'>Bio</p>
                 <Textarea {...register('bio')} />
+                {errors.bio && (
+                    <span className='text-red-500 text-xs mt-1 font-bold'>{errors.bio.message}</span>
+                )}
             </div>
 
             <div>
@@ -136,6 +148,9 @@ export default function ActionsActor() {
                     onChange={handleImageChange}
                     multiple
                 />
+                {errors.profilePictureUrl && (
+                    <span className='text-red-500 text-xs mt-1 font-bold'>{errors.profilePictureUrl.message}</span>
+                )}
             </div>
 
             <div>
@@ -147,16 +162,24 @@ export default function ActionsActor() {
                                 {...register(`awards.${index}.name`)}
                                 placeholder='Award Name'
                             />
+                            {errors.awards && errors.awards[index] && errors.awards[index].name && (
+                                <span className='text-red-500 text-xs mt-1 font-bold'>{errors.awards[index].name.message}</span>
+                            )}
                         </div>
                         <div className='flex col-span-2 items-center gap-2'>
                             <Controller
                                 control={control}
                                 name={`awards.${index}.date`}
                                 render={({ field }) => (
-                                    <DatePickerPopover
-                                        selected={field.value ?? undefined}
-                                        onSelect={field.onChange}
-                                    />
+                                    <>
+                                        <DatePickerPopover
+                                            selected={field.value ?? undefined}
+                                            onSelect={field.onChange}
+                                        />
+                                        {errors.awards && errors.awards[index] && errors.awards[index].date && (
+                                            <span className='text-red-500 text-xs mt-1 font-bold'>{errors.awards[index].date.message}</span>
+                                        )}
+                                    </>
                                 )}
                             />
                             <Button
