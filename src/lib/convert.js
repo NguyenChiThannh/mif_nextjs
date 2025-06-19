@@ -13,7 +13,14 @@ export const convertDeltaToHtml = (delta) => {
     }
 }
 
-export const renderContent = (content) => {
+export const renderContent = (content, type = 'post') => {
+  var colorGroup = 'text-green-500';
+  var colorMovie = 'text-blue-500';
+  if (type === 'chat') {
+    colorGroup = 'text-white';
+    colorMovie = 'text-white';
+  }
+
   // Regex: match @[display](id) hoặc #[display](id)
   const parts = content.split(/(@\[[^\]]*?\]\([^\)]+\)|#\[[^\]]*?\]\([^\)]+\))/g);
 
@@ -26,9 +33,9 @@ export const renderContent = (content) => {
         <Link
           key={`mention-${index}`}
           href={`/movies/${id}`}
-          className="text-blue-500 hover:underline"
+          className={`${colorMovie} font-bold hover:underline`}
         >
-          @{display}
+          {display}
         </Link>
       );
     }
@@ -41,9 +48,9 @@ export const renderContent = (content) => {
         <Link
           key={`group-${index}`}
           href={`/groups/${id}`}
-          className="text-green-600 hover:underline"
+          className={`${colorGroup} font-bold hover:underline`}
         >
-          #{display}
+          {display}
         </Link>
       );
     }
