@@ -36,14 +36,12 @@ export default function FeedSection({ group, canCreate, activeMembers, t }) {
 
   return (
     <div className='grid md:grid-cols-3 gap-4 grid-cols-2'>
-      <div className='grid gap-4 col-span-2'>
-        <div className='flex justify-between items-center mt-4'>
-          {canCreate && (
-            <div>
-              <CreatePostDialog groupId={group?.id} />
-            </div>
-          )}
-        </div>
+      <div className='grid gap-4 col-span-2 mt-4'>
+        {canCreate && (
+          <div>
+            <CreatePostDialog groupId={group?.id} />
+          </div>
+        )}
 
         <div className='space-y-2'>
           {isLoading && (
@@ -61,11 +59,11 @@ export default function FeedSection({ group, canCreate, activeMembers, t }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: postIndex * 0.08 }}
-                className="rounded-xl shadow-lg border border-border bg-card/80 hover:shadow-2xl transition-all duration-300"
+                className='rounded-xl shadow-lg border border-border bg-card/80 hover:shadow-2xl transition-all duration-300'
               >
                 <Post post={post} />
               </motion.div>
-            ))
+            )),
           )}
           {isFetchingNextPage && <PostSkeleton />}
           <div ref={observerElem}></div>
@@ -98,9 +96,7 @@ function LeftContent({ group, t }) {
       className='mt-6 hidden md:block'
     >
       <Card className='w-full shadow-xl rounded-2xl'>
-        <CardHeader className='font-bold text-lg'>
-          {t('introduce')}
-        </CardHeader>
+        <CardHeader className='font-bold text-lg'>{t('introduce')}</CardHeader>
         <CardContent className='grid text-sm gap-4'>
           {group.description && (
             <motion.p
@@ -179,10 +175,7 @@ function LeftContent({ group, t }) {
           </motion.div>
         </CardContent>
         <CardFooter>
-          <Button
-            className='w-full'
-            variant='secondary'
-          >
+          <Button className='w-full' variant='secondary'>
             <Link href={`/groups/${group?.id}/about`} className='w-full block'>
               {t('more')}
             </Link>
@@ -212,9 +205,7 @@ function MembersFeaturedSection({ activeMembers, t }) {
   const renderActiveMembersSection = useMemo(
     () => (
       <motion.div variants={itemVariants} className='space-y-4 mt-8'>
-        <p className='text-lg font-bold drop-shadow'>
-          {t('active_members')}
-        </p>
+        <p className='text-lg font-bold drop-shadow'>{t('active_members')}</p>
         <div className='grid grid-cols-1 gap-4'>
           {activeMembers?.map((member, index) => (
             <motion.div
@@ -249,13 +240,16 @@ function MembersFeaturedSection({ activeMembers, t }) {
                         )}
                       </div>
                       <div>
-                        <Link href={`/user/${member.userId}`} className='hover:underline'>
+                        <Link href={`/user/${member.id}`}>
                           <p className='font-medium text-foreground'>
                             {member.displayName}
                           </p>
                         </Link>
                         <p className='text-sm text-muted-foreground'>
-                          Score: <span className=' font-semibold'>{member.totalScore}</span>
+                          Score:{' '}
+                          <span className=' font-semibold'>
+                            {member.totalScore}
+                          </span>
                         </p>
                       </div>
                     </div>
