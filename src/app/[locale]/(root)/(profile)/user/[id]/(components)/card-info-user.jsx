@@ -5,6 +5,7 @@ import { MoreHorizontal, Pencil, Copy } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { toast } from 'react-toastify'
 import { motion } from 'framer-motion'
+import { formatDate } from '@/lib/formatter'
 
 export function CardInfoUser({ setOpenDialogEdit, infoUser, t }) {
     const pathname = usePathname()
@@ -61,11 +62,8 @@ export function CardInfoUser({ setOpenDialogEdit, infoUser, t }) {
                         <div className="text-muted-foreground font-medium">{t('display_name')}:</div>
                         <div className="text-foreground">{infoUser.displayName}</div>
                         <div className="text-muted-foreground font-medium">{t('dob')}:</div>
-                        <div className="text-foreground">{new Date(infoUser.dob).toLocaleDateString('vi-VN', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                        })}</div>
+                        <div className="text-foreground">{formatDate(infoUser.dob)}</div>
+
                     </div>
 
                     {/* Bio */}
