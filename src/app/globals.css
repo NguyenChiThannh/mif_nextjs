@@ -84,3 +84,7 @@
   line-height: 16px;
   margin-bottom: 16px;
 }
+
+.mentions__suggestions {
+  transform: translateY(-100%); /* Kéo lên trên caret */
+}
