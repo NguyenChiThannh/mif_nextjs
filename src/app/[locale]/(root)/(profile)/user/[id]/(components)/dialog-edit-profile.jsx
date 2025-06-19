@@ -8,7 +8,6 @@ import { useEffect } from 'react'
 import { DatePickerPopover } from '@/components/date-picker-popover'
 import { schemaProfileUser } from '@/lib/schemas/profile-user.schema'
 import { userApi } from '@/services/userApi'
-import { motion, AnimatePresence } from 'framer-motion'
 import { useTranslations } from 'next-intl'
 
 export function DialogEditProfile({ openDialogEdit, setOpenDialogEdit, infoUser, t }) {

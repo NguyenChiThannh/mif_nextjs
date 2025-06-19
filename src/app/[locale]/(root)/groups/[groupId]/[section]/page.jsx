@@ -17,6 +17,7 @@ import { useGroupStatus } from "@/hooks/useGroupStatus"
 import { canCreatePost, checkSectionAccess } from "@/middleware/groupAccess"
 import EventsSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/events-section"
 import ReportSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/report-section"
+import MembersFeaturedSection from "@/app/[locale]/(root)/groups/[groupId]/[section]/members-featured-section"
 
 export default function GroupPage() {
     const { groupId, section } = useParams()
@@ -70,7 +71,6 @@ export default function GroupPage() {
             case 'members':
                 return <MembersSection
                     members={members}
-                    activeMembers={activeMembers}
                     group={group}
                     pendingInvitations={pendingInvitations}
                     isOwner={isOwner}
@@ -82,6 +82,8 @@ export default function GroupPage() {
                 return <RulesSection isOwner={isOwner} group={group} t={t} />
             case 'report':
                 return <ReportSection groupId={groupId} />
+            case 'members-featured':
+                return <MembersFeaturedSection activeMembers={activeMembers} t={t}/>
             default:
                 return <FeedSection
                     group={group}

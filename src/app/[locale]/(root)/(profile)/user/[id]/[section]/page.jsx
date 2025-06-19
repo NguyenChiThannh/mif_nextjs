@@ -10,15 +10,15 @@ import { useParams } from 'next/navigation'
 import React from 'react'
 
 export default function UserSection() {
-    const { id, section } = useParams()
-    return (
-        <div>
-            {(!section || section === 'posts') && <PostsSection id={id} />}
-            {(section === 'info') && <InfoSection id={id} />}
-            {section === 'posts_saved' && <PostsSavedSection id={id} />}
-            {section === 'movies_saved' && <MoviesSavedSection id={id} />}
-            {section === 'favorite_actors' && <FavoriteActorsSection />}
-            {(section === 'event') && <SubscribedEventsSection />}
-        </div>
-    )
+  const { id, section } = useParams()
+  return (
+    <div>
+      {(!section || section === 'posts') && <PostsSection id={id} />}
+      {section === 'info' && <InfoSection id={id} />}
+      {section === 'posts_saved' && <PostsSavedSection id={id} />}
+      {section === 'movies_saved' && <MoviesSavedSection id={id} />}
+      {section === 'favorite_actors' && <FavoriteActorsSection />}
+      {section === 'event' && <SubscribedEventsSection />}
+    </div>
+  )
 }
