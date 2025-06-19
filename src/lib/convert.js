@@ -16,9 +16,13 @@ export const convertDeltaToHtml = (delta) => {
 export const renderContent = (content, type = 'post') => {
   var colorGroup = 'text-green-500';
   var colorMovie = 'text-blue-500';
+  var prefixGroup = '';
+  var prefixMovie = '';
   if (type === 'chat') {
     colorGroup = 'text-white';
     colorMovie = 'text-white';
+    prefixGroup = '#';
+    prefixMovie = '@';
   }
 
   // Regex: match @[display](id) hoặc #[display](id)
@@ -35,7 +39,7 @@ export const renderContent = (content, type = 'post') => {
           href={`/movies/${id}`}
           className={`${colorMovie} font-bold hover:underline`}
         >
-          {display}
+          {`${prefixMovie}${display}`}
         </Link>
       );
     }
@@ -50,7 +54,7 @@ export const renderContent = (content, type = 'post') => {
           href={`/groups/${id}`}
           className={`${colorGroup} font-bold hover:underline`}
         >
-          {display}
+          {`${prefixGroup}${display}`}
         </Link>
       );
     }

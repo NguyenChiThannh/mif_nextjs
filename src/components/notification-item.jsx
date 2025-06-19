@@ -8,6 +8,9 @@ import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import React from 'react'
 import { motion } from 'framer-motion'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { BlockedPostDialog } from '@/components/dialog-blocked-post-notification';
 
 export const BADGE_THRESHOLDS = [
   {
@@ -97,6 +100,7 @@ export default function NotificationItem({ notification, onClick }) {
   const router = useRouter()
   const locale = useLocale()
   const markAsReadMutation = notificationApi.mutation.useMarkAsRead()
+  const [showBlockedDialog, setShowBlockedDialog] = React.useState(false)
 
   const handleReadNotification = () => {
     if (onClick) onClick()
@@ -118,6 +122,9 @@ export default function NotificationItem({ notification, onClick }) {
       case 'BADGE_EARNED':
         router.push(`/badge?level=${badgeLevel}&groupId=${notification.groupId}`)
         break
+      case 'POST_BLOCKED':
+        setShowBlockedDialog(true)
+        break
       default:
         break
     }
@@ -128,67 +135,76 @@ export default function NotificationItem({ notification, onClick }) {
   const badgeLevel = notification?.message?.split(' ').at(-1)?.replace(/!$/, '')
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ scale: 1.02 }}
-      className={cn(
-        "px-4 pt-4 pb-2 rounded-lg cursor-pointer transition-all duration-300",
-        "bg-card shadow-sm hover:shadow-lg",
-        "border border-border/50 hover:border-border",
-        notification.isRead ? '' : 'bg-secondary'
-      )}
-      onClick={handleReadNotification}
-    >
-      <div className="flex items-start gap-4">
-        {/* Avatar */}
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-        >
-          <div className="relative size-8">
-            <Avatar className="size-10 border-2 border-border hover:border-primary transition-colors duration-300">
-              <AvatarImage src={notification.groupAvatar} alt="Group Avatar" />
-              <AvatarFallback className="uppercase text-sm bg-muted text-muted-foreground">
-                {notification.groupName?.[0] || 'G'}
-              </AvatarFallback>
-            </Avatar>
-
-            {notification.type === "BADGE_EARNED" && badgeLevel && (
-              <div className="absolute -bottom-3 -right-3">
-                <BadgeIcon level={badgeLevel} size="sm" showAnimation />
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Content */}
-        <div className="flex flex-col w-full gap-2">
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        whileHover={{ scale: 1.02 }}
+        className={cn(
+          "px-4 pt-4 pb-2 rounded-lg cursor-pointer transition-all duration-300",
+          "bg-card shadow-sm hover:shadow-lg",
+          "border border-border/50 hover:border-border",
+          notification.isRead ? '' : 'bg-secondary'
+        )}
+        onClick={handleReadNotification}
+      >
+        <div className="flex items-start gap-4">
+          {/* Avatar */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
-            className="flex items-center justify-between"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <span className="text-sm font-medium line-clamp-2 text-foreground">
-              {notification.message}
-            </span>
+            <div className="relative size-8">
+              <Avatar className="size-10 border-2 border-border hover:border-primary transition-colors duration-300">
+                <AvatarImage src={notification.groupAvatar} alt="Group Avatar" />
+                <AvatarFallback className="uppercase text-sm bg-muted text-muted-foreground">
+                  {notification.groupName?.[0] || 'G'}
+                </AvatarFallback>
+              </Avatar>
+
+              {notification.type === "BADGE_EARNED" && badgeLevel && (
+                <div className="absolute -bottom-3 -right-3">
+                  <BadgeIcon level={badgeLevel} size="sm" showAnimation />
+                </div>
+              )}
+            </div>
           </motion.div>
 
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.5 }}
-            className="text-xs text-muted-foreground"
-          >
-            {calculateTimeAgo(new Date(notification.createdAt), locale)}
-          </motion.span>
+          {/* Content */}
+          <div className="flex flex-col w-full gap-2">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className="flex items-center justify-between"
+            >
+              <span className="text-sm font-medium line-clamp-2 text-foreground">
+                {notification.message}
+              </span>
+            </motion.div>
+
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="text-xs text-muted-foreground"
+            >
+              {calculateTimeAgo(new Date(notification.createdAt), locale)}
+            </motion.span>
+          </div>
         </div>
-      </div>
-    </motion.div>
+      </motion.div>
+
+      {/* Blocked Post Dialog */}
+      <BlockedPostDialog
+        notification={notification}
+        open={showBlockedDialog}
+        onOpenChange={setShowBlockedDialog}
+      />
+    </>
   )
 }
 

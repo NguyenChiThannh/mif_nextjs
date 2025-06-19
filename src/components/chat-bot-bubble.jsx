@@ -336,7 +336,7 @@ export default function ChatBotBubble() {
           <Button
             variant="ghost"
             onClick={() => setIsOpen(true)}
-            className="relative rounded-full shadow-lg overflow-hidden border border-border w-16 h-16 hover:scale-105 transition-transform duration-300 animate-float"
+            className="relative rounded-full shadow-lg overflow-hidden border border-border w-14 h-14 hover:scale-105 transition-transform duration-300 animate-float"
           >
             <Image
               src="/logo.png"
@@ -345,7 +345,7 @@ export default function ChatBotBubble() {
               className="object-cover"
             />
           </Button>
-          <span className="text-xs font-medium text-foreground">MIF</span>
+          <span className="text-xs font-medium text-foreground">Trợ lý MIF</span>
         </div>
       )}
 

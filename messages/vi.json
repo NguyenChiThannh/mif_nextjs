@@ -203,7 +203,8 @@
             "members": "Thành viên",
             "events": "Sự kiện",
             "statistical": "Thống kê",
-            "report": "Quản lý báo cáo"
+            "report": "Quản lý báo cáo",
+            "members_featured": "Thành viên nổi bật"
         },
         "Report": {
             "title": "Quản lý tố cáo",

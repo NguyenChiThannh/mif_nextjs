@@ -203,7 +203,8 @@
             "members": "Members",
             "events": "Events",
             "statistical": "Statistics",
-            "report": "Report"
+            "report": "Report",
+            "members_featured": "Featured Members"
         },
         "Report": {
             "title": "Report Management",

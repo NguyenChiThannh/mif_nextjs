@@ -1,5 +1,4 @@
 "use client";
-
 import { MentionsInput, Mention } from "react-mentions";
 import { useTranslations } from "next-intl";
 import { movieApi } from "@/services/movieApi";

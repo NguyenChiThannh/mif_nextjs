@@ -1,4 +1,4 @@
-import { BookIcon, BookOpenIcon, CalendarCheckIcon, CircleUserIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, NewspaperIcon, UserRoundIcon, UsersIcon } from "lucide-react"
+import { BookIcon, BookOpenIcon, CalendarCheckIcon, CircleUserIcon, ClapperboardIcon, FilePenIcon, HouseIcon, InfoIcon, LayoutListIcon, LineChartIcon, MessageCircleIcon, UsersRoundIcon, UserRoundIcon, UsersIcon } from "lucide-react"
 
 export const headerMenuConfig = (t) => [
     {
@@ -223,6 +223,14 @@ export const navGroupConfig = {
                 icon: InfoIcon,
                 active: function (section) {
                     return (section === 'about')
+                }
+            },
+            {
+                title: t('members_featured'),
+                href: (groupId) => `/groups/${groupId}/members-featured`,
+                icon: UsersRoundIcon,
+                active: function (section) {
+                    return (section === 'members-featured')
                 }
             },
             {
