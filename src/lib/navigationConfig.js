@@ -226,14 +226,6 @@ export const navGroupConfig = {
                 }
             },
             {
-                title: t('members_featured'),
-                href: (groupId) => `/groups/${groupId}/members-featured`,
-                icon: UsersRoundIcon,
-                active: function (section) {
-                    return (section === 'members-featured')
-                }
-            },
-            {
                 title: t('events'),
                 href: (groupId) => `/groups/${groupId}/events`,
                 icon: CalendarCheckIcon,
