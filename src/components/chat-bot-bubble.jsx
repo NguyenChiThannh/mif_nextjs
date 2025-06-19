@@ -13,8 +13,9 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { motion, AnimatePresence } from "framer-motion";
-import { renderContent } from "@/lib/convert";
+import { renderContent, renderHashtagContent } from "@/lib/convert";
 import Link from "next/link";
+import MovieMentionInput from "./movie-mention-input";
 
 export default function ChatBotBubble() {
   const [isOpen, setIsOpen] = useState(false);
@@ -419,7 +420,7 @@ export default function ChatBotBubble() {
                       {/* User message */}
                       <div className="flex justify-end">
                         <div className="bg-primary text-primary-foreground px-3 py-2 rounded-lg max-w-[85%]">
-                          {chat.query}
+                          {renderContent(chat.query)}
                         </div>
                       </div>
                       {/* AI response or loading */}
@@ -479,11 +480,10 @@ export default function ChatBotBubble() {
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
-                        mention.type === "movie"
-                          ? "bg-red-100 text-red-600"
-                          : "bg-green-100 text-green-600"
-                      }`}
+                      className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${mention.type === "movie"
+                        ? "bg-red-100 text-red-600"
+                        : "bg-green-100 text-green-600"
+                        }`}
                     >
                       <span>
                         {mention.type === "movie" ? "@" : "#"}
@@ -552,11 +552,10 @@ export default function ChatBotBubble() {
 
             <div className="flex items-center gap-2">
               <motion.div
-                className={`flex-1 relative transition-all duration-300 ${
-                  isDropZone
-                    ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
-                    : ""
-                }`}
+                className={`flex-1 relative transition-all duration-300 ${isDropZone
+                  ? "ring-2 ring-primary ring-offset-2 ring-offset-background"
+                  : ""
+                  }`}
                 animate={{
                   scale: isDropZone ? 1.02 : 1,
                 }}
@@ -564,23 +563,17 @@ export default function ChatBotBubble() {
                 onDragLeave={handleInputDragLeave}
                 onDrop={handleInputDrop}
               >
-                <input
-                  ref={inputRef}
-                  type="text"
+                <MovieMentionInput
+                  minHeight={10}
                   value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleSend()}
+                  onChange={setInput}
                   placeholder={
                     isDropZone
                       ? "Thả group/movie vào đây để mention..."
                       : "Nhập tin nhắn..."
                   }
-                  disabled={isLoading}
-                  className={`w-full text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border transition-all duration-300 relative z-10 ${
-                    isDropZone
-                      ? "border-primary bg-primary/5 placeholder-primary/70 text-primary font-medium"
-                      : "border-border"
-                  }`}
+                  enableDropZone={true}
+                  suggestionsPosition="top"
                 />
 
                 {/* Drop zone overlay */}

@@ -14,21 +14,41 @@ export const convertDeltaToHtml = (delta) => {
 }
 
 export const renderContent = (content) => {
-    const parts = content.split(/(@\[.*?\]\(.*?\))/g);
-    return parts.map((part, index) => {
-      const match = part.match(/@\[(.*?)\]\((.*?)\)/);
-      if (match) {
-        const [_, display, id] = match;
-        return (
-          <Link
-            key={index}
-            href={`/movies/${id}`}
-            className="text-blue-500 hover:underline"
-          >
-            {display}
-          </Link>
-        );
-      }
-      return part;
-    });
-  };
+  // Regex: match @[display](id) hoặc #[display](id)
+  const parts = content.split(/(@\[[^\]]*?\]\([^\)]+\)|#\[[^\]]*?\]\([^\)]+\))/g);
+
+  return parts.map((part, index) => {
+    // Movie mention: @[title](id)
+    const mentionMatch = part.match(/@\[(.*?)\]\((.*?)\)/);
+    if (mentionMatch) {
+      const [_, display, id] = mentionMatch;
+      return (
+        <Link
+          key={`mention-${index}`}
+          href={`/movies/${id}`}
+          className="text-blue-500 hover:underline"
+        >
+          @{display}
+        </Link>
+      );
+    }
+
+    // Group mention: #[groupName](id)
+    const groupMatch = part.match(/#\[(.*?)\]\((.*?)\)/);
+    if (groupMatch) {
+      const [_, display, id] = groupMatch;
+      return (
+        <Link
+          key={`group-${index}`}
+          href={`/groups/${id}`}
+          className="text-green-600 hover:underline"
+        >
+          #{display}
+        </Link>
+      );
+    }
+
+    // Normal text
+    return part;
+  });
+};

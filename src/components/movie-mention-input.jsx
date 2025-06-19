@@ -11,6 +11,7 @@ export default function MovieMentionInput({
   onChange,
   placeholder,
   enableDropZone = false,
+  minHeight = 100,
 }) {
   const t = useTranslations("Groups");
   const [movieSearchQuery, setMovieSearchQuery] = useState("");
@@ -217,10 +218,12 @@ export default function MovieMentionInput({
             backgroundColor: "transparent",
             fontSize: 14,
             fontWeight: "normal",
+            border: "1px solid #e5e7eb", // thêm border cho control
+            borderRadius: 8, // optional, match suggestions
           },
           "&multiLine": {
             control: {
-              minHeight: 100,
+              minHeight: minHeight,
             },
             highlighter: {
               padding: 9,
