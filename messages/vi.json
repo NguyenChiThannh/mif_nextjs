@@ -434,7 +434,8 @@
     "reject_report_successful": "Từ chối thành công",
     "edit_post_successful": "Chỉnh sửa bài viết thành công",
     "delete_post_successful": "Xóa bài viết thành công",
-    "toggle_auto_moderation_successful": " Cập nhật trạng thái tự động kiểm duyệt thành công"
+    "toggle_auto_moderation_successful": " Cập nhật trạng thái tự động kiểm duyệt thành công",
+    "export_excel_successful": "Xuất Excel thành công"
   },
   "duration": "Thời lượng",
   "minutes": "phút",

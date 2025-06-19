@@ -434,7 +434,8 @@
     "reject_report_successful": "Reject successful",
     "edit_post_successful": "Edit post successful",
     "delete_post_successful": "Delete post successful",
-    "toggle_auto_moderation_successful": " Update auto-moderation status successful"
+    "toggle_auto_moderation_successful": " Update auto-moderation status successful",
+    "export_excel_successful": "Export Excel successful"
   },
   "duration": "Duration",
   "minutes": "minutes",
