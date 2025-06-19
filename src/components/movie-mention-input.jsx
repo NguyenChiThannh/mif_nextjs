@@ -8,6 +8,8 @@ import { useState, useEffect } from "react";
 
 export default function MovieMentionInput({
   value,
+  setMentions,
+  cleanMentions,
   onChange,
   placeholder,
   enableDropZone = false,
@@ -42,9 +44,36 @@ export default function MovieMentionInput({
     }
   }, [groupSearchQuery, groupSearchResults]);
 
-  const handleChange = (event, newValue, newPlainTextValue, mentions) => {
-    console.log("Handle Change:", { newValue, newPlainTextValue, mentions });
-    onChange(newValue);
+  const handleChange = (event, markupText, plainText, mentionsParam) => {
+    console.log("Current mentions param:", mentionsParam);
+
+    if (setMentions !== undefined) {
+        setMentions((prev) => {
+        const newOnes = mentionsParam
+          .filter((m) => !prev.some((p) => p.id === m.id))
+          .map((m) => {
+            // Cách lấy trigger: nhìn ký tự ngay trước vị trí m.index
+            const triggerChar = markupText[m.index];
+            const type = triggerChar === '@' ? 'movie' : triggerChar === '#' ? 'group' : 'unknown';
+
+            return {
+              id: m.id,
+              name: m.display,
+              type: type,
+              count: 1,
+            };
+          });
+
+        if (newOnes.length > 0) {
+          const updated = cleanMentions([...prev, ...newOnes]);
+          return updated;
+        }
+
+        // Nếu không có gì mới, giữ nguyên
+        return prev;
+      });
+    }
+    onChange(markupText);
   };
 
   const handleMovieSearch = (query) => {
@@ -218,8 +247,16 @@ export default function MovieMentionInput({
             backgroundColor: "transparent",
             fontSize: 14,
             fontWeight: "normal",
-            border: "1px solid #e5e7eb", // thêm border cho control
-            borderRadius: 8, // optional, match suggestions
+            border: "1px solid #e5e7eb",
+            borderRadius: 8,
+          },
+          input: {
+            padding: 9,
+            border: "none",
+            outline: "none",
+            "&focused": {
+              border: "1px solid #d41c0f",
+            },
           },
           "&multiLine": {
             control: {
@@ -232,6 +269,10 @@ export default function MovieMentionInput({
             input: {
               padding: 9,
               border: "1px solid transparent",
+              "&focused": {
+                border: "1px solid #d41c0f",
+                boxShadow: "0 0 0 3px rgba(225, 29, 72, 0.2)",
+              },
             },
           },
           suggestions: {
@@ -305,7 +346,7 @@ export default function MovieMentionInput({
           renderSuggestion={renderGroupSuggestion}
           markup="#[__display__](__id__)"
           style={{
-            backgroundColor: "rgba(34, 197, 94, 0.87)",
+            backgroundColor: "rgba(134, 242, 174, 0.80)",
             borderRadius: "5px",
           }}
         />

@@ -108,9 +108,11 @@ export default function ChatBotBubble() {
 
     let mention = "";
     if (dragData.type === "group") {
-      mention = `#${dragData.name}`;
+      // Group -> #[name](id)
+      mention = `#[${dragData.name}](${dragData.id})`;
     } else if (dragData.type === "movie") {
-      mention = `@${dragData.name}`;
+      // Movie -> @[name](id)
+      mention = `@[${dragData.name}](${dragData.id})`;
     }
 
     if (mention) {
@@ -420,7 +422,7 @@ export default function ChatBotBubble() {
                       {/* User message */}
                       <div className="flex justify-end">
                         <div className="bg-primary text-primary-foreground px-3 py-2 rounded-lg max-w-[85%]">
-                          {renderContent(chat.query)}
+                          {renderContent(chat.query, 'chat')}
                         </div>
                       </div>
                       {/* AI response or loading */}
@@ -565,6 +567,8 @@ export default function ChatBotBubble() {
               >
                 <MovieMentionInput
                   minHeight={10}
+                  cleanMentions={cleanMentions}
+                  setMentions={setMentions}
                   value={input}
                   onChange={setInput}
                   placeholder={
