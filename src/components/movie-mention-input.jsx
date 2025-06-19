@@ -3,49 +3,112 @@
 import { MentionsInput, Mention } from "react-mentions";
 import { useTranslations } from "next-intl";
 import { movieApi } from "@/services/movieApi";
+import { groupsApi } from "@/services/groupsApi";
 import { useState, useEffect } from "react";
 
-export default function MovieMentionInput({ value, onChange, placeholder }) {
+export default function MovieMentionInput({
+  value,
+  onChange,
+  placeholder,
+  enableDropZone = false,
+}) {
   const t = useTranslations("Groups");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
+  const [movieSearchQuery, setMovieSearchQuery] = useState("");
+  const [groupSearchQuery, setGroupSearchQuery] = useState("");
+  const [movieSuggestions, setMovieSuggestions] = useState([]);
+  const [groupSuggestions, setGroupSuggestions] = useState([]);
+  const [isDragOver, setIsDragOver] = useState(false);
 
-  const { data: searchResults, isLoading } =
-    movieApi.query.useSearchMoviesByTitle(0, 5, searchQuery);
+  const { data: movieSearchResults, isLoading: isLoadingMovies } =
+    movieApi.query.useSearchMoviesByTitle(0, 5, movieSearchQuery);
+
+  const { data: groupSearchResults, isLoading: isLoadingGroups } =
+    groupsApi.query.useSearchGroupByGroupName(groupSearchQuery);
 
   useEffect(() => {
-    console.log("Search Query:", searchQuery);
-    console.log("Search Results:", searchResults);
-    if (searchResults?.content) {
-      setSuggestions(searchResults.content);
+    console.log("Movie Search Query:", movieSearchQuery);
+    console.log("Movie Search Results:", movieSearchResults);
+    if (movieSearchResults?.content) {
+      setMovieSuggestions(movieSearchResults.content);
     }
-  }, [searchQuery, searchResults]);
+  }, [movieSearchQuery, movieSearchResults]);
+
+  useEffect(() => {
+    console.log("Group Search Query:", groupSearchQuery);
+    console.log("Group Search Results:", groupSearchResults);
+    if (groupSearchResults?.content) {
+      setGroupSuggestions(groupSearchResults.content);
+    }
+  }, [groupSearchQuery, groupSearchResults]);
 
   const handleChange = (event, newValue, newPlainTextValue, mentions) => {
     console.log("Handle Change:", { newValue, newPlainTextValue, mentions });
     onChange(newValue);
   };
 
-  const handleSearch = (query) => {
-    console.log("Handle Search:", query);
-    setSearchQuery(query);
+  const handleMovieSearch = (query) => {
+    console.log("Handle Movie Search:", query);
+    setMovieSearchQuery(query);
   };
 
-  const renderSuggestion = (
+  const handleGroupSearch = (query) => {
+    console.log("Handle Group Search:", query);
+    setGroupSearchQuery(query);
+  };
+
+  // Drop zone handlers
+  const handleDragOver = (e) => {
+    if (!enableDropZone) return;
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e) => {
+    if (!enableDropZone) return;
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e) => {
+    if (!enableDropZone) return;
+    e.preventDefault();
+    setIsDragOver(false);
+
+    try {
+      const dragData = JSON.parse(e.dataTransfer.getData("application/json"));
+      console.log("Dropped data:", dragData);
+
+      let mentionText = "";
+      if (dragData.type === "movie") {
+        mentionText = `@[${dragData.name}](${dragData.id})`;
+      } else if (dragData.type === "group") {
+        mentionText = `#[${dragData.name}](${dragData.id})`;
+      }
+
+      if (mentionText) {
+        const newValue = value ? `${value} ${mentionText}` : mentionText;
+        onChange(newValue);
+      }
+    } catch (error) {
+      console.error("Error parsing drag data:", error);
+    }
+  };
+
+  const renderMovieSuggestion = (
     entry,
     search,
     highlightedDisplay,
     index,
     focused
   ) => {
-    console.log("Render Suggestion:", {
+    console.log("Render Movie Suggestion:", {
       entry,
       search,
       highlightedDisplay,
       index,
       focused,
     });
-    const movie = suggestions.find((m) => m.id === entry.id);
+    const movie = movieSuggestions.find((m) => m.id === entry.id);
     console.log("Found Movie:", movie);
     if (!movie) return null;
 
@@ -80,80 +143,170 @@ export default function MovieMentionInput({ value, onChange, placeholder }) {
     );
   };
 
+  const renderGroupSuggestion = (
+    entry,
+    search,
+    highlightedDisplay,
+    index,
+    focused
+  ) => {
+    console.log("Render Group Suggestion:", {
+      entry,
+      search,
+      highlightedDisplay,
+      index,
+      focused,
+    });
+    const group = groupSuggestions.find((g) => g.id === entry.id);
+    console.log("Found Group:", group);
+    if (!group) return null;
+
+    return (
+      <div
+        className={`flex items-center gap-3 p-2 rounded-md transition-colors duration-150 ${
+          focused ? "bg-green-100" : "bg-white"
+        }`}
+        style={{
+          minWidth: 220,
+          boxShadow: focused ? "0 2px 8px rgba(0,0,0,0.08)" : undefined,
+        }}
+      >
+        <img
+          src={group.avatarUrl || "/group_default.jpg"}
+          alt={group.groupName}
+          className="w-10 h-10 object-cover rounded-full shadow border border-gray-200 bg-gray-50"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/group_default.jpg";
+          }}
+        />
+        <div className="flex flex-col justify-center">
+          <span className="font-semibold text-base text-gray-800">
+            {group.groupName}
+          </span>
+          <span className="text-xs text-gray-500">
+            {group.memberCount} thành viên
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <MentionsInput
-      value={value}
-      onChange={handleChange}
-      placeholder={placeholder}
-      className="mentions"
-      style={{
-        control: {
-          backgroundColor: "transparent",
-          fontSize: 14,
-          fontWeight: "normal",
-        },
-        "&multiLine": {
+    <div
+      className={`relative ${enableDropZone ? "drop-zone" : ""}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {enableDropZone && isDragOver && (
+        <div className="absolute inset-0 bg-primary/10 border-2 border-dashed border-primary rounded-lg flex items-center justify-center z-50 pointer-events-none">
+          <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg shadow-lg">
+            <span className="font-medium">Thả để mention</span>
+          </div>
+        </div>
+      )}
+
+      <MentionsInput
+        value={value}
+        onChange={handleChange}
+        placeholder={placeholder}
+        className="mentions"
+        style={{
           control: {
-            minHeight: 100,
+            backgroundColor: "transparent",
+            fontSize: 14,
+            fontWeight: "normal",
           },
-          highlighter: {
-            padding: 9,
-            border: "1px solid transparent",
-          },
-          input: {
-            padding: 9,
-            border: "1px solid transparent",
-          },
-        },
-        suggestions: {
-          list: {
-            background: "white",
-            border: "1px solid #e5e7eb",
-            borderRadius: 8,
-            boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
-            marginTop: 4,
-            padding: 0,
-            minWidth: 240,
-            maxWidth: 340,
-            maxHeight: 320,
-            overflowY: "auto",
-            zIndex: 100,
-          },
-          item: {
-            padding: 0,
-            margin: 0,
-            border: 0,
-            background: "none",
-            "&focused": {
-              backgroundColor: "#e0f2fe",
+          "&multiLine": {
+            control: {
+              minHeight: 100,
+            },
+            highlighter: {
+              padding: 9,
+              border: "1px solid transparent",
+            },
+            input: {
+              padding: 9,
+              border: "1px solid transparent",
             },
           },
-        },
-      }}
-    >
-      <Mention
-        trigger="@"
-        data={(query, callback) => {
-          console.log("Mention Data Query:", query);
-          handleSearch(query);
-          if (suggestions.length > 0) {
-            const formattedData = suggestions.map((movie) => ({
-              id: movie.id,
-              display: movie.title,
-            }));
-            console.log("Formatted Data for Callback:", formattedData);
-            callback(formattedData);
-          } else {
-            callback([]);
-          }
+          suggestions: {
+            list: {
+              background: "white",
+              border: "1px solid #e5e7eb",
+              borderRadius: 8,
+              boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
+              marginTop: 4,
+              padding: 0,
+              minWidth: 240,
+              maxWidth: 340,
+              maxHeight: 320,
+              overflowY: "auto",
+              zIndex: 100,
+            },
+            item: {
+              padding: 0,
+              margin: 0,
+              border: 0,
+              background: "none",
+              "&focused": {
+                backgroundColor: "#e0f2fe",
+              },
+            },
+          },
         }}
-        renderSuggestion={renderSuggestion}
-        markup="@[__display__](__id__)"
-        style={{
-          backgroundColor: "rgba(248, 101, 128, 0.87)",
-          borderRadius: "5px",
-        }}
-      />
-    </MentionsInput>
+      >
+        {/* Movie Mentions - Trigger: @ */}
+        <Mention
+          trigger="@"
+          data={(query, callback) => {
+            console.log("Movie Mention Data Query:", query);
+            handleMovieSearch(query);
+            if (movieSuggestions.length > 0) {
+              const formattedData = movieSuggestions.map((movie) => ({
+                id: movie.id,
+                display: movie.title,
+              }));
+              console.log("Formatted Movie Data for Callback:", formattedData);
+              callback(formattedData);
+            } else {
+              callback([]);
+            }
+          }}
+          renderSuggestion={renderMovieSuggestion}
+          markup="@[__display__](__id__)"
+          style={{
+            backgroundColor: "rgba(248, 101, 128, 0.87)",
+            borderRadius: "5px",
+          }}
+        />
+
+        {/* Group Mentions - Trigger: # */}
+        <Mention
+          trigger="#"
+          data={(query, callback) => {
+            console.log("Group Mention Data Query:", query);
+            handleGroupSearch(query);
+            if (groupSuggestions.length > 0) {
+              const formattedData = groupSuggestions.map((group) => ({
+                id: group.id,
+                display: group.groupName,
+              }));
+              console.log("Formatted Group Data for Callback:", formattedData);
+              callback(formattedData);
+            } else {
+              callback([]);
+            }
+          }}
+          renderSuggestion={renderGroupSuggestion}
+          markup="#[__display__](__id__)"
+          style={{
+            backgroundColor: "rgba(34, 197, 94, 0.87)",
+            borderRadius: "5px",
+          }}
+        />
+      </MentionsInput>
+    </div>
   );
 }

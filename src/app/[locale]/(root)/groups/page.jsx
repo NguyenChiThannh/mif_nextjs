@@ -33,18 +33,32 @@ export default function Groups() {
               </div>
               <div className="flex-1">
                 <h4 className="font-semibold text-foreground mb-1">
-                  🎬 Tính năng mới: Kéo thả Group để Mention!
+                  🎬 Tính năng mới: Kéo thả Group & Movie để Mention!
                 </h4>
                 <p className="text-sm text-muted-foreground">
-                  Bấm vào nút <strong>3 chấm dọc</strong> trên group, sau đó kéo
-                  và thả vào chatbot MIF để tự động mention group đó. Nút 3 chấm
-                  xuất hiện khi hover vào group!
+                  Bấm vào nút <strong>3 chấm dọc</strong> trên group/movie, sau
+                  đó kéo và thả vào chatbot MIF để tự động mention. Nút 3 chấm
+                  xuất hiện khi hover vào card!
                 </p>
-                <div className="flex items-center gap-2 mt-2 text-xs text-primary">
-                  <span className="bg-primary/10 px-2 py-1 rounded">Tip:</span>
-                  <span>
-                    Bấm ⋮ → Kéo &quot;Rạp chiếu nhà mình&quot; → Chatbot = &quot;@Rạp chiếu nhà mình&quot;
-                  </span>
+                <div className="flex flex-col gap-1 mt-2 text-xs text-primary">
+                  <div className="flex items-center gap-2">
+                    <span className="bg-primary/10 px-2 py-1 rounded">
+                      Groups:
+                    </span>
+                    <span>
+                      Bấm ⋮ → Kéo &quot;Rạp chiếu nhà mình&quot; → Chatbot =
+                      &quot;#Rạp chiếu nhà mình&quot;
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-green-500/10 text-green-600 px-2 py-1 rounded">
+                      Movies:
+                    </span>
+                    <span>
+                      Bấm ⋮ → Kéo &quot;Inception&quot; → Chatbot =
+                      &quot;@Inception&quot;
+                    </span>
+                  </div>
                 </div>
               </div>
               <Button

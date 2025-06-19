@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Trash2, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,8 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import useDragAndDrop from "@/hooks/useDragAndDrop";
 import { motion, AnimatePresence } from "framer-motion";
+import { renderContent } from "@/lib/convert";
+import Link from "next/link";
 
 export default function ChatBotBubble() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +28,43 @@ export default function ChatBotBubble() {
   const inputRef = useRef(null);
 
   const { handleDragOver, handleDrop } = useDragAndDrop();
+
+  // Utility function để đảm bảo mentions array luôn distinct
+  const cleanMentions = (mentionsArray) => {
+    const uniqueMentions = new Map();
+
+    mentionsArray.forEach((mention) => {
+      const uniqueKey = `${mention.id}-${mention.type}`;
+      if (uniqueMentions.has(uniqueKey)) {
+        // Nếu đã có, merge count
+        const existing = uniqueMentions.get(uniqueKey);
+        uniqueMentions.set(uniqueKey, {
+          ...existing,
+          count: (existing.count || 1) + (mention.count || 1),
+        });
+      } else {
+        uniqueMentions.set(uniqueKey, {
+          ...mention,
+          count: mention.count || 1,
+        });
+      }
+    });
+
+    return Array.from(uniqueMentions.values());
+  };
+
+  // Function để filter distinct mentions khi gửi backend
+  const getDistinctMentions = (mentionsArray) => {
+    const seen = new Set();
+    return mentionsArray.filter((mention) => {
+      const uniqueKey = `${mention.id}-${mention.type}`;
+      if (seen.has(uniqueKey)) {
+        return false;
+      }
+      seen.add(uniqueKey);
+      return true;
+    });
+  };
 
   // Chat API integration
   const chatWithBotMutation = chatBotApi.mutation.useChatWithBot();
@@ -63,21 +102,38 @@ export default function ChatBotBubble() {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Handle drag and drop
-  const handleGroupDrop = (dragData) => {
+  const handleItemDrop = (dragData) => {
+    console.log("Dropped data:", dragData);
+
+    let mention = "";
     if (dragData.type === "group") {
-      const mention = `@${dragData.name}`;
+      mention = `#${dragData.name}`;
+    } else if (dragData.type === "movie") {
+      mention = `@${dragData.name}`;
+    }
+
+    if (mention) {
       const newInput = input ? `${input} ${mention}` : mention;
       setInput(newInput);
 
-      // Add to mentions array for context
-      setMentions((prev) => [
-        ...prev,
-        {
+      // Add to mentions array for context - với count logic
+      setMentions((prev) => {
+        console.log("Current mentions before update:", prev);
+        console.log("Adding mention:", dragData);
+
+        // Thêm mention mới vào array
+        const newMention = {
           id: dragData.id,
           name: dragData.name,
           type: dragData.type,
-        },
-      ]);
+          count: 1,
+        };
+
+        // Sử dụng cleanMentions để đảm bảo distinct và merge count
+        const updated = cleanMentions([...prev, newMention]);
+        console.log("Updated mentions after clean:", updated);
+        return updated;
+      });
 
       // Focus input
       if (inputRef.current) {
@@ -90,6 +146,8 @@ export default function ChatBotBubble() {
   };
 
   const handleInputDragOver = (e) => {
+    e.preventDefault();
+    console.log("🟡 Drag over chatbot input");
     handleDragOver(e);
     setIsDropZone(true);
   };
@@ -102,7 +160,8 @@ export default function ChatBotBubble() {
   };
 
   const handleInputDrop = (e) => {
-    handleDrop(e, handleGroupDrop);
+    console.log("🎯 Drop on chatbot input");
+    handleDrop(e, handleItemDrop);
     setIsDropZone(false);
   };
 
@@ -129,9 +188,21 @@ export default function ChatBotBubble() {
 
     try {
       console.log("Sending request to backend...");
+
+      // Chuẩn bị mentions data - filter distinct để gửi backend
+      const distinctMentions = getDistinctMentions(mentions);
+      const mentionsForBackend = distinctMentions.map((mention) => ({
+        id: mention.id,
+        name: mention.name,
+        type: mention.type,
+      }));
+
+      console.log("Original mentions:", mentions);
+      console.log("Distinct mentions for backend:", mentionsForBackend);
+
       const response = await chatWithBotMutation.mutateAsync({
         message: input,
-        mentions: mentions, // Send mentions as context
+        mentions: mentionsForBackend, // Send distinct mentions only
       });
       console.log("Received response from backend:", response);
       console.log("Time taken:", Date.now() - startTime, "ms");
@@ -223,50 +294,13 @@ export default function ChatBotBubble() {
   const renderResponse = (response) => {
     if (!response) return null;
 
-    // Check if response contains movie data
-    try {
-      const parsedResponse = JSON.parse(response);
-      if (parsedResponse.type === "movie" && parsedResponse.data) {
-        return (
-          <div className="flex items-stretch gap-4 w-full">
-            <div className="relative overflow-hidden rounded-lg aspect-[3/4] w-24 flex-shrink-0">
-              <Image
-                src={parsedResponse.data.posterUrl}
-                alt={parsedResponse.data.title || "Movie Poster"}
-                fill
-                className="object-cover transition-transform duration-300 hover:scale-105"
-              />
-            </div>
-            <div className="grid gap-1 my-1 min-w-0 flex-1">
-              <h3 className="text-base font-semibold text-foreground line-clamp-2 hover:text-primary transition-colors duration-200">
-                {parsedResponse.data.title}
-              </h3>
-              <div className="grid gap-0.5 text-sm text-muted-foreground">
-                <p>
-                  Năm phát hành:{" "}
-                  {parsedResponse.data.releaseDate?.split("-")[0]}
-                </p>
-                <p>Thời lượng: {parsedResponse.data.duration} phút</p>
-                <p>
-                  <span className="font-medium">
-                    {parsedResponse.data.country}
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        );
-      }
-    } catch (e) {
-      // If response is not JSON or doesn't contain movie data, render as markdown
-      return (
-        <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
-      );
-    }
+    const decodedResponse = response.replace(/\\"/g, '"');
 
     // Default to markdown rendering
     return (
-      <ReactMarkdown rehypePlugins={[rehypeRaw]}>{response}</ReactMarkdown>
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+        {decodedResponse}
+      </ReactMarkdown>
     );
   };
 
@@ -299,7 +333,7 @@ export default function ChatBotBubble() {
           <Button
             variant="ghost"
             onClick={() => setIsOpen(true)}
-            className="relative rounded-full shadow-lg overflow-hidden border border-border w-20 h-20 hover:scale-105 transition-transform duration-300 animate-float"
+            className="relative rounded-full shadow-lg overflow-hidden border border-border w-16 h-16 hover:scale-105 transition-transform duration-300 animate-float"
           >
             <Image
               src="/logo.png"
@@ -441,20 +475,72 @@ export default function ChatBotBubble() {
                 >
                   {mentions.map((mention, index) => (
                     <motion.div
-                      key={mention.id}
+                      key={`${mention.id}-${mention.type}`}
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.8 }}
-                      className="flex items-center gap-1 bg-primary/10 text-primary px-2 py-1 rounded-full text-xs"
+                      className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs ${
+                        mention.type === "movie"
+                          ? "bg-red-100 text-red-600"
+                          : "bg-green-100 text-green-600"
+                      }`}
                     >
-                      <span>@{mention.name}</span>
+                      <span>
+                        {mention.type === "movie" ? "@" : "#"}
+                        {mention.name}
+                        {mention.year && ` (${mention.year})`}
+                        {mention.count > 1 && (
+                          <span className="ml-1 font-semibold">
+                            ×{mention.count}
+                          </span>
+                        )}
+                      </span>
                       <button
                         onClick={() =>
-                          setMentions((prev) =>
-                            prev.filter((m) => m.id !== mention.id)
-                          )
+                          setMentions((prev) => {
+                            console.log("Removing mention:", mention);
+                            console.log(
+                              "Current mentions before remove:",
+                              prev
+                            );
+
+                            const uniqueKey = `${mention.id}-${mention.type}`;
+                            const existingIndex = prev.findIndex(
+                              (m) => `${m.id}-${m.type}` === uniqueKey
+                            );
+
+                            if (existingIndex >= 0) {
+                              const updated = [...prev];
+                              if (updated[existingIndex].count > 1) {
+                                // Giảm count xuống 1
+                                updated[existingIndex] = {
+                                  ...updated[existingIndex],
+                                  count: updated[existingIndex].count - 1,
+                                };
+                                console.log(
+                                  "Updated mentions (decrement):",
+                                  updated
+                                );
+                                return updated;
+                              } else {
+                                // Remove hoàn toàn nếu count = 1
+                                const filtered = prev.filter(
+                                  (m) => `${m.id}-${m.type}` !== uniqueKey
+                                );
+                                console.log(
+                                  "Updated mentions (remove):",
+                                  filtered
+                                );
+                                return filtered;
+                              }
+                            }
+                            console.log(
+                              "No matching mention found, returning unchanged"
+                            );
+                            return prev;
+                          })
                         }
-                        className="hover:bg-primary/20 rounded-full p-0.5"
+                        className="hover:bg-black/10 rounded-full p-0.5"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -486,13 +572,13 @@ export default function ChatBotBubble() {
                   onKeyDown={(e) => e.key === "Enter" && handleSend()}
                   placeholder={
                     isDropZone
-                      ? "Thả group vào đây để mention..."
+                      ? "Thả group/movie vào đây để mention..."
                       : "Nhập tin nhắn..."
                   }
                   disabled={isLoading}
-                  className={`w-full text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border transition-all duration-300 ${
+                  className={`w-full text-sm px-3 py-2 rounded-md bg-muted text-foreground outline-none border transition-all duration-300 relative z-10 ${
                     isDropZone
-                      ? "border-primary bg-primary/5 placeholder-primary/70"
+                      ? "border-primary bg-primary/5 placeholder-primary/70 text-primary font-medium"
                       : "border-border"
                   }`}
                 />
@@ -504,10 +590,10 @@ export default function ChatBotBubble() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="absolute inset-0 bg-primary/10 rounded-md border-2 border-dashed border-primary flex items-center justify-center"
+                      className="absolute inset-0 bg-primary/20 rounded-md border-2 border-dashed border-primary flex items-center justify-center z-20"
                     >
                       <span className="text-primary text-xs font-medium">
-                        Thả để mention group
+                        Thả để mention group/movie
                       </span>
                     </motion.div>
                   )}
