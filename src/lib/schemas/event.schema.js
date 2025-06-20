@@ -14,7 +14,6 @@ export const schemaEvent = z
     startDate: z.any().refine(
       (val) => {
         if (!val) return false;
-        // val là object {year, month, day, hour, minute, ...}
         if (typeof val === 'object' && val.year && val.month && val.day) {
           const date = new Date(
             Date.UTC(
@@ -29,7 +28,6 @@ export const schemaEvent = z
           );
           return date > new Date();
         }
-        // Nếu là string hoặc Date
         const date = new Date(val);
         return date > new Date();
       },
