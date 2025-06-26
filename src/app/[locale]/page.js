@@ -1,14 +1,12 @@
 'use client'
-import Loading from "@/components/loading";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import Loading from '@/components/loading'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 export default function Home() {
-  const router = useRouter();
+  const router = useRouter()
   useEffect(() => {
-    router.push('/home');
-  }, [router]);
+    router.push('/home')
+  }, [router])
 
-  return (
-    <Loading />
-  );
+  return <Loading />
 }

@@ -1,5 +1,5 @@
-'use client';
-import React, { useState } from 'react';
+'use client'
+import React, { useState } from 'react'
 import {
   LineChart,
   Line,
@@ -11,43 +11,43 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-} from 'recharts';
-import { TrendingUp, Tag, Download } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+} from 'recharts'
+import { TrendingUp, Tag, Download } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import * as XLSX from 'xlsx';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { adminStatisticsApi } from '@/services/adminStatisticsApi';
-import { dataTypeOptions } from '@/lib/constant';
+} from '@/components/ui/select'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import * as XLSX from 'xlsx'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { adminStatisticsApi } from '@/services/adminStatisticsApi'
+import { dataTypeOptions } from '@/lib/constant'
 
 export default function MonthlyChart() {
-  const [chartType, setChartType] = useState('line');
-  const [selectedDataType, setSelectedDataType] = useState('users');
+  const [chartType, setChartType] = useState('line')
+  const [selectedDataType, setSelectedDataType] = useState('users')
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString(),
-  );
-  const [showAllMonths, setShowAllMonths] = useState(false);
+  )
+  const [showAllMonths, setShowAllMonths] = useState(false)
   const { data: userStatsData, isLoading: isLoadingUserStatsData } =
-    adminStatisticsApi.query.useGetUserStatisticsByYear(selectedYear);
+    adminStatisticsApi.query.useGetUserStatisticsByYear(selectedYear)
   const { data: postStatsData, isLoading: isLoadingPostStatsData } =
-    adminStatisticsApi.query.useGetPostStatisticsByYear(selectedYear);
+    adminStatisticsApi.query.useGetPostStatisticsByYear(selectedYear)
   const { data: ratingStatsData, isLoading: isLoadingRatingStatsData } =
-    adminStatisticsApi.query.useGetRatingStatisticsByYear(selectedYear);
+    adminStatisticsApi.query.useGetRatingStatisticsByYear(selectedYear)
 
   const exportExcelAnalyticsMutation =
-    adminStatisticsApi.mutation.useExportExcelAnalytics();
+    adminStatisticsApi.mutation.useExportExcelAnalytics()
 
   // Get current date
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth() + 1; // JavaScript months are 0-based
+  const currentDate = new Date()
+  const currentYear = currentDate.getFullYear()
+  const currentMonth = currentDate.getMonth() + 1 // JavaScript months are 0-based
 
   // Danh sách các năm để chọn
   const yearOptions = [
@@ -56,89 +56,89 @@ export default function MonthlyChart() {
     { value: '2026', label: '2026' },
     { value: '2027', label: '2027' },
     { value: '2028', label: '2028' },
-  ];
+  ]
 
   // Lọc dữ liệu theo năm đã chọn
   const getFilteredData = () => {
-    let data;
+    let data
     switch (selectedDataType) {
       case 'users':
-        data = userStatsData;
-        break;
+        data = userStatsData
+        break
       case 'posts':
-        data = postStatsData;
-        break;
+        data = postStatsData
+        break
       case 'ratings':
-        data = ratingStatsData;
-        break;
+        data = ratingStatsData
+        break
       default:
-        return [];
+        return []
     }
 
-    if (!data) return [];
+    if (!data) return []
 
     // Transform API response into chart data format and filter out future months if needed
     return Object.entries(data)
       .filter(([month]) => {
-        const monthNum = parseInt(month);
-        const yearNum = parseInt(selectedYear);
+        const monthNum = parseInt(month)
+        const yearNum = parseInt(selectedYear)
         return (
           showAllMonths ||
           yearNum < currentYear ||
           (yearNum === currentYear && monthNum <= currentMonth)
-        );
+        )
       })
       .map(([month, count]) => ({
         month: `Tháng ${month}`,
         count: count,
-      }));
-  };
+      }))
+  }
 
   const handleExportCSV = () => {
-    const currentData = getFilteredData();
-    let csvContent = `data:text/csv;charset=utf-8,Tháng,Số lượng (${selectedYear})\n`;
+    const currentData = getFilteredData()
+    let csvContent = `data:text/csv;charset=utf-8,Tháng,Số lượng (${selectedYear})\n`
 
     currentData.forEach((item) => {
-      csvContent += `${item.month},${item.count}\n`;
-    });
+      csvContent += `${item.month},${item.count}\n`
+    })
 
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
+    const encodedUri = encodeURI(csvContent)
+    const link = document.createElement('a')
+    link.setAttribute('href', encodedUri)
     link.setAttribute(
       'download',
       `thong_ke_${selectedDataType}_${selectedYear}.csv`,
-    );
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
+    )
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   const handleExportExcel = () => {
-    const currentData = getFilteredData();
-    const worksheet = XLSX.utils.json_to_sheet(currentData);
-    const workbook = XLSX.utils.book_new();
+    const currentData = getFilteredData()
+    const worksheet = XLSX.utils.json_to_sheet(currentData)
+    const workbook = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(
       workbook,
       worksheet,
       `Thống kê ${selectedYear}`,
-    );
+    )
     XLSX.writeFile(
       workbook,
       `thong_ke_${selectedDataType}_${selectedYear}.xlsx`,
-    );
-  };
+    )
+  }
 
   const handleExportExcelAnalytics = async () => {
     try {
-      console.log('1. Starting export...');
-      const response = await exportExcelAnalyticsMutation.mutateAsync();
-      console.log('2. Response received:', response);
+      console.log('1. Starting export...')
+      const response = await exportExcelAnalyticsMutation.mutateAsync()
+      console.log('2. Response received:', response)
 
       // Kiểm tra response có đúng format không
       if (!response?.base64Data) {
-        console.error('3. Invalid response format - missing base64Data');
-        throw new Error('Invalid response format');
+        console.error('3. Invalid response format - missing base64Data')
+        throw new Error('Invalid response format')
       }
 
       console.log('4. Response data:', {
@@ -147,77 +147,77 @@ export default function MonthlyChart() {
         fileType: response.fileType,
         base64Length: response.base64Data.length,
         base64Preview: response.base64Data.substring(0, 100) + '...',
-      });
+      })
 
       // Lấy base64 string từ response
-      const base64Data = response.base64Data;
-      console.log('5. Base64 string length:', base64Data.length);
+      const base64Data = response.base64Data
+      console.log('5. Base64 string length:', base64Data.length)
 
       try {
         // Tạo binary string từ base64
-        const binaryString = atob(base64Data);
-        console.log('6. Binary string created, length:', binaryString.length);
+        const binaryString = atob(base64Data)
+        console.log('6. Binary string created, length:', binaryString.length)
 
         // Chuyển binary string thành array buffer
-        const bytes = new Uint8Array(binaryString.length);
+        const bytes = new Uint8Array(binaryString.length)
         for (let i = 0; i < binaryString.length; i++) {
-          bytes[i] = binaryString.charCodeAt(i);
+          bytes[i] = binaryString.charCodeAt(i)
         }
-        console.log('7. Uint8Array created, length:', bytes.length);
+        console.log('7. Uint8Array created, length:', bytes.length)
 
         // Tạo blob từ array buffer
         const blob = new Blob([bytes], {
           type:
             response.fileType ||
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        });
+        })
         console.log('8. Blob created:', {
           size: blob.size,
           type: blob.type,
-        });
+        })
 
         // Tạo object URL
-        const url = URL.createObjectURL(blob);
-        console.log('9. URL created:', url);
+        const url = URL.createObjectURL(blob)
+        console.log('9. URL created:', url)
 
         // Tạo temporary link để download
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = response.fileName;
+        const link = document.createElement('a')
+        link.href = url
+        link.download = response.fileName
         console.log(
           '10. Download link created with filename:',
           response.fileName,
-        );
+        )
 
         // Thêm vào document và click
-        document.body.appendChild(link);
-        console.log('11. Link added to document');
+        document.body.appendChild(link)
+        console.log('11. Link added to document')
 
         // Click với timeout nhỏ để đảm bảo browser kịp xử lý
         setTimeout(() => {
-          link.click();
-          console.log('12. Click triggered');
+          link.click()
+          console.log('12. Click triggered')
 
           // Cleanup sau click
           setTimeout(() => {
-            URL.revokeObjectURL(url);
-            document.body.removeChild(link);
-            console.log('13. Cleanup completed');
-          }, 100);
-        }, 100);
+            URL.revokeObjectURL(url)
+            document.body.removeChild(link)
+            console.log('13. Cleanup completed')
+          }, 100)
+        }, 100)
       } catch (blobError) {
-        console.error('Error creating blob:', blobError);
-        throw blobError;
+        console.error('Error creating blob:', blobError)
+        throw blobError
       }
     } catch (error) {
-      console.error('Error in export:', error);
+      console.error('Error in export:', error)
       console.error('Error details:', {
         name: error.name,
         message: error.message,
         response: error.response,
-      });
+      })
     }
-  };
+  }
 
   return (
     <div className='p-4'>
@@ -273,12 +273,12 @@ export default function MonthlyChart() {
                 </SelectTrigger>
                 <SelectContent>
                   {yearOptions.map((option) => {
-                    if (parseInt(option.value) > currentYear) return null;
+                    if (parseInt(option.value) > currentYear) return null
                     return (
                       <SelectItem key={option.value} value={option.value}>
                         {option.label}
                       </SelectItem>
-                    );
+                    )
                   })}
                 </SelectContent>
               </Select>
@@ -523,5 +523,5 @@ export default function MonthlyChart() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

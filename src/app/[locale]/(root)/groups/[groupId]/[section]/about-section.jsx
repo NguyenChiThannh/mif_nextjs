@@ -37,11 +37,11 @@ export default function AboutSection({ group, members, t }) {
 
   return (
     <motion.div
-      initial="hidden"
-      whileInView="visible"
+      initial='hidden'
+      whileInView='visible'
       viewport={{ once: true }}
       variants={containerVariants}
-      className="space-y-8"
+      className='space-y-8'
     >
       {/* Information Group */}
       <motion.div variants={itemVariants}>
@@ -67,55 +67,55 @@ export default function AboutSection({ group, members, t }) {
 
 function CardInformationGroup({ group, t, movieCategories }) {
   return (
-    <Card className="w-full max-w-3xl mx-auto border-border bg-card mt-6">
+    <Card className='w-full max-w-3xl mx-auto border-border bg-card mt-6'>
       <CardContent>
-        <div className="grid gap-6 mt-6">
-          <div className="flex justify-between items-center">
-            <p className="text-lg font-bold text-foreground flex items-center">
+        <div className='grid gap-6 mt-6'>
+          <div className='flex justify-between items-center'>
+            <p className='text-lg font-bold text-foreground flex items-center'>
               {t('title_about')}
             </p>
           </div>
-          <Separator className="bg-border" />
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <Separator className='bg-border' />
+          <p className='text-sm text-muted-foreground leading-relaxed'>
             {group.description}
           </p>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             {group.isPublic ? (
-              <div className="space-y-2">
-                <p className="flex gap-2 font-medium text-foreground items-center">
-                  <Users className="h-4 w-4 text-primary" />
+              <div className='space-y-2'>
+                <p className='flex gap-2 font-medium text-foreground items-center'>
+                  <Users className='h-4 w-4 text-primary' />
                   {t('public')}
                 </p>
-                <p className="text-sm text-muted-foreground pl-6">
+                <p className='text-sm text-muted-foreground pl-6'>
                   &middot; {t('public_description')}
                 </p>
               </div>
             ) : (
-              <div className="space-y-2">
-                <p className="flex gap-2 font-medium text-foreground items-center">
-                  <Lock className="h-4 w-4 text-primary" />
+              <div className='space-y-2'>
+                <p className='flex gap-2 font-medium text-foreground items-center'>
+                  <Lock className='h-4 w-4 text-primary' />
                   {t('private')}
                 </p>
-                <p className="text-sm text-muted-foreground pl-6">
+                <p className='text-sm text-muted-foreground pl-6'>
                   &middot; {t('private_description')}
                 </p>
               </div>
             )}
-            <div className="space-y-2">
-              <p className="flex gap-2 font-medium text-foreground items-center">
-                <Eye className="h-4 w-4 text-primary" />
+            <div className='space-y-2'>
+              <p className='flex gap-2 font-medium text-foreground items-center'>
+                <Eye className='h-4 w-4 text-primary' />
                 {t('display')}
               </p>
-              <p className="text-sm text-muted-foreground pl-6">
+              <p className='text-sm text-muted-foreground pl-6'>
                 &middot; {t('display_description')}
               </p>
             </div>
-            <div className="space-y-2">
-              <p className="flex gap-2 font-medium text-foreground items-center">
-                <SquareLibrary className="h-4 w-4 text-primary" />
+            <div className='space-y-2'>
+              <p className='flex gap-2 font-medium text-foreground items-center'>
+                <SquareLibrary className='h-4 w-4 text-primary' />
                 {t('category')}
               </p>
-              <p className="text-sm text-muted-foreground pl-6">
+              <p className='text-sm text-muted-foreground pl-6'>
                 &middot;{' '}
                 {movieCategories?.find(
                   (category) => category.id === group.categoryId,
@@ -131,36 +131,36 @@ function CardInformationGroup({ group, t, movieCategories }) {
 
 function CardMemberGroup({ group, members, t }) {
   return (
-    <Card className="w-full max-w-3xl mx-auto border-border bg-card">
+    <Card className='w-full max-w-3xl mx-auto border-border bg-card'>
       <CardContent>
-        <div className="grid gap-6 mt-6">
-          <div className="flex items-center gap-2">
-            <p className="text-lg font-bold text-foreground">{t('members')}</p>
-            <span className="text-sm text-muted-foreground">
+        <div className='grid gap-6 mt-6'>
+          <div className='flex items-center gap-2'>
+            <p className='text-lg font-bold text-foreground'>{t('members')}</p>
+            <span className='text-sm text-muted-foreground'>
               · {members?.numberOfElements}
             </span>
           </div>
-          <Separator className="bg-border" />
+          <Separator className='bg-border' />
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3 }}
-            className="flex items-center gap-2"
+            className='flex items-center gap-2'
           >
             <GroupAvatar
               images={members?.content?.map((user) => user.avatar)}
               names={members?.content?.map((user) => user?.displayName)}
-              size="w-12 h-12"
+              size='w-12 h-12'
             />
           </motion.div>
           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
             <Button
-              variant="secondary"
-              className="w-full bg-muted hover:bg-muted/80 text-muted-foreground transition-colors duration-200"
+              variant='secondary'
+              className='w-full bg-muted hover:bg-muted/80 text-muted-foreground transition-colors duration-200'
             >
               <Link
                 href={`/groups/${group?.id}/members`}
-                className="w-full h-full"
+                className='w-full h-full'
               >
                 {t('button_see_all_members')}
               </Link>
@@ -174,27 +174,27 @@ function CardMemberGroup({ group, members, t }) {
 
 function CardActivityGroup({ group, t }) {
   return (
-    <Card className="w-full max-w-3xl mx-auto border-border bg-card">
+    <Card className='w-full max-w-3xl mx-auto border-border bg-card'>
       <CardContent>
-        <div className="grid gap-6 mt-6">
-          <p className="text-lg font-bold text-foreground">{t('activity')}</p>
-          <Separator className="bg-border" />
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <p className="flex gap-2 font-medium text-foreground items-center">
-                <Clock5 className="h-4 w-4 text-primary" />
+        <div className='grid gap-6 mt-6'>
+          <p className='text-lg font-bold text-foreground'>{t('activity')}</p>
+          <Separator className='bg-border' />
+          <div className='space-y-4'>
+            <div className='space-y-2'>
+              <p className='flex gap-2 font-medium text-foreground items-center'>
+                <Clock5 className='h-4 w-4 text-primary' />
                 {t('date_of_establishment')}
               </p>
-              <p className="text-sm text-muted-foreground pl-6">
+              <p className='text-sm text-muted-foreground pl-6'>
                 &middot; {t('established_on')}: {formatDate(group?.createdAt)}
               </p>
             </div>
-            <div className="space-y-2">
-              <p className="flex gap-2 font-medium text-foreground items-center">
-                <CalendarDays className="h-4 w-4 text-primary" />
+            <div className='space-y-2'>
+              <p className='flex gap-2 font-medium text-foreground items-center'>
+                <CalendarDays className='h-4 w-4 text-primary' />
                 Bài viết
               </p>
-              <p className="text-sm text-muted-foreground pl-6">
+              <p className='text-sm text-muted-foreground pl-6'>
                 &middot; {group?.weeklyPostCount || 0} {t('week_this_post')}
               </p>
             </div>

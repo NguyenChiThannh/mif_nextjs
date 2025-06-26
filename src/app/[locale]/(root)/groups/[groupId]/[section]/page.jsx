@@ -1,39 +1,39 @@
-'use client';
+'use client'
 
-import { useParams } from 'next/navigation';
-import { Separator } from '@/components/ui/separator';
-import { useTranslations } from 'next-intl';
-import { groupsApi } from '@/services/groupsApi';
-import Loading from '@/components/loading';
-import SideBar from './(component)/sidebar';
-import HeaderGroup from './(component)/header-group';
-import { useIsGroupOwner } from '@/hooks/useIsGroupOwner';
-import AboutSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/about-section';
-import FeedSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/feed-section';
-import MembersSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/members-section';
-import RulesSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/rules-section';
-import Background from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/background';
-import { useGroupStatus } from '@/hooks/useGroupStatus';
-import { canCreatePost, checkSectionAccess } from '@/middleware/groupAccess';
-import EventsSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/events-section';
-import ReportSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/report-section';
-import MembersFeaturedSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/members-featured-section';
+import { useParams } from 'next/navigation'
+import { Separator } from '@/components/ui/separator'
+import { useTranslations } from 'next-intl'
+import { groupsApi } from '@/services/groupsApi'
+import Loading from '@/components/loading'
+import SideBar from './(component)/sidebar'
+import HeaderGroup from './(component)/header-group'
+import { useIsGroupOwner } from '@/hooks/useIsGroupOwner'
+import AboutSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/about-section'
+import FeedSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/feed-section'
+import MembersSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/members-section'
+import RulesSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/rules-section'
+import Background from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/background'
+import { useGroupStatus } from '@/hooks/useGroupStatus'
+import { canCreatePost, checkSectionAccess } from '@/middleware/groupAccess'
+import EventsSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/events-section'
+import ReportSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/report-section'
+import MembersFeaturedSection from '@/app/[locale]/(root)/groups/[groupId]/[section]/members-featured-section'
 
 export default function GroupPage() {
-  const { groupId, section } = useParams();
-  const t = useTranslations('Groups');
+  const { groupId, section } = useParams()
+  const t = useTranslations('Groups')
 
   const { data: group, isLoading: isLoadingGroup } =
-    groupsApi.query.useGetGroupByGroupId(groupId);
+    groupsApi.query.useGetGroupByGroupId(groupId)
   const { data: members, isLoading: isLoadingMember } =
-    groupsApi.query.useGetAllMember(groupId);
+    groupsApi.query.useGetAllMember(groupId)
   const { data: pendingInvitations, isLoading: isLoadingPendingInvitations } =
-    groupsApi.query.useGetPendingInvitations(groupId);
+    groupsApi.query.useGetPendingInvitations(groupId)
   const { data: activeMembers, isLoading: isLoadingActiveMembers } =
-    groupsApi.query.useGetTopActiveUsers(groupId);
+    groupsApi.query.useGetTopActiveUsers(groupId)
 
-  const { status } = useGroupStatus(group?.id);
-  const isOwner = useIsGroupOwner(group);
+  const { status } = useGroupStatus(group?.id)
+  const isOwner = useIsGroupOwner(group)
 
   if (
     isLoadingGroup ||
@@ -41,7 +41,7 @@ export default function GroupPage() {
     isLoadingPendingInvitations ||
     isLoadingActiveMembers
   ) {
-    return <Loading />;
+    return <Loading />
   }
 
   const renderSection = () => {
@@ -50,9 +50,9 @@ export default function GroupPage() {
       status,
       isOwner,
       group.isPublic,
-    );
+    )
     if (!hasAccess) {
-      return null;
+      return null
     }
 
     switch (section) {
@@ -65,9 +65,9 @@ export default function GroupPage() {
             isOwner={isOwner}
             canCreate={canCreatePost(status, isOwner)}
           />
-        );
+        )
       case 'about':
-        return <AboutSection group={group} members={members} t={t} />;
+        return <AboutSection group={group} members={members} t={t} />
       case 'feed':
         return (
           <FeedSection
@@ -77,7 +77,7 @@ export default function GroupPage() {
             isOwner={isOwner}
             canCreate={canCreatePost(status, isOwner)}
           />
-        );
+        )
       case 'members':
         return (
           <MembersSection
@@ -87,13 +87,13 @@ export default function GroupPage() {
             isOwner={isOwner}
             t={t}
           />
-        );
+        )
       case 'events':
-        return <EventsSection />;
+        return <EventsSection />
       case 'rules':
-        return <RulesSection isOwner={isOwner} group={group} t={t} />;
+        return <RulesSection isOwner={isOwner} group={group} t={t} />
       case 'report':
-        return <ReportSection groupId={groupId} />;
+        return <ReportSection groupId={groupId} />
       default:
         return (
           <FeedSection
@@ -103,9 +103,9 @@ export default function GroupPage() {
             isOwner={isOwner}
             canCreate={canCreatePost(status, isOwner)}
           />
-        );
+        )
     }
-  };
+  }
 
   return (
     <div className='flex flex-col min-h-screen bg-background'>
@@ -132,5 +132,5 @@ export default function GroupPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

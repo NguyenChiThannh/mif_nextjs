@@ -1,86 +1,86 @@
-'use client';
+'use client'
 
-import { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'next/navigation';
-import { useAppSelector } from '@/redux/store';
-import { useQueryClient } from '@tanstack/react-query';
-import { useWebSocket } from '@/hooks/useWebSocket';
-import { groupPostApi } from '@/services/groupPostApi';
-import { commentApi } from '@/services/commentApi';
-import useInfiniteScroll from '@/hooks/useInfiniteScroll';
-import Post, { PostSkeleton } from '@/components/post';
-import Comment, { CommentSkeleton } from './(components)/comment';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { ArrowLeft, Send } from 'lucide-react';
-import useUserId from '@/hooks/useUserId';
-import { useTranslations } from 'next-intl';
-import { useRouter, usePathname } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react'
+import { useParams } from 'next/navigation'
+import { useAppSelector } from '@/redux/store'
+import { useQueryClient } from '@tanstack/react-query'
+import { useWebSocket } from '@/hooks/useWebSocket'
+import { groupPostApi } from '@/services/groupPostApi'
+import { commentApi } from '@/services/commentApi'
+import useInfiniteScroll from '@/hooks/useInfiniteScroll'
+import Post, { PostSkeleton } from '@/components/post'
+import Comment, { CommentSkeleton } from './(components)/comment'
+import { Button } from '@/components/ui/button'
+import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { ArrowLeft, Send } from 'lucide-react'
+import useUserId from '@/hooks/useUserId'
+import { useTranslations } from 'next-intl'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function DetailPost() {
-  const { postId } = useParams();
-  const userId = useUserId();
-  const authState = useAppSelector((state) => state.auth.authState);
-  const queryClient = useQueryClient();
-  const t = useTranslations('Groups.Post');
-  const router = useRouter();
-  const pathname = usePathname();
+  const { postId } = useParams()
+  const userId = useUserId()
+  const authState = useAppSelector((state) => state.auth.authState)
+  const queryClient = useQueryClient()
+  const t = useTranslations('Groups.Post')
+  const router = useRouter()
+  const pathname = usePathname()
 
   // State management
-  const [replyContent, setReplyContent] = useState('');
-  const [replyTo, setReplyTo] = useState(null);
-  const [liveComments, setLiveComments] = useState([]);
+  const [replyContent, setReplyContent] = useState('')
+  const [replyTo, setReplyTo] = useState(null)
+  const [liveComments, setLiveComments] = useState([])
 
   // Queries
   const { data: post, isLoading: isLoadingPost } =
-    groupPostApi.query.useGetPostByPostId(postId);
+    groupPostApi.query.useGetPostByPostId(postId)
   const {
     data,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isLoading: isLoadingComment,
-  } = commentApi.query.useGetAllCommentByPostId(postId);
+  } = commentApi.query.useGetAllCommentByPostId(postId)
 
   // WebSocket connection
   const { isConnected, client } = useWebSocket(
     authState.accessToken,
     `/topic/comments/${postId}`,
     handleNewComment,
-  );
+  )
 
   // Infinite scroll
-  const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
+  const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage)
 
   function handleNewComment(newComment) {
     setLiveComments((prev) => {
-      const isDuplicate = prev.some((comment) => comment.id === newComment.id);
-      if (isDuplicate) return prev;
-      return [newComment, ...prev];
-    });
-    queryClient.invalidateQueries(['comments', postId]);
+      const isDuplicate = prev.some((comment) => comment.id === newComment.id)
+      if (isDuplicate) return prev
+      return [newComment, ...prev]
+    })
+    queryClient.invalidateQueries(['comments', postId])
   }
 
   const handleSendComment = () => {
-    if (!replyContent.trim() || !client?.active) return;
+    if (!replyContent.trim() || !client?.active) return
 
     const comment = {
       postId: postId,
       content: replyContent,
       createAt: new Date().toISOString(),
-    };
+    }
 
     client.publish({
       destination: '/app/comment.sendComment',
       body: JSON.stringify(comment),
-    });
+    })
 
-    setReplyContent('');
-  };
+    setReplyContent('')
+  }
 
   const handleReply = (commentId, content, level) => {
-    if (!content.trim() || !client?.active) return;
+    if (!content.trim() || !client?.active) return
 
     const reply = {
       postId: postId,
@@ -88,65 +88,65 @@ export default function DetailPost() {
       parentId: commentId,
       level: level,
       createAt: new Date().toISOString(),
-    };
+    }
 
     client.publish({
       destination: '/app/comment.reply',
       body: JSON.stringify(reply),
-    });
+    })
 
-    setReplyContent('');
-    setReplyTo(null);
-  };
+    setReplyContent('')
+    setReplyTo(null)
+  }
 
   const handleVote = (comment, voteType) => {
     const currentVote = comment.upvotes.some((id) => id === userId)
       ? 'upvote'
       : comment.downvotes.some((id) => id === userId)
         ? 'downvote'
-        : null;
+        : null
 
     if (currentVote === voteType) {
       client.publish({
         destination: `/app/comment.${voteType}`,
         body: JSON.stringify(comment.id),
-      });
+      })
     } else {
       if (currentVote) {
         client.publish({
           destination: `/app/comment.${currentVote === 'upvote' ? 'downvote' : 'upvote'}`,
           body: JSON.stringify(comment.id),
-        });
+        })
       }
       client.publish({
         destination: `/app/comment.${voteType}`,
         body: JSON.stringify(comment.id),
-      });
+      })
     }
-  };
+  }
 
   // Combine and sort comments
   const combinedComments = useMemo(() => {
-    const commentMap = new Map();
+    const commentMap = new Map()
 
     data?.pages?.forEach((page) => {
       page.content.forEach((comment) => {
         if (!commentMap.has(comment.id)) {
-          commentMap.set(comment.id, comment);
+          commentMap.set(comment.id, comment)
         }
-      });
-    });
+      })
+    })
 
     liveComments.forEach((comment) => {
       if (!commentMap.has(comment.id)) {
-        commentMap.set(comment.id, comment);
+        commentMap.set(comment.id, comment)
       }
-    });
+    })
 
     return Array.from(commentMap.values()).sort(
       (a, b) => new Date(b.createAt) - new Date(a.createAt),
-    );
-  }, [data?.pages, liveComments]);
+    )
+  }, [data?.pages, liveComments])
 
   // Render nested comments
   const renderComments = (comments, level = 1) => {
@@ -194,21 +194,21 @@ export default function DetailPost() {
         )}
         {comment.replies && renderComments(comment.replies, level + 1)}
       </div>
-    ));
-  };
+    ))
+  }
 
   const handleBackHome = () => {
-    console.log('Current pathname:', pathname);
+    console.log('Current pathname:', pathname)
 
-    const segments = pathname.split('/');
+    const segments = pathname.split('/')
     if (segments.length >= 6) {
-      const locale = segments[1];
-      const groupId = segments[3];
-      const newPath = `/${locale}/groups/${groupId}`;
-      console.log('Redirecting to:', newPath);
-      router.push(newPath);
+      const locale = segments[1]
+      const groupId = segments[3]
+      const newPath = `/${locale}/groups/${groupId}`
+      console.log('Redirecting to:', newPath)
+      router.push(newPath)
     }
-  };
+  }
 
   return (
     <div>
@@ -284,5 +284,5 @@ export default function DetailPost() {
       </div>
       <div ref={observerElem} className='mb-4'></div>
     </div>
-  );
+  )
 }

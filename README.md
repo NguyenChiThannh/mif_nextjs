@@ -2,11 +2,15 @@
 
 ## Overview
 
-Movie Insight Forum (MIF) is a comprehensive web application built with Next.js that serves as a platform for movie enthusiasts to discuss, analyze, and share their thoughts about films. The application features a modern UI, real-time interactions, and advanced analytics capabilities.
+Movie Insight Forum (MIF) is a comprehensive web application built with Next.js
+that serves as a platform for movie enthusiasts to discuss, analyze, and share
+their thoughts about films. The application features a modern UI, real-time
+interactions, and advanced analytics capabilities.
 
 ## Features
 
 ### Core Features
+
 - 🎬 Movie information and reviews
 - 👥 User groups and communities
 - 📝 Article posting and sharing
@@ -18,6 +22,7 @@ Movie Insight Forum (MIF) is a comprehensive web application built with Next.js 
 - 🔔 Real-time notifications
 
 ### Admin Dashboard
+
 - 📈 Sentiment analysis visualization
 - 📊 User engagement metrics
 - 📑 Content management
@@ -25,6 +30,7 @@ Movie Insight Forum (MIF) is a comprehensive web application built with Next.js 
 - 👥 User management
 
 ### Technical Features
+
 - 🔐 Authentication and authorization
 - 🌙 Dark/Light mode support
 - 📱 Responsive design
@@ -37,6 +43,7 @@ Movie Insight Forum (MIF) is a comprehensive web application built with Next.js 
 ## Tech Stack
 
 ### Core Framework & Libraries
+
 - **Next.js 14**: React framework with SSR and SSG support
 - **React 18**: UI library
 - **TypeScript**: Static type checking
@@ -48,6 +55,7 @@ Movie Insight Forum (MIF) is a comprehensive web application built with Next.js 
 - **Zod**: Schema validation
 
 ### Data Management & API
+
 - **Axios**: HTTP client
 - **React Query**: Data fetching and caching
 - **Redux Persist**: State persistence
@@ -55,48 +63,57 @@ Movie Insight Forum (MIF) is a comprehensive web application built with Next.js 
 - **STOMP.js**: WebSocket protocol
 
 ### Rich Content & Editing
+
 - **QuillJS**: Rich text editor
 - **React Markdown**: Markdown rendering
 - **HTML React Parser**: HTML parsing
 
 ### Data Visualization
+
 - **Chart.js**: Charting library
 
 ### File Handling & Export
+
 - **XLSX**: Excel file handling
 - **ExcelJS**: Advanced Excel operations
 - **PDFKit**: PDF generation
 
 ### AI & Bot Integration
+
 - **Google Generative AI**: AI integration
 - **Node Telegram Bot API**: Telegram bot integration
 
 ### Authentication & Security
+
 - **React OAuth Google**: Google authentication
 
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js >= 16.x
 - NPM >= 7.x or Yarn >= 1.x
 
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone [repository-url]
 cd mif_nextjs
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 # or
 yarn install
 ```
 
-3. Set up environment variables:
-Create a `.env.local` file in the root directory with the following variables:
+3. Set up environment variables: Create a `.env.local` file in the root
+   directory with the following variables:
+
 ```env
 NEXT_PUBLIC_APP_URL=your_app_url
 NEXT_PUBLIC_TELEGRAM_BOT_TOKEN=your_telegram_bot_token
@@ -104,6 +121,7 @@ NEXT_PUBLIC_GEMINI_API_KEY=your_gemini_api_key
 ```
 
 4. Run the development server:
+
 ```bash
 npm run dev
 # or
@@ -139,14 +157,17 @@ src/
 
 ## API Documentation
 
-The frontend integrates with a backend API. For detailed API documentation, visit:
+The frontend integrates with a backend API. For detailed API documentation,
+visit:
 [API Documentation](https://documenter.getpostman.com/view/21875363/2sAXqp83yy#93b88b25-cf2c-444c-8f38-ed74c47524f1)
 
 ## Telegram Bot Integration
 
-The application includes an automated reporting system that integrates with Telegram Bot API and Google Gemini API.
+The application includes an automated reporting system that integrates with
+Telegram Bot API and Google Gemini API.
 
 ### Bot Commands
+
 - `/report` - Shows available report types
 - `/report pdf` - Generates and sends a PDF report
 - `/report excel` - Generates and sends an Excel report
@@ -161,8 +182,10 @@ The application includes an automated reporting system that integrates with Tele
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for
+details.
 
 ## Support
 
-For support, please open an issue in the repository or contact the development team.
+For support, please open an issue in the repository or contact the development
+team.

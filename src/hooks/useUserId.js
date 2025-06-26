@@ -1,12 +1,12 @@
-import useIsLogin from '@/hooks/useIsLogin';
-import { useSelector } from 'react-redux';
+import useIsLogin from '@/hooks/useIsLogin'
+import { useSelector } from 'react-redux'
 
 export const useUserId = () => {
-    const isLogin = useIsLogin();
+  const isLogin = useIsLogin()
 
-    const userId = useSelector((state) => state?.auth?.authState?.id);
+  const userId = useSelector((state) => state?.auth?.authState?.id)
 
-    return isLogin ? userId : null;
+  return isLogin ? userId : null
 }
 
-export default useUserId;
+export default useUserId

@@ -1,8 +1,8 @@
-import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux'
 
 export const useIsLogin = () => {
-    const isLogin = useSelector((state) => state?.auth?.authState?.isLogin);
-    return isLogin;
+  const isLogin = useSelector((state) => state?.auth?.authState?.isLogin)
+  return isLogin
 }
 
-export default useIsLogin;
+export default useIsLogin

@@ -1,18 +1,18 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    newsState: {},
-};
+  newsState: {},
+}
 
 export const newsSlice = createSlice({
-    name: "news",
-    initialState,
-    reducers: {
-        setNewsState: (state, action) => {
-            state.newsState = action.payload;
-        },
+  name: 'news',
+  initialState,
+  reducers: {
+    setNewsState: (state, action) => {
+      state.newsState = action.payload
     },
-});
+  },
+})
 
-export const { setNewsState } = newsSlice.actions;
-export const newsReducer = newsSlice.reducer;
+export const { setNewsState } = newsSlice.actions
+export const newsReducer = newsSlice.reducer

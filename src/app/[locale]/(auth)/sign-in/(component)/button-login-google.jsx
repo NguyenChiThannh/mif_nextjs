@@ -19,10 +19,10 @@ function GoogleLoginButton({ t }) {
   const loginWithGoogleMutation = authApi.mutation.useLoginWithGoogle()
 
   return (
-    <div className="w-full flex justify-center">
+    <div className='w-full flex justify-center'>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
-          const idToken = credentialResponse.credential 
+          const idToken = credentialResponse.credential
           if (!idToken) {
             toast.error(tToast('login_google_error'))
             return
@@ -39,7 +39,7 @@ function GoogleLoginButton({ t }) {
                     isLogin: true,
                     accessToken: data.access_token,
                     id,
-                  })
+                  }),
                 )
 
                 fetch('/api/auth', {
@@ -53,7 +53,7 @@ function GoogleLoginButton({ t }) {
                 })
                   .then((res) => res.json())
                   .then(() => {
-                    window.location.href = '/home';
+                    window.location.href = '/home'
                   })
                   .catch((err) => {
                     console.error('Error sending token to server:', err)
@@ -62,7 +62,7 @@ function GoogleLoginButton({ t }) {
               onError: () => {
                 toast.error(tToast('login_google_error'))
               },
-            }
+            },
           )
         }}
         onError={() => {

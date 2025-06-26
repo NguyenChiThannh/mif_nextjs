@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const schemaEvent = z
   .object({
@@ -13,7 +13,7 @@ export const schemaEvent = z
     groupId: z.string().min(1, 'GroupId là bắt buộc'),
     startDate: z.any().refine(
       (val) => {
-        if (!val) return false;
+        if (!val) return false
         if (typeof val === 'object' && val.year && val.month && val.day) {
           const date = new Date(
             Date.UTC(
@@ -25,11 +25,11 @@ export const schemaEvent = z
               val.second || 0,
               val.millisecond || 0,
             ),
-          );
-          return date > new Date();
+          )
+          return date > new Date()
         }
-        const date = new Date(val);
-        return date > new Date();
+        const date = new Date(val)
+        return date > new Date()
       },
       { message: 'Thời gian sự kiện phải ở tương lai' },
     ),
@@ -50,7 +50,7 @@ export const schemaEvent = z
           path: ['link'],
           code: z.ZodIssueCode.custom,
           message: 'Link sự kiện là bắt buộc',
-        });
+        })
       }
     }
     if (data.eventType === 'OFFLINE') {
@@ -59,7 +59,7 @@ export const schemaEvent = z
           path: ['location'],
           code: z.ZodIssueCode.custom,
           message: 'Địa điểm là bắt buộc',
-        });
+        })
       }
     }
-  });
+  })

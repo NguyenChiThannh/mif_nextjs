@@ -4,30 +4,35 @@ import { groupsApi } from '@/services/groupsApi'
 import React from 'react'
 
 export default function SectionExploreGroup({ movieCategories, t }) {
-    const { isLoading, data: groupNotJoin } = groupsApi.query.useFindGroupUserNotJoin(4)
+  const { isLoading, data: groupNotJoin } =
+    groupsApi.query.useFindGroupUserNotJoin(4)
 
-    return (
-        <>
-            <div className="mt-4">
-                <Title title={t("you_might_be_interested")} isMore={false} />
-            </div>
+  return (
+    <>
+      <div className='mt-4'>
+        <Title title={t('you_might_be_interested')} isMore={false} />
+      </div>
 
-            <div className="flex-1 mt-4 mb-8">
-                <div className="grid gap-8 md:grid-cols-3 lg:grid-cols-4">
-                    {isLoading ? (
-                        <>
-                            {Array.from({ length: 4 }).map((_, index) => (
-                                <CardGroupsSkeleton key={index} />
-                            ))}
-                        </>
-                    )
-                        :
-                        (groupNotJoin.content.map(group => (
-                            <CardGroups key={group.id} group={group} initialStatus="join" categories={movieCategories} />
-                        )))
-                    }
-                </div>
-            </div>
-        </>
-    )
+      <div className='flex-1 mt-4 mb-8'>
+        <div className='grid gap-8 md:grid-cols-3 lg:grid-cols-4'>
+          {isLoading ? (
+            <>
+              {Array.from({ length: 4 }).map((_, index) => (
+                <CardGroupsSkeleton key={index} />
+              ))}
+            </>
+          ) : (
+            groupNotJoin.content.map((group) => (
+              <CardGroups
+                key={group.id}
+                group={group}
+                initialStatus='join'
+                categories={movieCategories}
+              />
+            ))
+          )}
+        </div>
+      </div>
+    </>
+  )
 }
