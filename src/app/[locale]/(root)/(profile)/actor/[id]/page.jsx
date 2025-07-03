@@ -21,10 +21,14 @@ export default function Actor() {
   const [isInitialLoading, setIsInitialLoading] = useState(true)
   const [favoriteCount, setFavoriteCount] = useState(0)
 
-  const { data: actor, isLoading: isActorLoading } = actorApi.query.useGetActorById(id)
-  const addFavoriteActorMutation = favoriteActorsApi.mutation.useAddFavoriteActor()
-  const removeFavoriteActorMutation = favoriteActorsApi.mutation.useRemoveFavoriteActor()
-  const isActorFavoriteMutation = favoriteActorsApi.mutation.useIsActorFavorite()
+  const { data: actor, isLoading: isActorLoading } =
+    actorApi.query.useGetActorById(id)
+  const addFavoriteActorMutation =
+    favoriteActorsApi.mutation.useAddFavoriteActor()
+  const removeFavoriteActorMutation =
+    favoriteActorsApi.mutation.useRemoveFavoriteActor()
+  const isActorFavoriteMutation =
+    favoriteActorsApi.mutation.useIsActorFavorite()
 
   // Set initial favorite count
   useEffect(() => {
@@ -48,23 +52,23 @@ export default function Actor() {
 
   const handleLike = () => {
     setLiked(true)
-    setFavoriteCount(prev => prev + 1)
+    setFavoriteCount((prev) => prev + 1)
     addFavoriteActorMutation.mutate(id, {
       onError: () => {
         setLiked(false)
-        setFavoriteCount(prev => prev - 1)
-      }
+        setFavoriteCount((prev) => prev - 1)
+      },
     })
   }
 
   const handleUnlike = () => {
     setLiked(false)
-    setFavoriteCount(prev => prev - 1)
+    setFavoriteCount((prev) => prev - 1)
     removeFavoriteActorMutation.mutate(id, {
       onError: () => {
         setLiked(true)
-        setFavoriteCount(prev => prev + 1)
-      }
+        setFavoriteCount((prev) => prev + 1)
+      },
     })
   }
 
@@ -73,9 +77,9 @@ export default function Actor() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
-      }
-    }
+        staggerChildren: 0.2,
+      },
+    },
   }
 
   const itemVariants = {
@@ -85,16 +89,16 @@ export default function Actor() {
       y: 0,
       transition: {
         duration: 0.5,
-        ease: "easeOut"
-      }
-    }
+        ease: 'easeOut',
+      },
+    },
   }
 
   return (
     <motion.div
-      className="max-w-4xl mx-auto p-4 space-y-8 bg-background min-h-screen"
-      initial="hidden"
-      animate="visible"
+      className='max-w-4xl mx-auto p-4 space-y-8 bg-background min-h-screen'
+      initial='hidden'
+      animate='visible'
       variants={containerVariants}
     >
       <motion.div variants={itemVariants}>
@@ -117,14 +121,14 @@ export default function Actor() {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Title title={t("images")} isMore={false} />
+        <Title title={t('images')} isMore={false} />
         <motion.div
-          className="mt-4"
+          className='mt-4'
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <DynamicImageGallery type="actor" />
+          <DynamicImageGallery type='actor' />
         </motion.div>
       </motion.div>
 

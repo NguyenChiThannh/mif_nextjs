@@ -1,23 +1,22 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { categoryApi } from "@/services/movieCategoriesApi";
-import useUserId from "@/hooks/useUserId";
-import { SectionGroup } from "@/app/[locale]/(root)/groups/(sections)/section-group";
-import SectionExploreGroup from "@/app/[locale]/(root)/groups/(sections)/section-explore-group";
-import { useTranslations } from "next-intl";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { X, Info } from "lucide-react";
+'use client'
+import React, { useEffect, useState } from 'react'
+import { categoryApi } from '@/services/movieCategoriesApi'
+import useUserId from '@/hooks/useUserId'
+import { SectionGroup } from '@/app/[locale]/(root)/groups/(sections)/section-group'
+import SectionExploreGroup from '@/app/[locale]/(root)/groups/(sections)/section-explore-group'
+import { useTranslations } from 'next-intl'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { X, Info } from 'lucide-react'
 
 export default function Groups() {
-  const t = useTranslations("Groups");
-  const userId = useUserId();
-  const [showDragHint, setShowDragHint] = useState(true);
-  const { data: movieCategories } =
-    categoryApi.query.useGetAllmovieCategories();
+  const t = useTranslations('Groups')
+  const userId = useUserId()
+  const [showDragHint, setShowDragHint] = useState(true)
+  const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
 
   return (
-    <div className="flex flex-col w-full min-h-screen">
+    <div className='flex flex-col w-full min-h-screen'>
       {/* Drag and Drop Hint */}
       <AnimatePresence>
         {showDragHint && (
@@ -25,24 +24,24 @@ export default function Groups() {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
-            className="bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-4 mb-6 mx-4 mt-4"
+            className='bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 rounded-lg p-4 mb-6 mx-4 mt-4'
           >
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 mt-0.5">
-                <Info className="h-5 w-5 text-primary" />
+            <div className='flex items-start gap-3'>
+              <div className='flex-shrink-0 mt-0.5'>
+                <Info className='h-5 w-5 text-primary' />
               </div>
-              <div className="flex-1">
-                <h4 className="font-semibold text-foreground mb-1">
+              <div className='flex-1'>
+                <h4 className='font-semibold text-foreground mb-1'>
                   🎬 Tính năng mới: Kéo thả Group & Movie để Mention!
                 </h4>
-                <p className="text-sm text-muted-foreground">
+                <p className='text-sm text-muted-foreground'>
                   Bấm vào nút <strong>3 chấm dọc</strong> trên group/movie, sau
                   đó kéo và thả vào chatbot MIF để tự động mention. Nút 3 chấm
                   xuất hiện khi hover vào card!
                 </p>
-                <div className="flex flex-col gap-1 mt-2 text-xs text-primary">
-                  <div className="flex items-center gap-2">
-                    <span className="bg-primary/10 px-2 py-1 rounded">
+                <div className='flex flex-col gap-1 mt-2 text-xs text-primary'>
+                  <div className='flex items-center gap-2'>
+                    <span className='bg-primary/10 px-2 py-1 rounded'>
                       Groups:
                     </span>
                     <span>
@@ -50,8 +49,8 @@ export default function Groups() {
                       &quot;#Rạp chiếu nhà mình&quot;
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="bg-green-500/10 text-green-600 px-2 py-1 rounded">
+                  <div className='flex items-center gap-2'>
+                    <span className='bg-green-500/10 text-green-600 px-2 py-1 rounded'>
                       Movies:
                     </span>
                     <span>
@@ -62,12 +61,12 @@ export default function Groups() {
                 </div>
               </div>
               <Button
-                variant="ghost"
-                size="sm"
+                variant='ghost'
+                size='sm'
                 onClick={() => setShowDragHint(false)}
-                className="flex-shrink-0 hover:bg-primary/10"
+                className='flex-shrink-0 hover:bg-primary/10'
               >
-                <X className="h-4 w-4" />
+                <X className='h-4 w-4' />
               </Button>
             </div>
           </motion.div>
@@ -77,5 +76,5 @@ export default function Groups() {
       <SectionGroup movieCategories={movieCategories} userId={userId} t={t} />
       <SectionExploreGroup movieCategories={movieCategories} t={t} />
     </div>
-  );
+  )
 }

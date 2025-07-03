@@ -98,7 +98,7 @@ export function Badge({ level, size = 'lg', showLabel = true }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="flex flex-col items-center gap-6"
+      className='flex flex-col items-center gap-6'
     >
       <motion.div
         whileHover={{ scale: 1.1, rotate: 5 }}
@@ -121,7 +121,7 @@ export function Badge({ level, size = 'lg', showLabel = true }) {
             duration: 2,
             ease: 'linear',
           }}
-          className="absolute inset-0 opacity-30 bg-gradient-to-br from-white via-transparent to-transparent"
+          className='absolute inset-0 opacity-30 bg-gradient-to-br from-white via-transparent to-transparent'
         />
 
         {/* Badge icon */}
@@ -134,7 +134,7 @@ export function Badge({ level, size = 'lg', showLabel = true }) {
         </motion.div>
 
         {/* Subtle ring */}
-        <div className="absolute inset-0 rounded-full border border-white/20" />
+        <div className='absolute inset-0 rounded-full border border-white/20' />
       </motion.div>
 
       {showLabel && (
@@ -142,9 +142,9 @@ export function Badge({ level, size = 'lg', showLabel = true }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-center"
+          className='text-center'
         >
-          <h3 className="font-semibold text-xl text-foreground">
+          <h3 className='font-semibold text-xl text-foreground'>
             {badgeInfo.level}
           </h3>
         </motion.div>
@@ -167,10 +167,10 @@ export function Badges() {
   return (
     <motion.div
       variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
+      initial='hidden'
+      whileInView='visible'
       viewport={{ once: true }}
-      className="grid grid-cols-2 md:grid-cols-4 gap-8"
+      className='grid grid-cols-2 md:grid-cols-4 gap-8'
     >
       {BADGE_THRESHOLDS.map((badge) => (
         <motion.div

@@ -1,30 +1,30 @@
-import { privateApi } from "./config";
+import { privateApi } from './config'
 import {
   useInfiniteQuery,
   useQueryClient,
   useMutation,
-} from "@tanstack/react-query";
+} from '@tanstack/react-query'
 
 const QUERY_KEY = {
-  groupChats: () => ["group-chats"],
-  groupMessages: (groupId) => ["group-messages", groupId],
-};
+  groupChats: () => ['group-chats'],
+  groupMessages: (groupId) => ['group-messages', groupId],
+}
 
 const getGroupChats = async () => {
-  const res = await privateApi.get("/group-chats");
-  return res.data;
-};
+  const res = await privateApi.get('/group-chats')
+  return res.data
+}
 
 const getGroupMessages = async ({ groupId, page = 0, size = 8 }) => {
   const res = await privateApi.get(`/chat/group/${groupId}/messages`, {
     params: { page, size },
-  });
-  return res.data;
-};
+  })
+  return res.data
+}
 
 const joinGroupChat = async (groupId) => {
-  const res = await privateApi.post(`/joined-group-chat?groupId=${groupId}`);
-  return res.data;
+  const res = await privateApi.post(`/joined-group-chat?groupId=${groupId}`)
+  return res.data
 }
 
 export const chatApi = {
@@ -34,10 +34,10 @@ export const chatApi = {
         queryKey: QUERY_KEY.groupChats(),
         queryFn: getGroupChats,
         getNextPageParam: (lastPage) => {
-          if (!lastPage || lastPage.last) return undefined;
-          return lastPage.number + 1;
+          if (!lastPage || lastPage.last) return undefined
+          return lastPage.number + 1
         },
-      });
+      })
     },
     useGetGroupMessages(groupId) {
       return useInfiniteQuery({
@@ -45,21 +45,21 @@ export const chatApi = {
         queryFn: ({ pageParam = 0 }) =>
           getGroupMessages({ groupId, page: pageParam }),
         getNextPageParam: (lastPage) => {
-          if (!lastPage || lastPage.last) return undefined;
-          return lastPage.number + 1;
+          if (!lastPage || lastPage.last) return undefined
+          return lastPage.number + 1
         },
-      });
+      })
     },
   },
   mutation: {
     useJoinGroupChat() {
-      const queryClient = useQueryClient();
+      const queryClient = useQueryClient()
       return useMutation({
         mutationFn: joinGroupChat,
         onSuccess: () => {
-          queryClient.invalidateQueries(QUERY_KEY.groupChats());
+          queryClient.invalidateQueries(QUERY_KEY.groupChats())
         },
-      });
+      })
     },
   },
-};
+}

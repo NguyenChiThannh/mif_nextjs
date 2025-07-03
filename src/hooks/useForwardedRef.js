@@ -1,16 +1,16 @@
-import React from "react";
+import React from 'react'
 
 export function useForwardedRef(ref) {
-    const innerRef = React.useRef(null);
+  const innerRef = React.useRef(null)
 
-    React.useEffect(() => {
-        if (!ref) return;
-        if (typeof ref === "function") {
-            ref(innerRef.current);
-        } else {
-            ref.current = innerRef.current;
-        }
-    }, [ref]);
+  React.useEffect(() => {
+    if (!ref) return
+    if (typeof ref === 'function') {
+      ref(innerRef.current)
+    } else {
+      ref.current = innerRef.current
+    }
+  }, [ref])
 
-    return innerRef;
+  return innerRef
 }

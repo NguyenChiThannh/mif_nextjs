@@ -136,36 +136,36 @@ export default function ReportSection({ groupId }) {
 
     return (
       <Dialog open={showAnalysis} onOpenChange={setShowAnalysis}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className='max-w-2xl'>
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-foreground">
+            <DialogTitle className='text-xl font-semibold text-foreground'>
               {t('analysis_title')}
             </DialogTitle>
           </DialogHeader>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className='space-y-6'
           >
-            <div className="space-y-3">
-              <h3 className="font-semibold text-foreground">
+            <div className='space-y-3'>
+              <h3 className='font-semibold text-foreground'>
                 {t('post_title')}
               </h3>
-              <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
+              <p className='text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg'>
                 {analysisData.post.title}
               </p>
-              <h3 className="font-semibold text-foreground">
+              <h3 className='font-semibold text-foreground'>
                 {t('post_content')}
               </h3>
-              <p className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
+              <p className='text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg'>
                 {analysisData.post.content}
               </p>
             </div>
-            <div className="space-y-3">
-              <h3 className="font-semibold text-foreground">
+            <div className='space-y-3'>
+              <h3 className='font-semibold text-foreground'>
                 {t('analysis_results')}
               </h3>
-              <div className="grid grid-cols-2 gap-3">
+              <div className='grid grid-cols-2 gap-3'>
                 {Object.entries(categories).map(
                   ([category, flagged], index) => (
                     <motion.div
@@ -173,18 +173,18 @@ export default function ReportSection({ groupId }) {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
+                      className='flex items-center justify-between p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors'
                     >
-                      <span className="text-sm font-medium text-foreground">
+                      <span className='text-sm font-medium text-foreground'>
                         {category}
                       </span>
-                      <div className="flex items-center gap-2">
+                      <div className='flex items-center gap-2'>
                         {flagged ? (
-                          <XCircle className="h-4 w-4 text-destructive" />
+                          <XCircle className='h-4 w-4 text-destructive' />
                         ) : (
-                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          <CheckCircle2 className='h-4 w-4 text-green-500' />
                         )}
-                        <span className="text-sm font-medium">
+                        <span className='text-sm font-medium'>
                           {(scores[category] * 100).toFixed(1)}%
                         </span>
                       </div>
@@ -205,9 +205,9 @@ export default function ReportSection({ groupId }) {
     return (
       <motion.div
         variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid gap-4"
+        initial='hidden'
+        animate='visible'
+        className='grid gap-4'
       >
         {reportsData?.pages?.map((page) =>
           page.content.map((report, index) => (
@@ -217,13 +217,13 @@ export default function ReportSection({ groupId }) {
               whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.2 }}
             >
-              <Card className="border-border bg-card hover:shadow-lg transition-all duration-300">
+              <Card className='border-border bg-card hover:shadow-lg transition-all duration-300'>
                 <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <div className="space-y-1">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Flag className="h-4 w-4 text-destructive" />
-                        <span className="text-foreground">
+                  <div className='flex justify-between items-center'>
+                    <div className='space-y-1'>
+                      <CardTitle className='text-base flex items-center gap-2'>
+                        <Flag className='h-4 w-4 text-destructive' />
+                        <span className='text-foreground'>
                           {t('report_id', { id: report.id.slice(-6) })}
                         </span>
                         <Badge
@@ -236,25 +236,25 @@ export default function ReportSection({ groupId }) {
                           {report.status}
                         </Badge>
                       </CardTitle>
-                      <div className="text-sm text-muted-foreground">
+                      <div className='text-sm text-muted-foreground'>
                         {formatDate(report.createdAt)}
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-sm">
+                    <Badge variant='outline' className='text-sm'>
                       {t('report_count', { count: report.reportCount })}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <User className="h-4 w-4" />
+                  <div className='space-y-4'>
+                    <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                      <User className='h-4 w-4' />
                       <span>
                         {t('post_owner', { username: report.ownerUsername })}
                       </span>
                     </div>
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-sm text-foreground">
+                    <div className='space-y-3'>
+                      <h4 className='font-semibold text-sm text-foreground'>
                         {t('report_list')}
                       </h4>
                       {report.groupReports.map((groupReport, index) => (
@@ -263,18 +263,18 @@ export default function ReportSection({ groupId }) {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="space-y-2"
+                          className='space-y-2'
                         >
-                          <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-                            <div className="flex-1 space-y-1">
-                              <div className="text-sm">
-                                <span className="font-medium text-foreground">
+                          <div className='flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors'>
+                            <div className='flex-1 space-y-1'>
+                              <div className='text-sm'>
+                                <span className='font-medium text-foreground'>
                                   {t('report_reason', {
                                     reason: groupReport.reason,
                                   })}
                                 </span>
                               </div>
-                              <div className="text-xs text-muted-foreground">
+                              <div className='text-xs text-muted-foreground'>
                                 {formatDateOrTimeAgo(groupReport.reportedAt)}
                               </div>
                             </div>
@@ -285,48 +285,48 @@ export default function ReportSection({ groupId }) {
                         </motion.div>
                       ))}
                     </div>
-                    <div className="flex gap-2">
+                    <div className='flex gap-2'>
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant='outline'
+                        size='sm'
                         onClick={() => handleViewAnalysis(report)}
-                        className="hover:bg-muted"
+                        className='hover:bg-muted'
                       >
                         {t('view_analysis')}
                       </Button>
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant='outline'
+                        size='sm'
                         onClick={() =>
                           window.open(
                             `/groups/${groupId}/post/${report.postId}`,
                             '_blank',
                           )
                         }
-                        className="hover:bg-muted"
+                        className='hover:bg-muted'
                       >
                         {t('view_post')}
                       </Button>
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant='outline'
+                        size='sm'
                         onClick={() => handleRejectReport(report.id)}
                         disabled={rejectReportMutation.isLoading}
-                        className="hover:bg-muted"
+                        className='hover:bg-muted'
                       >
-                        <XCircle className="h-4 w-4 mr-2" />
+                        <XCircle className='h-4 w-4 mr-2' />
                         {rejectReportMutation.isLoading
                           ? t('processing')
                           : t('reject_report')}
                       </Button>
                       <Button
-                        variant="destructive"
-                        size="sm"
+                        variant='destructive'
+                        size='sm'
                         onClick={() => handleBlockPost(report.id)}
                         disabled={blockPostMutation.isLoading}
-                        className="hover:bg-destructive/90"
+                        className='hover:bg-destructive/90'
                       >
-                        <Ban className="h-4 w-4 mr-2" />
+                        <Ban className='h-4 w-4 mr-2' />
                         {blockPostMutation.isLoading
                           ? t('blocking')
                           : t('block_post')}
@@ -350,9 +350,9 @@ export default function ReportSection({ groupId }) {
     return (
       <motion.div
         variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="grid gap-4"
+        initial='hidden'
+        animate='visible'
+        className='grid gap-4'
       >
         {blockedData?.pages?.map((page) =>
           page.content.map((report, index) => (
@@ -362,36 +362,36 @@ export default function ReportSection({ groupId }) {
               whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.2 }}
             >
-              <Card className="border-border bg-card hover:shadow-lg transition-all duration-300">
+              <Card className='border-border bg-card hover:shadow-lg transition-all duration-300'>
                 <CardHeader>
-                  <div className="flex justify-between items-center">
-                    <div className="space-y-1">
-                      <CardTitle className="text-base flex items-center gap-2">
-                        <Ban className="h-4 w-4 text-destructive" />
-                        <span className="text-foreground">
+                  <div className='flex justify-between items-center'>
+                    <div className='space-y-1'>
+                      <CardTitle className='text-base flex items-center gap-2'>
+                        <Ban className='h-4 w-4 text-destructive' />
+                        <span className='text-foreground'>
                           {t('report_id', { id: report.id.slice(-6) })}
                         </span>
-                        <Badge variant="destructive">BLOCKED</Badge>
+                        <Badge variant='destructive'>BLOCKED</Badge>
                       </CardTitle>
-                      <div className="text-sm text-muted-foreground">
+                      <div className='text-sm text-muted-foreground'>
                         {formatDate(report.updatedAt)}
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-sm">
+                    <Badge variant='outline' className='text-sm'>
                       {t('report_count', { count: report.reportCount })}
                     </Badge>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <User className="h-4 w-4" />
+                  <div className='space-y-4'>
+                    <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                      <User className='h-4 w-4' />
                       <span>
                         {t('post_owner', { username: report.ownerUsername })}
                       </span>
                     </div>
-                    <div className="space-y-3">
-                      <h4 className="font-semibold text-sm text-foreground">
+                    <div className='space-y-3'>
+                      <h4 className='font-semibold text-sm text-foreground'>
                         {t('block_reason')}
                       </h4>
                       {report.groupReports.map((groupReport, index) => (
@@ -400,23 +400,23 @@ export default function ReportSection({ groupId }) {
                           initial={{ opacity: 0, x: -20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ delay: index * 0.1 }}
-                          className="space-y-2"
+                          className='space-y-2'
                         >
-                          <div className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
-                            <Avatar className="h-6 w-6">
-                              <AvatarFallback className="bg-primary/10 text-primary">
+                          <div className='flex items-start gap-3 p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors'>
+                            <Avatar className='h-6 w-6'>
+                              <AvatarFallback className='bg-primary/10 text-primary'>
                                 {groupReport.reporterId.slice(-2)}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 space-y-1">
-                              <div className="text-sm">
-                                <span className="font-medium text-foreground">
+                            <div className='flex-1 space-y-1'>
+                              <div className='text-sm'>
+                                <span className='font-medium text-foreground'>
                                   {t('report_reason', {
                                     reason: groupReport.reason,
                                   })}
                                 </span>
                               </div>
-                              <div className="text-xs text-muted-foreground">
+                              <div className='text-xs text-muted-foreground'>
                                 {formatDateOrTimeAgo(groupReport.reportedAt)}
                               </div>
                             </div>
@@ -427,28 +427,28 @@ export default function ReportSection({ groupId }) {
                         </motion.div>
                       ))}
                     </div>
-                    <div className="flex gap-2">
+                    <div className='flex gap-2'>
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant='outline'
+                        size='sm'
                         onClick={() =>
                           window.open(
                             `/groups/${groupId}/post/${report.postId}`,
                             '_blank',
                           )
                         }
-                        className="hover:bg-muted"
+                        className='hover:bg-muted'
                       >
                         {t('view_post')}
                       </Button>
                       <Button
-                        variant="outline"
-                        size="sm"
+                        variant='outline'
+                        size='sm'
                         onClick={() => handleUnblockPost(report.id)}
                         disabled={unBlockPostMutation.isLoading}
-                        className="hover:bg-muted"
+                        className='hover:bg-muted'
                       >
-                        <ShieldAlert className="h-4 w-4 mr-2" />
+                        <ShieldAlert className='h-4 w-4 mr-2' />
                         {unBlockPostMutation.isLoading
                           ? t('unblocking')
                           : t('unblock_post')}
@@ -470,12 +470,12 @@ export default function ReportSection({ groupId }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-6"
+      className='space-y-6'
     >
-      <div className="flex items-center justify-between mt-4">
-        <h2 className="text-2xl font-bold text-foreground">{t('title')}</h2>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">{t('auto_moderation')}</span>
+      <div className='flex items-center justify-between mt-4'>
+        <h2 className='text-2xl font-bold text-foreground'>{t('title')}</h2>
+        <div className='flex items-center gap-2'>
+          <span className='text-sm font-semibold'>{t('auto_moderation')}</span>
           <Switch
             checked={autoModerationStatus}
             onCheckedChange={(checked) => {
@@ -487,26 +487,26 @@ export default function ReportSection({ groupId }) {
       </div>
 
       <Tabs
-        defaultValue="reports"
-        className="w-full"
+        defaultValue='reports'
+        className='w-full'
         onValueChange={setActiveTab}
       >
-        <TabsList className="grid w-full grid-cols-2 bg-muted/50">
+        <TabsList className='grid w-full grid-cols-2 bg-muted/50'>
           <TabsTrigger
-            value="reports"
-            className="data-[state=active]:bg-background"
+            value='reports'
+            className='data-[state=active]:bg-background'
           >
             {t('reported_posts')}
           </TabsTrigger>
           <TabsTrigger
-            value="blocked"
-            className="data-[state=active]:bg-background"
+            value='blocked'
+            className='data-[state=active]:bg-background'
           >
             {t('blocked_posts')}
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="reports">{renderReportedPosts()}</TabsContent>
-        <TabsContent value="blocked">{renderBlockedPosts()}</TabsContent>
+        <TabsContent value='reports'>{renderReportedPosts()}</TabsContent>
+        <TabsContent value='blocked'>{renderBlockedPosts()}</TabsContent>
       </Tabs>
 
       <DialogConfirmDelete />
@@ -549,27 +549,27 @@ function DialogConfirmDelete() {
 
   return (
     <Dialog open={dialogState.isOpen} onOpenChange={() => handleConfirm(false)}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className='sm:max-w-lg'>
         <DialogHeader>
-          <DialogTitle className="text-xl font-semibold text-foreground">
+          <DialogTitle className='text-xl font-semibold text-foreground'>
             Xác nhận
           </DialogTitle>
         </DialogHeader>
-        <p className="text-muted-foreground">
+        <p className='text-muted-foreground'>
           {dialogState.message || t('message_default')}
         </p>
         <DialogFooter>
           <Button
-            variant="outline"
+            variant='outline'
             onClick={() => handleConfirm(false)}
-            className="hover:bg-muted"
+            className='hover:bg-muted'
           >
             Hủy
           </Button>
           <Button
-            variant="destructive"
+            variant='destructive'
             onClick={() => handleConfirm(true)}
-            className="hover:bg-destructive/90"
+            className='hover:bg-destructive/90'
           >
             Xác nhận
           </Button>

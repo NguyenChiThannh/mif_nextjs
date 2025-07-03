@@ -1,15 +1,10 @@
-'use client';
-import CreatePostDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-create-post';
-import Post, { PostSkeleton } from '@/components/post';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from '@/components/ui/card';
-import useInfiniteScroll from '@/hooks/useInfiniteScroll';
-import { groupPostApi } from '@/services/groupPostApi';
+'use client'
+import CreatePostDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-create-post'
+import Post, { PostSkeleton } from '@/components/post'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
+import useInfiniteScroll from '@/hooks/useInfiniteScroll'
+import { groupPostApi } from '@/services/groupPostApi'
 import {
   Clock,
   Eye,
@@ -19,20 +14,20 @@ import {
   Star,
   TrendingUp,
   Users,
-} from 'lucide-react';
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { categoryApi } from '@/services/movieCategoriesApi';
-import React, { useMemo } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { BadgeIcon } from '@/components/badge-icon';
+} from 'lucide-react'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { motion } from 'framer-motion'
+import { categoryApi } from '@/services/movieCategoriesApi'
+import React, { useMemo } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { BadgeIcon } from '@/components/badge-icon'
 
 export default function FeedSection({ group, canCreate, activeMembers, t }) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
-    groupPostApi.query.useGetPostsByGroupIdInfinite(group.id);
+    groupPostApi.query.useGetPostsByGroupIdInfinite(group.id)
 
-  const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage);
+  const observerElem = useInfiniteScroll(hasNextPage, fetchNextPage)
 
   return (
     <div className='grid md:grid-cols-3 gap-4 grid-cols-2'>
@@ -78,15 +73,14 @@ export default function FeedSection({ group, canCreate, activeMembers, t }) {
       {/* Left content */}
       <div>
         <LeftContent group={group} t={t} />
-        <MembersFeaturedSection activeMembers={activeMembers} t={t} />
+        {/* <MembersFeaturedSection activeMembers={activeMembers} t={t} /> */}
       </div>
     </div>
-  );
+  )
 }
 
 function LeftContent({ group, t }) {
-  const { data: movieCategories } =
-    categoryApi.query.useGetAllmovieCategories();
+  const { data: movieCategories } = categoryApi.query.useGetAllmovieCategories()
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -183,14 +177,14 @@ function LeftContent({ group, t }) {
         </CardFooter>
       </Card>
     </motion.div>
-  );
+  )
 }
 
 function MembersFeaturedSection({ activeMembers, t }) {
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
-  };
+  }
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -200,7 +194,7 @@ function MembersFeaturedSection({ activeMembers, t }) {
         staggerChildren: 0.2,
       },
     },
-  };
+  }
 
   const renderActiveMembersSection = useMemo(
     () => (
@@ -262,7 +256,7 @@ function MembersFeaturedSection({ activeMembers, t }) {
       </motion.div>
     ),
     [activeMembers],
-  );
+  )
   return (
     <motion.div
       initial='hidden'
@@ -277,5 +271,5 @@ function MembersFeaturedSection({ activeMembers, t }) {
         </Card>
       </motion.div>
     </motion.div>
-  );
+  )
 }

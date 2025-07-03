@@ -1,13 +1,13 @@
 'use client'
-import { useTheme } from 'next-themes';
-import { ToastContainer, Bounce } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useTheme } from 'next-themes'
+import { ToastContainer, Bounce } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const CustomToastContainer = () => {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
   return (
     <ToastContainer
-      position="bottom-right"
+      position='bottom-right'
       autoClose={5000}
       hideProgressBar={false}
       newestOnTop={false}
@@ -20,7 +20,7 @@ const CustomToastContainer = () => {
       transition={Bounce}
       limit={3}
     />
-  );
-};
+  )
+}
 
-export default CustomToastContainer;
+export default CustomToastContainer

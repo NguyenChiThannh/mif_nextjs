@@ -10,7 +10,7 @@ export function ProfilePermissionGuard({
   const { isOwnProfile, canView } = useProfilePermission(id)
 
   if (!canView) {
-    return <div className="text-center p-4">{t('no_permission')}</div>
+    return <div className='text-center p-4'>{t('no_permission')}</div>
   }
 
   if (requireOwner && !isOwnProfile) {

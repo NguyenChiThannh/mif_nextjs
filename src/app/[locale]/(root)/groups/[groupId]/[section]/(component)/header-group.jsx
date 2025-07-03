@@ -1,47 +1,41 @@
 import DialogConfirmDelete, {
   confirmDelete,
-} from '@/components/dialog-confirm-delete';
-import GroupAvatar from '@/components/group-avatar';
-import { Button } from '@/components/ui/button';
+} from '@/components/dialog-confirm-delete'
+import GroupAvatar from '@/components/group-avatar'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { groupsApi } from '@/services/groupsApi';
-import {
-  LogOut,
-  PencilLine,
-  Trash,
-  UserPlus,
-  GripVertical,
-} from 'lucide-react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useGroupStatus, GROUP_STATUS } from '@/hooks/useGroupStatus';
-import EditGroupDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-edit-group';
-import DialogAddMemberToGroup from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-add-member-to-group';
-import useUserId from '@/hooks/useUserId';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
-import useDragAndDrop from '@/hooks/useDragAndDrop';
+} from '@/components/ui/dropdown-menu'
+import { groupsApi } from '@/services/groupsApi'
+import { LogOut, PencilLine, Trash, UserPlus, GripVertical } from 'lucide-react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useGroupStatus, GROUP_STATUS } from '@/hooks/useGroupStatus'
+import EditGroupDialog from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-edit-group'
+import DialogAddMemberToGroup from '@/app/[locale]/(root)/groups/[groupId]/[section]/(component)/dialog-add-member-to-group'
+import useUserId from '@/hooks/useUserId'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import useDragAndDrop from '@/hooks/useDragAndDrop'
 
 export default function HeaderGroup({ group, members, t, isOwner }) {
-  const router = useRouter();
-  const deleteGroupMutation = groupsApi.mutation.useDeleteGroup();
-  const [openDialogEditGroup, setOpenDialogEditGroup] = useState(false);
-  const [isDragMode, setIsDragMode] = useState(false);
-  const [isDragHover, setIsDragHover] = useState(false);
-  const userId = useUserId();
+  const router = useRouter()
+  const deleteGroupMutation = groupsApi.mutation.useDeleteGroup()
+  const [openDialogEditGroup, setOpenDialogEditGroup] = useState(false)
+  const [isDragMode, setIsDragMode] = useState(false)
+  const [isDragHover, setIsDragHover] = useState(false)
+  const userId = useUserId()
   const {
     status,
     handleJoinGroup,
     handleRemovePendingGroup,
     handleLeaveGroup,
-  } = useGroupStatus(group.id, userId);
-  const { handleDragStart, handleDragEnd } = useDragAndDrop();
+  } = useGroupStatus(group.id, userId)
+  const { handleDragStart, handleDragEnd } = useDragAndDrop()
 
   const handleDeleteGroup = () => {
     confirmDelete('', (result) => {
@@ -49,25 +43,25 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
         deleteGroupMutation.mutate(
           { groupId: group.id },
           { onSuccess: () => router.push('/groups') },
-        );
+        )
       }
-    });
-  };
+    })
+  }
 
   const handleEnableDragMode = (e) => {
-    e.stopPropagation();
-    setIsDragMode(true);
-  };
+    e.stopPropagation()
+    setIsDragMode(true)
+  }
 
   const handleDisableDragMode = () => {
-    setIsDragMode(false);
-    setIsDragHover(false);
-  };
+    setIsDragMode(false)
+    setIsDragHover(false)
+  }
 
   const handleGroupDragStart = (e) => {
     if (!isDragMode) {
-      e.preventDefault();
-      return;
+      e.preventDefault()
+      return
     }
 
     const dragData = {
@@ -75,17 +69,17 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
       id: group.id,
       name: group.groupName,
       avatar: group.avatarUrl,
-    };
-    handleDragStart(e, dragData);
-    setIsDragHover(true);
-  };
+    }
+    handleDragStart(e, dragData)
+    setIsDragHover(true)
+  }
 
   const handleGroupDragEnd = () => {
-    handleDragEnd();
-    setIsDragHover(false);
+    handleDragEnd()
+    setIsDragHover(false)
     // Auto disable drag mode after drag
-    setTimeout(() => setIsDragMode(false), 1000);
-  };
+    setTimeout(() => setIsDragMode(false), 1000)
+  }
 
   const renderGroupActions = () => {
     if (isOwner) {
@@ -128,14 +122,14 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
             setOpen={setOpenDialogEditGroup}
           />
         </DropdownMenu>
-      );
+      )
     }
-    return null;
-  };
+    return null
+  }
 
   const renderMembershipActions = () => {
     if (isOwner) {
-      return <DialogAddMemberToGroup groupId={group.id} />;
+      return <DialogAddMemberToGroup groupId={group.id} />
     }
 
     if (status === GROUP_STATUS.NOT_JOIN) {
@@ -148,7 +142,7 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
           <UserPlus className='h-4 w-4 mr-1' />
           Tham gia
         </Button>
-      );
+      )
     }
 
     if (status === GROUP_STATUS.PENDING) {
@@ -161,7 +155,7 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
         >
           Đang chờ duyệt
         </Button>
-      );
+      )
     }
 
     if (status === GROUP_STATUS.JOINED && !isOwner) {
@@ -175,11 +169,11 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
           <LogOut className='h-4 w-4 mr-1' />
           Rời nhóm
         </Button>
-      );
+      )
     }
 
-    return null;
-  };
+    return null
+  }
 
   return (
     <motion.div
@@ -296,5 +290,5 @@ export default function HeaderGroup({ group, members, t, isOwner }) {
       </motion.div>
       <DialogConfirmDelete />
     </motion.div>
-  );
+  )
 }

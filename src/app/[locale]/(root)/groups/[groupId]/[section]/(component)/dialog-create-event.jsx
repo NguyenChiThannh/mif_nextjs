@@ -1,16 +1,16 @@
-import { z } from 'zod';
-import { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { z } from 'zod'
+import { useState } from 'react'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -18,27 +18,27 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
-import { Controller, useForm } from 'react-hook-form';
-import { DateTimePicker } from '@/components/date-and-time-picker';
-import useUserId from '@/hooks/useUserId';
-import { userApi } from '@/services/userApi';
-import { schemaEvent } from '@/lib/schemas/event.schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import useUploadImages from '@/hooks/useUploadImages';
-import { eventApi } from '@/services/eventApi';
-import { Loader2 } from 'lucide-react';
+} from '@/components/ui/select'
+import { Separator } from '@/components/ui/separator'
+import { Textarea } from '@/components/ui/textarea'
+import { Controller, useForm } from 'react-hook-form'
+import { DateTimePicker } from '@/components/date-and-time-picker'
+import useUserId from '@/hooks/useUserId'
+import { userApi } from '@/services/userApi'
+import { schemaEvent } from '@/lib/schemas/event.schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import useUploadImages from '@/hooks/useUploadImages'
+import { eventApi } from '@/services/eventApi'
+import { Loader2 } from 'lucide-react'
 
 export function DialogCreateEvent({ groupId }) {
-  const [eventType, setEventType] = useState(null);
-  const [socialType, setSocialType] = useState('OTHER');
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [eventType, setEventType] = useState(null)
+  const [socialType, setSocialType] = useState('OTHER')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const createEventMutation = eventApi.mutation.useCreateEvent(groupId);
+  const createEventMutation = eventApi.mutation.useCreateEvent(groupId)
   const { images, handleImageChange, removeImage, uploadImage } =
-    useUploadImages();
+    useUploadImages()
 
   const {
     register,
@@ -58,39 +58,39 @@ export function DialogCreateEvent({ groupId }) {
       link: '',
       location: '',
     },
-  });
-  console.log('🚀 ~ DialogCreateEvent ~ errors:', errors);
+  })
+  console.log('🚀 ~ DialogCreateEvent ~ errors:', errors)
 
-  const userId = useUserId();
-  const { data: userInfo } = userApi.query.useGetUserInfoById(userId);
+  const userId = useUserId()
+  const { data: userInfo } = userApi.query.useGetUserInfoById(userId)
 
   const onSubmit = async (data) => {
     const { year, month, day, hour, minute, second, millisecond } =
-      data.startDate;
+      data.startDate
     const date = new Date(
       Date.UTC(year, month - 1, day, hour, minute, second, millisecond),
-    );
+    )
 
     // Convert startDate to ISO string
-    const startDateIsoString = date.toISOString();
+    const startDateIsoString = date.toISOString()
 
     const uploadedImageUrls = await Promise.all(
       images.map((image) => uploadImage(image)),
-    );
+    )
     const formData = {
       ...data,
       eventType,
       startDate: startDateIsoString,
       eventPicture: uploadedImageUrls[0],
-    };
+    }
 
     createEventMutation.mutate(formData, {
       onSuccess: () => {
-        setIsDialogOpen(false);
-        reset();
+        setIsDialogOpen(false)
+        reset()
       },
-    });
-  };
+    })
+  }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -178,7 +178,7 @@ export function DialogCreateEvent({ groupId }) {
                   granularity='minute'
                   value={field.value}
                   onChange={(date) => {
-                    field.onChange(date);
+                    field.onChange(date)
                   }}
                 />
               )}
@@ -203,10 +203,10 @@ export function DialogCreateEvent({ groupId }) {
               render={({ field }) => (
                 <Select
                   onValueChange={(value) => {
-                    field.onChange(value);
-                    setEventType(value);
+                    field.onChange(value)
+                    setEventType(value)
                     if (value !== 'ONLINE') {
-                      setSocialType('OTHER');
+                      setSocialType('OTHER')
                     }
                   }}
                 >
@@ -243,8 +243,8 @@ export function DialogCreateEvent({ groupId }) {
                   render={({ field }) => (
                     <Select
                       onValueChange={(value) => {
-                        field.onChange(value);
-                        setSocialType(value);
+                        field.onChange(value)
+                        setSocialType(value)
                       }}
                     >
                       <SelectTrigger className='w-full'>
@@ -335,5 +335,5 @@ export function DialogCreateEvent({ groupId }) {
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
