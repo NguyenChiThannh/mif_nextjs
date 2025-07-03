@@ -141,7 +141,7 @@ export default function SideBar({
             >
               <OctagonAlert className='h-4 w-4' />
               {t('report')}
-              {isOwner && pendingInvitations?.numberOfElements > 0 && (
+              {/* {isOwner && pendingInvitations?.numberOfElements > 0 && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -149,7 +149,7 @@ export default function SideBar({
                 >
                   {pendingInvitations.numberOfElements}
                 </motion.div>
-              )}
+              )} */}
             </Link>
           </motion.div>
         )}

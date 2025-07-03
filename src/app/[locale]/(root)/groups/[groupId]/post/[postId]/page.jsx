@@ -212,15 +212,16 @@ export default function DetailPost() {
 
   return (
     <div>
-      <div className='w-full max-w-3xl mx-auto shadow-xl py-2 rounded-lg bg-card h-full'>
+      <div className='w-full max-w-3xl mx-auto'>
         <Button
           onClick={handleBackHome}
-          className='flex items-center gap-2 my-4'
+          className=' flex items-center gap-2 my-4'
         >
           <ArrowLeft className='w-4 h-4' />
           Quay lại
         </Button>
-        <div className='pb-2'></div>
+      </div>
+      <div className='w-full max-w-3xl mx-auto shadow-xl py-2 rounded-lg bg-card h-full'>
         {isLoadingPost ? (
           <PostSkeleton />
         ) : (

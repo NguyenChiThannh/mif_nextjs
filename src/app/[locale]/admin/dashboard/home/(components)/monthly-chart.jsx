@@ -238,9 +238,9 @@ export default function MonthlyChart() {
               </p>
             </div>
 
-            <Button className='shadow-lg' onClick={handleExportExcelAnalytics}>
+            {/* <Button className='shadow-lg' onClick={handleExportExcelAnalytics}>
               Xuất báo cáo AI
-            </Button>
+            </Button> */}
           </div>
 
           <div className='grid grid-cols-1  md:[grid-template-columns:repeat(20,_minmax(0,_1fr))] gap-4 mt-4'>

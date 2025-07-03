@@ -72,8 +72,12 @@ export default function CardActorHorizontal({ actor, isTopRanked }) {
 function ActorInfo({ actor, isTopRanked, t }) {
   return (
     <div className='flex items-center gap-4'>
-      <Avatar className='border border-border w-12 h-12 transition-transform duration-200 hover:scale-105'>
-        <AvatarImage src={actor.profilePictureUrl} alt={actor.name} />
+      <Avatar className='border border-border w-12 h-12 transition-transform duration-200 hover:scale-105 overflow-hidden'>
+        <AvatarImage
+          className='w-full h-full object-cover'
+          src={actor.profilePictureUrl}
+          alt={actor.name}
+        />
         <AvatarFallback className='bg-muted text-muted-foreground'>
           {actor.name?.charAt(0)}
         </AvatarFallback>

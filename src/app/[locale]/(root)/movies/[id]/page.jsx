@@ -37,7 +37,7 @@ export default function DetailMovie() {
 
   const checkSavedStatus = () => {
     batchCheckSavedStatusMutation.mutate(
-      { postIds: [id] },
+      { movieIds: [id] },
       {
         onSuccess: (data) => {
           setIsSavedMovie(data[id])

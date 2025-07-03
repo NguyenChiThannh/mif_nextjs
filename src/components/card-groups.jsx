@@ -171,7 +171,7 @@ export default function CardGroups({ group, categories }) {
             <div className='p-4'>
               <div className='mb-3 space-y-2'>
                 <motion.h3
-                  className={`text-xl font-bold transition-colors duration-200 cursor-pointer ${
+                  className={`text-xl font-bold transition-colors duration-200 cursor-pointer truncate  ${
                     isDragMode
                       ? isDragHover
                         ? 'text-primary'

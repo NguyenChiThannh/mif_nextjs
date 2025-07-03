@@ -66,7 +66,7 @@ export default function ChatList({ onSelectGroup }) {
                 <div
                   key={group.groupId}
                   className={cn(
-                    'flex items-center gap-3 p-2 rounded-lg hover:bg-muted cursor-pointer',
+                    'flex items-center gap-3 px-4 py-2 rounded-xl transition-colors duration-150 hover:bg-muted cursor-pointer',
                     activeGroupId === group.groupId && 'bg-muted',
                   )}
                   onClick={() =>
@@ -77,28 +77,34 @@ export default function ChatList({ onSelectGroup }) {
                     )
                   }
                 >
-                  <Avatar className='w-10 h-10'>
-                    <AvatarImage src={group.avatarUrl} alt={group.groupName} />
+                  {/* Avatar */}
+                  <Avatar className='w-10 h-10 rounded-full overflow-hidden shrink-0'>
+                    <AvatarImage
+                      src={group.avatarUrl}
+                      alt={group.groupName}
+                      className='w-full h-full object-cover'
+                    />
                     <AvatarFallback>{group.groupName[0]}</AvatarFallback>
                   </Avatar>
+
+                  {/* Info */}
                   <div className='flex-1 min-w-0'>
-                    <div className='flex items-center justify-between'>
-                      <span className='font-medium truncate'>
-                        {group.groupName}
-                      </span>
-                      <span className='text-xs text-muted-foreground'>
-                        {formatDateOrTimeAgo(group.updateTime)}
-                      </span>
-                    </div>
+                    <span className='font-medium text-base truncate block leading-tight'>
+                      {group.groupName}
+                    </span>
+                    <span className='text-xs text-muted-foreground block leading-normal italic '>
+                      {formatDateOrTimeAgo(group.updateTime)}
+                    </span>
                     <p className='text-sm text-muted-foreground truncate'>
                       {group.newestMessage}
                     </p>
                   </div>
                 </div>
               ))}
+
             <div ref={observerElem} className='h-4' />
             {isFetchingNextPage && (
-              <div className='text-center text-muted-foreground'>
+              <div className='text-center text-sm text-muted-foreground mt-2'>
                 Loading more groups...
               </div>
             )}

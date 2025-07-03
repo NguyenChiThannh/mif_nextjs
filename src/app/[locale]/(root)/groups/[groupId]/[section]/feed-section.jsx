@@ -73,7 +73,7 @@ export default function FeedSection({ group, canCreate, activeMembers, t }) {
       {/* Left content */}
       <div>
         <LeftContent group={group} t={t} />
-        <MembersFeaturedSection activeMembers={activeMembers} t={t} />
+        {/* <MembersFeaturedSection activeMembers={activeMembers} t={t} /> */}
       </div>
     </div>
   )

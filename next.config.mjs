@@ -132,6 +132,18 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'datasets-server.huggingface.co',
+        port: '',
+        pathname: '/**',
+      },
     ],
   },
   experimental: {
