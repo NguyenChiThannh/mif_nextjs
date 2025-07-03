@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import useDragAndDrop from '@/hooks/useDragAndDrop'
 import { useState } from 'react'
 
-export default function CardGroups({ group, categories }) {
+export default function CardGroups({ group, categories, isTruncated = true }) {
   const t = useTranslations('Groups')
   const userId = useUserId()
   const { status, handleJoinGroup, handleRemovePendingGroup } = useGroupStatus(
@@ -108,7 +108,9 @@ export default function CardGroups({ group, categories }) {
         onDragEnd={handleGroupDragEnd}
       >
         <Card
-          className={`overflow-hidden transition-all duration-300 cursor-pointer ${
+          className={`transition-all duration-300 cursor-pointer ${
+            isTruncated ? 'truncate' : 'overflow-hidden'
+          } ${
             isDragMode
               ? 'border-primary/50 cursor-grab active:cursor-grabbing'
               : 'border-border hover:shadow-lg'
@@ -171,7 +173,7 @@ export default function CardGroups({ group, categories }) {
             <div className='p-4'>
               <div className='mb-3 space-y-2'>
                 <motion.h3
-                  className={`text-xl font-bold transition-colors duration-200 cursor-pointer truncate  ${
+                  className={`text-xl font-bold transition-colors duration-200 cursor-pointer  ${
                     isDragMode
                       ? isDragHover
                         ? 'text-primary'

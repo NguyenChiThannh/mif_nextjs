@@ -50,6 +50,7 @@ export function GroupCarousel() {
                 group={group}
                 initialStatus='join'
                 categories={movieCategories}
+                isTruncated={false}
               />
             </CarouselItem>
           ))}
