@@ -1,6 +1,7 @@
 'use client'
 
 import Background from '@/app/[locale]/(auth)/bg-movie/background'
+import { DialogInfoSystem } from '@/components/dialog-info-system'
 import { Film } from 'lucide-react'
 import Link from 'next/link'
 
@@ -9,6 +10,7 @@ const LOGO_TEXT = 'MIF'
 export default function AuthLayout({ children }) {
   return (
     <main className='relative w-full min-h-screen bg-black'>
+      <DialogInfoSystem />
       {/* Logo */}
       <div className='absolute flex top-2 left-20 z-50'>
         <Link href='/home' className='flex items-center gap-2'>
