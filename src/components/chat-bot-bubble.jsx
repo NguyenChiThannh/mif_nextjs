@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { Trash2, X, Send } from 'lucide-react'
+import { Trash2, X, Send, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { chatBotApi } from '@/services/chatBotApi'
 import DialogConfirmDelete, {
@@ -16,6 +16,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { renderContent, renderHashtagContent } from '@/lib/convert'
 import Link from 'next/link'
 import MovieMentionInput from './movie-mention-input'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import ChatbotInfoDialog from '@/components/dialog-chat-bot-info'
 
 export default function ChatBotBubble() {
   const [isOpen, setIsOpen] = useState(false)
@@ -362,6 +369,7 @@ export default function ChatBotBubble() {
           <div className='flex items-center justify-between px-3 py-2 border-b border-border'>
             <div className='flex items-center gap-2'>
               <span className='font-semibold text-sm'>Trợ lý MIF AI</span>
+              <ChatbotInfoDialog />
               <Button
                 variant='ghost'
                 size='icon'
